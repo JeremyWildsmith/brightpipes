@@ -8,4 +8,4 @@ nb-configuration.xml
 
 # MS Documents Metadata files.
 *.~*
-.tmp
+*.tmp
