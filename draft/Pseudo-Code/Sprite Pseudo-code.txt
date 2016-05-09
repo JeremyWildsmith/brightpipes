@@ -1,0 +1,11 @@
+function Sprite(img, coordX, coordY) {
+	this.img = img;
+	this.coordX = coordX;
+	this.coordY = coordY;
+}
+
+Sprite.prototype.draw = function() {
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	ctx.drawImage(this.img, this.coordX, this.coordY);
+}
