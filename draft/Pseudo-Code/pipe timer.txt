@@ -1,0 +1,19 @@
+
+<html>
+<head>
+	<script>
+	// timer in milliseconds before water flows out
+	waterTimer = 20000;
+	
+	function waterFlowAniamtion() {
+	    // code for water flowing
+	}
+	
+	if (gameStart == true)
+		do waterTimer--;
+
+
+	when water == 0
+		do waterFlowAnimation()
+	
+
