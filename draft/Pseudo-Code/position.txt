@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Canvas Drag and Drop Test</title>
+</head>
+<body>
+
+
+<canvas id="canvas" width="400" height="300" style="border: 1px solid #ff00ff">
+</canvas>
+
+
+<script>
+
+var canvas;
+var ctx;
+var x = get x coordinate of pipe;
+var y = get y coordinate of pipe;
+var WIDTH = 400;
+var HEIGHT = 300;
+var dragstatus = false;
+
+
+function clearPipe() {
+ call pipe function that can clear
+}
+
+function init() {
+ canvas = document.getElementById("canvas");
+ ctx = canvas.getContext("2d");
+ return setInterval(draw, 10);
+}
+
+function draw() {
+ clearPipe();
+ 
+
+ draw pipe (x coordinate - half its length, y coordinate - half its width);
+}
+
+function move(e){
+ if (dragstatus){
+  x = e.pageX - canvas.offsetLeft;
+  y = e.pageY - canvas.offsetTop;
+ }
+}
+
+function drag(e){
+ if (e.pageX < x + half length + canvas.offsetLeft && e.pageX > x - half length +
+ canvas.offsetLeft && e.pageY < y + half width + canvas.offsetTop &&
+ e.pageY > y - half width + canvas.offsetTop){
+  x = e.pageX - canvas.offsetLeft;
+  y = e.pageY - canvas.offsetTop;
+  dragstatus = true;
+  canvas.onmousemove = move;
+ }
+}
+
+function letGo(){
+ dragstatus = false;
+ canvas.onmousemove = null;
+}
+
+init();
+canvas.onmousedown = drag;
+canvas.onmouseup = letGo;
+
+</script>
+
+</body>
+</html>
