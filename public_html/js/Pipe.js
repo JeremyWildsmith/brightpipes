@@ -10,7 +10,7 @@ function Pipe(parentGrid, graphic, connectionDirections, location)
 
 //Set pipe fill state to full, or if already full, fill out pipes
 Pipe.prototype.fill = function() {
-    if (this.filled === true) {
+    if (this.filled) {
         var pipeArray = getConnections();
         
         if (pipeArray.length === 0) {
@@ -40,31 +40,30 @@ Pipe.prototype.getConnections = function() {
     
     for(i = 0; i < this.connectionDirections.length; i++) {
         switch(this.connectionDirections[i]) {
-            case this.connectionDirection.Up:
+            case Direction.Up:
                 if (pipeUp !== null && 
                         pipeUp.getDirections.indexOf(Direction.Down) !== -1) {
                     pipeArray.push(pipeUp);
                 }
                 break;
-                
-            case this.connectionDirection.Down:
+            case Direction.Down:
                 if (pipeDown !== null && 
                         pipeDown.getDirections.indexOf(Direction.Up) !== -1) {
                     pipeArray.push(pipeDown);
                 }
                 break;
-            
-            case this.connectionDirection.Right:
+            case Direction.Right:
                 if (pipeRight !== null &&
                         pipeRight.getDirections.indexOf(Direction.Right) !== -1) {
                     pipeArray.push(pipeRight);
                 }
-             
-            case this.connectionDirection.Left:
+                break;
+            case Direction.Left:
                 if (pipeLeft !== null &&
                         pipeLeft.getDirections.indexOf(Direction.Left) !== -1) {
                     pipeArray.push(pipeLeft);
                 }
+                break;
         }
     }
     
