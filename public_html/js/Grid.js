@@ -46,7 +46,7 @@ Grid.prototype.draw = function(g, x, y) {
     for(var xLoc = 0; xLoc < this.GRID_WIDTH; xLoc++) {   
         for(var yLoc = 0; yLoc < this.GRID_WIDTH; yLoc++) {
             g.rect(x + xLoc * this.cellDimensions,
-                  x + xLoc * this.cellDimensions,
+                  y + yLoc * this.cellDimensions,
                   this.cellDimensions,
                   this.cellDimensions);
             
