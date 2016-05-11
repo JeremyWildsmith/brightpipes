@@ -54,7 +54,7 @@ Grid.prototype.screenToGrid = function(location) {
 Grid.prototype.draw = function(g, x, y) {
     g.strokeStyle = "#000";
     for(var xLoc = 0; xLoc < this.GRID_WIDTH; xLoc++) {   
-        for(var yLoc = 0; yLoc < this.GRID_WIDTH; yLoc++) {
+        for(var yLoc = 0; yLoc < this.GRID_HEIGHT; yLoc++) {
             g.rect(x + xLoc * this.cellDimensions,
                   y + yLoc * this.cellDimensions,
                   this.cellDimensions,
