@@ -41,6 +41,16 @@ Grid.prototype.clearPipe = function(location) {
    this.pipes[location.x, location.y] = null;
 };
 
+Grid.prototype.screenToGrid = function(location) {
+    translation = new Vector(location.x / this.cellDimensions, location.y / this.cellDimensions);
+    
+    if(translation.x < 0 || translation.x > this.GRID_WIDTH ||
+       translation.y < 0 || translation.y > this.GRID_HEIGHT)
+        throw "Specified coordinates are not inside screen bounds.";
+    
+    return translation;
+};
+
 Grid.prototype.draw = function(g, x, y) {
     g.strokeStyle = "#000";
     for(var xLoc = 0; xLoc < this.GRID_WIDTH; xLoc++) {   
