@@ -3,6 +3,7 @@ function Game(width, height)
     this.width = width;
     this.height = height;
     this.count = 0;
+    this.screen = new GameScreen(); 
     
     this.test = new NullGraphic();
     var outer = this;
@@ -15,13 +16,7 @@ Game.prototype.draw = function(g, x, y) {
     
     g.clearRect(0, 0, this.width, this.height);
     
-    g.fillStyle = "#000";
-    g.rect(0, 0, this.width, this.height);
-    g.stroke();
-    
-    g.fillStyle = "#000";
-    g.fillText("Sup Bro!" + this.count, 50, 50);
-    this.test.draw(g, x + 25, y + 25);
+    this.screen.draw(g, x, y);
 };
 
 Game.prototype.update = function(deltaTime) {

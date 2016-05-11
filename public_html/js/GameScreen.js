@@ -18,5 +18,9 @@ GameScreen.prototype.update = function (deltaTime) {
 };
 
 GameScreen.prototype.draw = function (g, x, y) {
+    var canvas = document.getElementById("mainCanvas");
+    g.font = "15px Arial";
+    g.fillText("Score: ", 10, 100);  //missing the function that counts the score
+    g.fillText("Number of pipes used: ", 10, 120); // missing the function that counts the number of pipes used
+};
 
-}
