@@ -1,4 +1,4 @@
-function Pipe(parentGrid, graphic, connectionDirections, location) 
+function Pipe(parentGrid, graphic, connectionDirections, location)
 {
     this.location = location;
     this.parentGrid = parentGrid;
@@ -9,45 +9,63 @@ function Pipe(parentGrid, graphic, connectionDirections, location)
 }
 
 //Set pipe fill state to full, or if already full, fill out pipes
-Pipe.prototype.fill = function() {
+Pipe.prototype.fill = function (dir) {
     if (this.filled) {
-        var pipeArray = getConnections();
-        
-        if (pipeArray.length === 0) {
+        var pipeArray = getConnections(dir);
+
+        if (pipeArray.length !== this.connectionDirections.length) {
             this.leaked = true;
         } else {
-            
+            for (i = 0; i < pipeArray.length; i++) {
+                pipeArray[i].fill();
+            }
         }
-    } else 
+    } else
         this.filled = true;
+
+
 };
 
 //Draw the pipe graphic
-Pipe.prototype.draw = function(g, x, y) { 
-    
+Pipe.prototype.draw = function (g, x, y) {
+
 };
 
-Pipe.prototype.getConnections = function() {
+Pipe.prototype.getConnections = function (dir) {
     var pipeArray = [];
-    var pipeUp = 
+    var pipeUp =
             this.parentGrid.getPipe(this.location.add(Direction.Up.delta));
-    var pipeDown = 
-            this.parentGrid.getPipe(this.location.add(Dirction.Down.delta));
-    var pipeRight = 
+    var pipeDown =
+            this.parentGrid.getPipe(this.location.add(Direction.Down.delta));
+    var pipeRight =
             this.parentGrid.getPipe(this.location.add(Direction.Right.delta));
-    var pipeLeft = 
+    var pipeLeft =
             this.parentGrid.getPipe(this.location.add(Direction.Left.delta()));
-    
-    for(i = 0; i < this.connectionDirections.length; i++) {
-        switch(this.connectionDirections[i]) {
+
+    switch (dir) {
+        case Direction.Up:
+            pipeUp = null;
+            break;
+        case Direction.Down:
+            pipeDown = null;
+            break;
+        case Direction.Right:
+            pipeRight = null;
+            break;
+        case Direction.Left:
+            pipeLeft = null;
+            break;
+    }
+    for (i = 0; i < this.connectionDirections.length; i++) {
+        switch (this.connectionDirections[i]) {
             case Direction.Up:
-                if (pipeUp !== null && 
+                if (pipeUp !== null &&
                         pipeUp.getDirections.indexOf(Direction.Down) !== -1) {
                     pipeArray.push(pipeUp);
                 }
                 break;
             case Direction.Down:
-                if (pipeDown !== null && 
+                if (pipeDown !== null &&
                         pipeDown.getDirections.indexOf(Direction.Up) !== -1) {
                     pipeArray.push(pipeDown);
                 }
@@ -66,19 +84,19 @@ Pipe.prototype.getConnections = function() {
                 break;
         }
     }
-    
+
     return pipeArray;
-    
+
 };
 //Probably wont do much, at least not now
-Pipe.prototype.update = function(deltaTime) {
-    
+Pipe.prototype.update = function (deltaTime) {
+
 };
 
-Pipe.prototype.connectedToPump = function() {
-    
+Pipe.prototype.connectedToPump = function () {
+
 };
 
-Pipe.prototype.getDirections = function() {
+Pipe.prototype.getDirections = function () {
     return this.connectionDirections;
 };
