@@ -21,3 +21,11 @@ Game.prototype.update = function(deltaTime) {
 Game.prototype.onMouseMove = function(location) {
     this.screen.onMouseMove(location);
 };
+
+Game.prototype.onMouseDown = function (location) {
+    this.screen.onMouseDown(location);
+};
+
+Game.prototype.onMouseUp = function(location) {
+    this.screen.onMouseUp(location);
+};
