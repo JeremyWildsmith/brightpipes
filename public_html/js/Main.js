@@ -8,8 +8,12 @@ window.onload = function() {
     var canvas = document.getElementById("mainCanvas").getContext("2d");
     game = new Game(CANVAS_WIDTH, CANVAS_HEIGHT);
 
+    var last = Date.now();
     setInterval(function() {
-      game.update(dt);
+      var now = Date.now();
+      var deltaTime = now - last;
+      last = now;
+      game.update(deltaTime);
       game.draw(canvas, 0, 0);
     }, dt);
     
