@@ -1,10 +1,10 @@
 function GameScreen() {
     this.PUMP_INTERVAL = 20000;
-    this.CELL_DIMENSIONS = 40;
+    this.CELL_DIMENSIONS = 50;
 
     this.elapsedSinceLastPump = 0;
 
-    this.grid = new Grid(this.CELL_DIMENSIONS, 5, 5);
+    this.grid = new Grid(this.CELL_DIMENSIONS, 4, 4);
     this.pipeSelection = new PipeSelectionQueue();
     
 
@@ -26,7 +26,7 @@ GameScreen.prototype.draw = function (g, x, y) {
     g.fillText("Number of pipes used: ", 10, 35); // missing the function that counts the number of pipes used
 
     this.grid.draw(g, 10, 55);
-    this.pipeSelection.draw(g, 10, 270);
+    this.pipeSelection.draw(g, 33, 270);
 
 };
 
