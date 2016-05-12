@@ -40,8 +40,6 @@ Pipe.prototype.fill = function (dir) {
         }
     } else
         this.filled = true;
-
-
 };
 
 //Draw the pipe graphic
