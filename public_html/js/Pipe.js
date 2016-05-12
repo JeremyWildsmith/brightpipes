@@ -29,7 +29,7 @@ Pipe.prototype.fill = function (dir) {
 
 //Draw the pipe graphic
 Pipe.prototype.draw = function (g, x, y) {
-
+    this.graphic.draw(g, x, y);
 };
 
 Pipe.prototype.getConnections = function (dir) {
