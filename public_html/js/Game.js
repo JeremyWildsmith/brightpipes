@@ -21,4 +21,5 @@ Game.prototype.draw = function(g, x, y) {
 
 Game.prototype.update = function(deltaTime) {
     this.count++;
+    this.screen.update(deltaTime);
 };
