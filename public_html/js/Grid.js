@@ -31,14 +31,21 @@ Grid.prototype.getPipe = function(location) {
    return this.pipes[location.x][location.y];
 };
 
-Grid.prototype.setPipe = function(location, pipe) { 
+Grid.prototype.setPipe = function(pipe, location) { 
    validateLocation(location);
-   pipe.location = location;
-   pipe.parentGrid = this;
+   
+   clearPipe(location);
+   
    this.pipes[location.x, location.y] = pipe;
+   
+   pipe.attach(this, location);
 };
 
 Grid.prototype.clearPipe = function(location) {
+    
+    if(this.pipes[location.x, location.y] !== null)
+        this.pipes[location.x, location.y].detach();
+    
    this.pipes[location.x, location.y] = null;
 };
 
