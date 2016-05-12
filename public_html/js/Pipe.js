@@ -6,6 +6,7 @@ function Pipe(parentGrid, graphic, connectionDirections, location)
     this.connectionDirections = connectionDirections;
     this.filled = false;
     this.leaked = false;
+    this.pump = false;
 }
 
 //Set pipe fill state to full, or if already full, fill out pipes
@@ -94,9 +95,25 @@ Pipe.prototype.update = function (deltaTime) {
 };
 
 Pipe.prototype.connectedToPump = function () {
-
+    var pipeArray = getConnections(null);
+    var pumpBoolean = false;
+    
+    for (i = 0; i < pipeArray.length; i++) {
+        if (pipeArray[i].isPump) {
+            pumpBoolean = true;
+        }
+    }
+    return pumpBoolean;
 };
 
 Pipe.prototype.getDirections = function () {
     return this.connectionDirections;
+};
+
+Pipe.prototype.setAsPump = function() {
+    this.pump = true;
+};
+
+Pipe.prototype.isPump = function() {
+    return this.pump;
 };
