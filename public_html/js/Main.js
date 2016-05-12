@@ -14,8 +14,7 @@ function getLocation(e) {
     if (e.pageX || e.pageY) {
         x = e.pageX;
         y = e.pageY;
-    }
-    else {
+    } else {
         x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
         y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
     }
@@ -33,29 +32,38 @@ window.onload = function () {
     game = new Game(CANVAS_WIDTH, CANVAS_HEIGHT);
 
     var last = Date.now();
-    
+
     var cycle = function () {
         var now = Date.now();
         var deltaTime = now - last;
         last = now;
         game.update(deltaTime);
         game.draw(g, 0, 0);
-    
+
         setTimeout(cycle, dt);
     };
-    
+
     cycle();
 };
 
 
-document.onmousemove = function(e) {
-    game.onMouseMove(getLocation(e));   
+document.onmousemove = function (e) {
+    game.onMouseMove(getLocation(e));
 };
 
-document.onmousedown = function(e) {
+document.onmousedown = function (e) {
     game.onMouseDown(getLocation(e));
 };
 
-document.onmouseup = function(e) {
+document.onmouseup = function (e) {
     game.onMouseUp(getLocation(e));
+};
+
+document.onkeypress = function (e) {
+    e = e || window.event;
+    var letter = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (letter) {
+        alert("Character typed: " + String.fromCharCode(letter));
+
+    }
 };
