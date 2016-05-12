@@ -12,7 +12,19 @@ function GameScreen() {
     
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
+    
+    this.fillPipeSelection();
 }
+
+GameScreen.prototype.fillPipeSelection = function() {
+    var pipes = Pipes.values();
+    
+    var pipe = null;
+    
+    do {
+        pipe = pipes[Math.floor(Math.random()*pipes.length)].create();
+    } while(this.pipeSelection.pushPipe(pipe));
+};
 
 GameScreen.prototype.update = function (deltaTime) {
     this.elapsedSinceLastPump += deltaTime;
