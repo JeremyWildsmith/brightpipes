@@ -17,3 +17,7 @@ Game.prototype.update = function(deltaTime) {
     this.count++;
     this.screen.update(deltaTime);
 };
+
+Game.prototype.onMouseMove = function(location) {
+    this.screen.onMouseMove(location);
+};
