@@ -27,6 +27,16 @@ GameScreen.prototype.draw = function (g, x, y) {
 
     this.grid.draw(g, 10, 55);
     this.pipeSelection.draw(g, 33, 270);
-
 };
 
+GameScreen.prototype.onMouseDown = function() {
+    
+};
+
+GameScreen.prototype.onMouseUp = function() {
+    
+};
+
+GameScreen.prototype.onMouseMove = function(currentLocation) {
+    
+};
