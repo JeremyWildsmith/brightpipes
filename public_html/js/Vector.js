@@ -6,3 +6,7 @@ function Vector(x, y) {
 Vector.prototype.add = function(vec) {
     return new Vector(this.x + vec.x, this.y + vec.y);
 };
+
+Vector.prototype.difference = function(vec) {
+    return new Vector(this.x - vec.x, this.y - vec.y);
+};
