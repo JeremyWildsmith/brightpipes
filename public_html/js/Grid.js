@@ -31,26 +31,25 @@ Grid.prototype.getPipe = function(location) {
    return this.pipes[location.x][location.y];
 };
 
-Grid.prototype.setPipe = function(pipe, location) { 
+Grid.prototype.setPipe = function(location, pipe) { 
    this.validateLocation(location);
    
-   clearPipe(location);
+   this.clearPipe(location);
    
-   this.pipes[location.x, location.y] = pipe;
+   this.pipes[location.x][location.y] = pipe;
    
    pipe.attach(this, location);
 };
 
 Grid.prototype.clearPipe = function(location) {
+    if(this.pipes[location.x][location.y] !== null)
+        this.pipes[location.x][location.y].detach();
     
-    if(this.pipes[location.x, location.y] !== null)
-        this.pipes[location.x, location.y].detach();
-    
-   this.pipes[location.x, location.y] = null;
+   this.pipes[location.x][location.y] = null;
 };
 
 Grid.prototype.screenToGrid = function(location) {
-    translation = new Vector(location.x / this.cellDimensions, location.y / this.cellDimensions);
+    var translation = new Vector(location.x / this.cellDimensions, location.y / this.cellDimensions);
     
     if(translation.x < 0 || translation.x > this.gridWidth ||
        translation.y < 0 || translation.y > this.gridHeight)
@@ -77,7 +76,7 @@ Grid.prototype.draw = function(g, x, y) {
             if(this.pipes[xLoc][yLoc] === null)
                 continue;
             
-            this.pipes[x][y].draw(g,
+            this.pipes[xLoc][yLoc].draw(g,
                             x + xLoc * this.cellDimensions + this.cellDimensions / 2,
                             y + yLoc * this.cellDimensions + this.cellDimensions / 2);
         }
