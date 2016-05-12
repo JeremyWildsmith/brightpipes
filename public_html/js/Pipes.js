@@ -38,7 +38,7 @@ var Pipes = {
             dirs.push(Direction.Left);
             dirs.push(Direction.Down);
             
-            var graphic = new LoadingGraphic("gfx/rightDown.png");
+            var graphic = new LoadingGraphic("gfx/leftDown.png");
             
             return new Pipe(graphic, dirs);
     }},
