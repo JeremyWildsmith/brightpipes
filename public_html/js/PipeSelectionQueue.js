@@ -7,11 +7,24 @@ PipeSelectionQueue.prototype.draw = function(g, x, y) {
 };
 
 PipeSelectionQueue.prototype.popPipe = function(location) {
+    var coord = this.pipeGrid.screenToGrid(location);
     
+    if(coord.x < 0 || coord.x > 2 || coord.y !== 0)
+        return null;
+    
+    var pipe = this.pipeGrid.getPipe(coord);
+    this.pipeGrid.clearPipe(coord);
 };
 
 PipeSelectionQueue.prototype.pushPipe = function(pipe) {
+    for(var i = 0; i < 3; i++) {
+        if(this.pipeGrid.getPipe(new Vector(i, 0)) === null) {
+            this.pipeGrid.setPipe(new Vector(i, 0), pipe);
+            return true;
+        }
+    }
     
+    return false;
 };
 
 PipeSelectionQueue.prototype.getBounds = function() {
