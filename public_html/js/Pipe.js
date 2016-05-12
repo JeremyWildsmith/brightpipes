@@ -24,7 +24,11 @@ Pipe.prototype.detach = function() {
     this.location = new Vector(0, 0);
 };
 
-//Set pipe fill state to full, or if already full, fill out pipes
+/**
+ * Set pipe fill state to full, or if already full, fill out pipes.
+ * 
+ * @param dir - direction of where the pipe is pumping from
+ */
 Pipe.prototype.fill = function (dir) {
     this.checkAttached();
     
@@ -47,6 +51,13 @@ Pipe.prototype.draw = function (g, x, y) {
     this.graphic.draw(g, x, y);
 };
 
+/**
+ * Returns an array of all of the legal pipe connections except for the pipe
+ * where the pump direction is coming from. 
+ * 
+ * @param dir - direction of where the pipe is pumping from
+ * @return pipeArray[]
+ */
 Pipe.prototype.getConnections = function (dir) {
     this.checkAttached();
     
@@ -60,6 +71,7 @@ Pipe.prototype.getConnections = function (dir) {
     var pipeLeft =
             this.parentGrid.getPipe(this.location.add(Direction.Left.delta()));
 
+    //sets the pipe where the pump is coming from to null
     switch (dir) {
         case Direction.Up:
             pipeUp = null;
@@ -74,6 +86,7 @@ Pipe.prototype.getConnections = function (dir) {
             pipeLeft = null;
             break;
     }
+    //add the pipes with legal connections to the array
     for (i = 0; i < this.connectionDirections.length; i++) {
         switch (this.connectionDirections[i]) {
             case Direction.Up:
@@ -111,7 +124,11 @@ Pipe.prototype.update = function (deltaTime) {
     this.checkAttached();
     
 };
-
+/**
+ * Function used to see if the pipe is connected to the pump
+ * 
+ * @return pumpBoolean - boolean value of if the pump is connected to the pipe
+ */
 Pipe.prototype.connectedToPump = function () {
     this.checkAttached();
     
@@ -126,16 +143,30 @@ Pipe.prototype.connectedToPump = function () {
     return pumpBoolean;
 };
 
+/**
+ * Getter method for connectionDirections
+ * 
+ * @return this.connectionDirections 
+ */
 Pipe.prototype.getDirections = function () {
     this.checkAttached();
     
     return this.connectionDirections;
 };
 
+/**
+ * Sets the pipe as a pump
+ * 
+ */
 Pipe.prototype.setAsPump = function() {
     this.pump = true;
 };
 
+/**
+ * Getter method for pump
+ * 
+ * @return this.pump
+ */
 Pipe.prototype.isPump = function() {
     return this.pump;
 };
