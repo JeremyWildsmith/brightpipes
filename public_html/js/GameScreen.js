@@ -16,6 +16,11 @@ function GameScreen() {
     this.fillPipeSelection();
 }
 
+GameScreen.prototype.refreshPipeSelection = function() {
+    this.pipeSelection.clear();
+    this.fillPipeSelection();
+};
+
 GameScreen.prototype.fillPipeSelection = function() {
     var pipes = Pipes.values();
     
@@ -31,8 +36,12 @@ GameScreen.prototype.update = function (deltaTime) {
     
     if (this.elapsedSinceLastPump > this.PUMP_INTERVAL)
     {
-        this.elapsedSinceLastPump = 0;
+        this.elapsedSinceLastPump -= this.PUMP_INTERVAL;
         this.grid.pump();
+        
+        this.draggingPipe = null;
+        this.refreshPipeSelection();
+        this.fillPipeSelection();
     }
 };
 
@@ -59,6 +68,15 @@ GameScreen.prototype.onMouseDown = function(location) {
 };
 
 GameScreen.prototype.onMouseUp = function(location) {
+    if(this.draggingPipe !== null) {
+        var gridBounds = this.grid.getBounds().add(this.GRID_LOCATION);
+        
+        if(gridBounds.contains(location)) {
+            var gridCoord = this.grid.screenToGrid(location.difference(this.GRID_LOCATION));
+            this.grid.setPipe(gridCoord, this.draggingPipe);
+        }
+    }
+    
     this.draggingPipe = null;
 };
 

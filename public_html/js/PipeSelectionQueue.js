@@ -14,6 +14,13 @@ PipeSelectionQueue.prototype.popPipe = function(location) {
     
     var pipe = this.pipeGrid.getPipe(coord);
     this.pipeGrid.clearPipe(coord);
+    
+    return pipe;
+};
+
+PipeSelectionQueue.prototype.clear = function() {
+    for(var x = 0; x < 3; x++)
+        this.pipeGrid.clearPipe(new Vector(x, 0));
 };
 
 PipeSelectionQueue.prototype.pushPipe = function(pipe) {

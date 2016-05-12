@@ -2,7 +2,6 @@ function Game(width, height)
 {
     this.width = width;
     this.height = height;
-    this.count = 0;
     this.screen = new GameScreen(); 
 }
 
@@ -14,7 +13,6 @@ Game.prototype.draw = function(g, x, y) {
 };
 
 Game.prototype.update = function(deltaTime) {
-    this.count++;
     this.screen.update(deltaTime);
 };
 

@@ -20,7 +20,7 @@ function Grid(cellDimensions, gridWidth, gridHeight) {
 
 Grid.prototype.validateLocation = function(location) {
     if(location.x > this.gridWidth || location.y > this.gridHeight ||
-       location.x < 0 || location.y > 0)
+       location.x < 0 || location.y < 0)
    {
        throw "Provided location it outside of grid bounds.";
    }
@@ -49,7 +49,7 @@ Grid.prototype.clearPipe = function(location) {
 };
 
 Grid.prototype.screenToGrid = function(location) {
-    var translation = new Vector(location.x / this.cellDimensions, location.y / this.cellDimensions);
+    var translation = new Vector(location.x / this.cellDimensions, location.y / this.cellDimensions).floor();
     
     if(translation.x < 0 || translation.x > this.gridWidth ||
        translation.y < 0 || translation.y > this.gridHeight)
@@ -59,6 +59,8 @@ Grid.prototype.screenToGrid = function(location) {
 };
 
 Grid.prototype.draw = function(g, x, y) {
+    
+    
     g.strokeStyle = "#000";
     for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
         for(var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
@@ -70,6 +72,8 @@ Grid.prototype.draw = function(g, x, y) {
             g.stroke();
         }
     }
+    
+    g.beginPath();
     
     for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
         for(var yLoc = 0; yLoc < this.gridWidth; yLoc++) {

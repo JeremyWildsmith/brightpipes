@@ -27,19 +27,24 @@ function getLocation(e) {
 }
 
 window.onload = function () {
-    var dt = 1000 / 30;
+    var dt = 33;
     canvas = document.getElementById("mainCanvas");
     var g = canvas.getContext("2d");
     game = new Game(CANVAS_WIDTH, CANVAS_HEIGHT);
 
     var last = Date.now();
-    setInterval(function () {
+    
+    var cycle = function () {
         var now = Date.now();
         var deltaTime = now - last;
         last = now;
         game.update(deltaTime);
         game.draw(g, 0, 0);
-    }, dt);
+    
+        setTimeout(cycle, dt);
+    };
+    
+    cycle();
 };
 
 
