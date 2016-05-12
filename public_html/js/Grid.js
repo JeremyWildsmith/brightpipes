@@ -34,6 +34,7 @@ Grid.prototype.getPipe = function(location) {
 Grid.prototype.setPipe = function(location, pipe) { 
    validateLocation(location);
    pipe.location = location;
+   pipe.parentGrid = this;
    this.pipes[location.x, location.y] = pipe;
 };
 
@@ -74,4 +75,8 @@ Grid.prototype.draw = function(g, x, y) {
                             y + yLoc * this.cellDimensions + this.cellDimensions / 2);
         }
     }
+};
+
+Grid.prototype.getBounds = function() {
+    return new Rectangle(new Vector(0,0), this.gridWidth * this.cellDimensions, this.gridHeight * this.cellDimensions);
 };

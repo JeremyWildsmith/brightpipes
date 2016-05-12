@@ -13,3 +13,7 @@ PipeSelectionQueue.prototype.popPipe = function(location) {
 PipeSelectionQueue.prototype.pushPipe = function(pipe) {
     
 };
+
+PipeSelectionQueue.prototype.getBounds = function() {
+    return this.pipeGrid.getBounds();
+};
