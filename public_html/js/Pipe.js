@@ -9,16 +9,30 @@ function Pipe(graphic, connectionDirections)
     this.pump = false;
 }
 
+/**
+ * Checks to see if the pipe is attached to the parent grid.
+ * 
+ */
 Pipe.prototype.checkAttached = function() {
     if(this.parentGrid === null)
         throw "Not attached to world.";
 };
 
+/**
+ * Attaches the pipe to the grid/world.
+ * 
+ * @param grid - main grid
+ * @param location - location of the pipe
+ */
 Pipe.prototype.attach = function(grid, location) {
     this.parentGrid = grid;
     this.location = location;
 };
 
+/**
+ * Detaches the pipe from the grid/world.
+ * 
+ */
 Pipe.prototype.detach = function() {
     this.parentGrid = null;
     this.location = new Vector(0, 0);
@@ -46,7 +60,13 @@ Pipe.prototype.fill = function (dir) {
         this.filled = true;
 };
 
-//Draw the pipe graphic
+/**
+ * Draw the pipe graphic.
+ * 
+ * @param g - graphic
+ * @param x - x coordinate
+ * @param y - y coordinate
+ */
 Pipe.prototype.draw = function (g, x, y) {
     this.graphic.draw(g, x, y);
 };
