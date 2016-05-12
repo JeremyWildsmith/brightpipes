@@ -27,12 +27,12 @@ Grid.prototype.validateLocation = function(location) {
 };
 
 Grid.prototype.getPipe = function(location) {
-   validateLocation(location);
+   this.validateLocation(location);
    return this.pipes[location.x][location.y];
 };
 
 Grid.prototype.setPipe = function(pipe, location) { 
-   validateLocation(location);
+   this.validateLocation(location);
    
    clearPipe(location);
    
@@ -86,4 +86,13 @@ Grid.prototype.draw = function(g, x, y) {
 
 Grid.prototype.getBounds = function() {
     return new Rectangle(new Vector(0,0), this.gridWidth * this.cellDimensions, this.gridHeight * this.cellDimensions);
+};
+
+Grid.prototype.pump = function() {
+    for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
+        for(var yLoc = 0; yLoc < this.gridWidth; yLoc++) {
+            if(this.pipes[xLoc][yLoc] !== null && this.pipes[xLoc][yLoc].isPump())
+                this.pipes[xLoc][yLoc].fill(null);
+        }
+    }
 };
