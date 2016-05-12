@@ -1,7 +1,7 @@
-function Pipe(parentGrid, graphic, connectionDirections, location)
+function Pipe(graphic, connectionDirections)
 {
-    this.location = location;
-    this.parentGrid = parentGrid;
+    this.location = new Vector(0, 0);
+    this.parentGrid = null;
     this.graphic = graphic;
     this.connectionDirections = connectionDirections;
     this.filled = false;
@@ -9,8 +9,25 @@ function Pipe(parentGrid, graphic, connectionDirections, location)
     this.pump = false;
 }
 
+Pipe.prototype.checkAttached = function() {
+    if(this.parentGrid === null)
+        throw "Not attached to world.";
+};
+
+Pipe.prototype.attach = function(grid, location) {
+    this.parentGrid = grid;
+    this.location = location;
+};
+
+Pipe.prototype.detach = function() {
+    this.parentGrid = null;
+    this.location = new Vector(0, 0);
+};
+
 //Set pipe fill state to full, or if already full, fill out pipes
 Pipe.prototype.fill = function (dir) {
+    this.checkAttached();
+    
     if (this.filled) {
         var pipeArray = getConnections(dir);
 
@@ -33,6 +50,8 @@ Pipe.prototype.draw = function (g, x, y) {
 };
 
 Pipe.prototype.getConnections = function (dir) {
+    this.checkAttached();
+    
     var pipeArray = [];
     var pipeUp =
             this.parentGrid.getPipe(this.location.add(Direction.Up.delta));
@@ -91,10 +110,13 @@ Pipe.prototype.getConnections = function (dir) {
 };
 //Probably wont do much, at least not now
 Pipe.prototype.update = function (deltaTime) {
-
+    this.checkAttached();
+    
 };
 
 Pipe.prototype.connectedToPump = function () {
+    this.checkAttached();
+    
     var pipeArray = getConnections(null);
     var pumpBoolean = false;
     
@@ -107,6 +129,8 @@ Pipe.prototype.connectedToPump = function () {
 };
 
 Pipe.prototype.getDirections = function () {
+    this.checkAttached();
+    
     return this.connectionDirections;
 };
 
