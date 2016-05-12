@@ -4,12 +4,6 @@ function Game(width, height)
     this.height = height;
     this.count = 0;
     this.screen = new GameScreen(); 
-    
-    this.test = new NullGraphic();
-    var outer = this;
-    new GraphicFactory().createFromFile("gfx/test.jpg", function(gfx) { 
-        outer.test = gfx;
-    });
 }
 
 Game.prototype.draw = function(g, x, y) {
