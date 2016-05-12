@@ -43,7 +43,14 @@ window.onload = function () {
 };
 
 
-document.onmousemove = function (e) {
-    game.update(0);
-    game.onMouseMove(getLocation(e));
+document.onmousemove = function(e) {
+    game.onMouseMove(getLocation(e));   
+};
+
+document.onmousedown = function(e) {
+    game.onMouseDown(getLocation(e));
+};
+
+document.onmouseup = function(e) {
+    game.onMouseUp(getLocation(e));
 };
