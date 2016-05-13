@@ -19,20 +19,20 @@ function Grid(cellDimensions, gridWidth, gridHeight) {
 }
 
 Grid.prototype.validateLocation = function(location) {
-    if(location.x > this.gridWidth || location.y > this.gridHeight ||
-       location.x < 0 || location.y < 0)
-   {
-       throw "Provided location it outside of grid bounds.";
-   }
+    return (location.x >= 0 && location.y >= 0 &&
+       location.x < this.gridWidth && location.y < this.gridHeight);
 };
 
 Grid.prototype.getPipe = function(location) {
-   this.validateLocation(location);
+   if(!this.validateLocation(location))
+       return null;
+   
    return this.pipes[location.x][location.y];
 };
 
 Grid.prototype.setPipe = function(location, pipe) { 
-   this.validateLocation(location);
+   if(!this.validateLocation(location))
+       return null;
    
    this.clearPipe(location);
    
