@@ -1,4 +1,4 @@
-function Pipe(graphic, connectionDirections)
+function Pipe(graphic, connectionDirections, type)
 {
     this.location = new Vector(0, 0);
     this.parentGrid = null;
@@ -7,6 +7,7 @@ function Pipe(graphic, connectionDirections)
     this.filled = false;
     this.leaked = false;
     this.pump = false;
+    this.type = type;
 }
 
 /**

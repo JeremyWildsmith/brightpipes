@@ -48,6 +48,7 @@ GameScreen.prototype.fillPipeSelection = function() {
 };
 
 GameScreen.prototype.update = function (deltaTime) {
+    this.searchForEasterEgg();
     
     if(!this.playing)
         return;
@@ -80,6 +81,29 @@ GameScreen.prototype.update = function (deltaTime) {
             this.draggingPipe = null;
             this.refreshPipeSelection();
             this.fillPipeSelection();
+        }
+    }
+};
+
+GameScreen.prototype.searchForEasterEgg = function() {
+    var pipes = this.grid.getPipes();
+    for(var i = 0; i < pipes.length; i++) {
+        var pipe = pipes[i];
+        
+        if(pipe.type === Pipes.RightDown) {
+            var right = this.grid.getPipe(pipe.getLocation().add(Direction.Right.delta));
+            var down = this.grid.getPipe(pipe.getLocation().add(Direction.Down.delta));
+            var accross = this.grid.getPipe(pipe.getLocation().add(Direction.Down.delta.add(Direction.Right.delta)));
+
+            if(right === null || down === null || accross === null)
+                return;
+            
+            if(right.type === Pipes.LeftDown && down.type === Pipes.RightUp && accross.type === Pipes.LeftUp)
+            {
+                if(!pipe.isFilled()) {
+                    pipe.setAsPump();
+                }
+            }
         }
     }
 };
@@ -142,7 +166,7 @@ GameScreen.prototype.drawWater = function(g, x, y) {
 };
 
 GameScreen.prototype.drawPipeWater = function(g, x, y, pipe) {
-    if(!pipe.isFilled() || pipe.isPump())
+    if(!pipe.isFilled() || pipe.type === Pipes.Pump)
         return;
     
     var inProgression = Math.min(1.0, this.elapsedSinceLastPump / (this.PUMP_INTERVAL / 2));

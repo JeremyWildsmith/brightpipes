@@ -46,7 +46,6 @@ window.onload = function () {
     cycle();
 };
 
-
 document.onmousemove = function (e) {
     game.onMouseMove(getLocation(e));
 };
@@ -57,13 +56,4 @@ document.onmousedown = function (e) {
 
 document.onmouseup = function (e) {
     game.onMouseUp(getLocation(e));
-};
-
-document.onkeypress = function (e) {
-    e = e || window.event;
-    var letter = (typeof e.which === "number") ? e.which : e.keyCode;
-    if (letter) {
-        alert("Character typed: " + String.fromCharCode(letter));
-
-    }
 };
