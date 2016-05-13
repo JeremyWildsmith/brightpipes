@@ -200,3 +200,7 @@ Pipe.prototype.setAsPump = function() {
 Pipe.prototype.isPump = function() {
     return this.pump;
 };
+
+Pipe.prototype.isFilled = function() {
+    return this.filled;
+};
