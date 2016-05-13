@@ -78,8 +78,15 @@ GameScreen.prototype.onMouseUp = function(location) {
         
         if(gridBounds.contains(location)) {
             var gridCoord = this.grid.screenToGrid(location.difference(this.GRID_LOCATION));
-            this.grid.setPipe(gridCoord, this.draggingPipe);
-        }
+            
+            var oldPipe = this.grid.getPipe(gridCoord);
+ 
+            if(oldPipe !== null && oldPipe.isFilled())
+                this.pipeSelection.pushPipe(this.draggingPipe);
+            else
+                this.grid.setPipe(gridCoord, this.draggingPipe);
+        } else
+            this.pipeSelection.pushPipe(this.draggingPipe);
     }
     
     this.draggingPipe = null;
