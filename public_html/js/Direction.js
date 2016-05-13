@@ -1,8 +1,8 @@
 var Direction = {
     Up : {value: 0, name: "Up", delta: new Vector(0, -1) },
     Down : {value: 1, name: "Down", delta: new Vector(0, 1) },
-    Right : {value: 2, name: "Left", delta: new Vector(1, 0) },
-    Left : {value: 3, name: "Right", delta: new Vector(-1, 0) },
+    Right : {value: 2, name: "Right", delta: new Vector(1, 0) },
+    Left : {value: 3, name: "Left", delta: new Vector(-1, 0) },
     values: function() {
         var array = [];
         array.push(Direction.Up);
@@ -10,5 +10,15 @@ var Direction = {
         array.push(Direction.Right);
         array.push(Direction.Left);
         return array;
+    },
+    fromVector: function(v) {
+        var dirs = this.values();
+        
+        for(var i = 0; i < dirs.length; i++) {
+            if(v.equals(dirs[i].delta))
+                return dirs[i];
+        }
+        
+        throw "Unrecognized direction vecotr.";
     }
 };
