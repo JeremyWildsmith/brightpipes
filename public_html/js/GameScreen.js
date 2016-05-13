@@ -1,5 +1,5 @@
 function GameScreen() {
-    this.PUMP_INTERVAL = 20000;
+    this.PUMP_INTERVAL = 5000;
     this.CELL_DIMENSIONS = 50;
     
     this.GRID_LOCATION = new Vector(10, 55);
@@ -9,6 +9,11 @@ function GameScreen() {
 
     this.grid = new Grid(this.CELL_DIMENSIONS, 4, 4);
     this.pipeSelection = new PipeSelectionQueue();
+    
+    var pump = Pipes.Vertical.create();
+    pump.setAsPump();
+    
+    this.grid.setPipe(new Vector(0,0), pump);
     
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
