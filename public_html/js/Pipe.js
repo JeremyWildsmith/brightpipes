@@ -1,3 +1,10 @@
+/**
+ * Pipe object
+ * 
+ * @param graphic - image of the pipe
+ * @param connectionDirections - directions the pipe points to
+ * @param type - the type of pipe
+ */
 function Pipe(graphic, connectionDirections, type)
 {
     this.location = new Vector(0, 0);
@@ -23,7 +30,6 @@ Pipe.prototype.attach = function(grid, location) {
 
 /**
  * Detaches the pipe from the grid/world.
- * 
  */
 Pipe.prototype.detach = function() {
     this.parentGrid = null;
@@ -180,10 +186,20 @@ Pipe.prototype.isPump = function() {
     return this.pump;
 };
 
+/**
+ * Getter method for filled
+ * 
+ * @return this.filled
+ */
 Pipe.prototype.isFilled = function() {
     return this.filled;
 };
 
+/**
+ * Getter method for leaked
+ * 
+ * @return this.leaked
+ */
 Pipe.prototype.isLeaking = function() {
     return this.leaked;
-}
+};
