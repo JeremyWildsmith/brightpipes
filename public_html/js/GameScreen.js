@@ -1,11 +1,13 @@
 function GameScreen() {
-    this.PUMP_INTERVAL = 5000;
+    this.PUMP_INTERVAL = 3000;
     this.CELL_DIMENSIONS = 50;
     
     this.GRID_LOCATION = new Vector(10, 55);
     this.PIPE_SELECTION_LOCATION = new Vector(33, 270);
     
     this.playing = true;
+
+    this.pipesPlaced = 0;
 
     this.elapsedSinceLastPump = this.PUMP_INTERVAL;
 
@@ -110,7 +112,7 @@ GameScreen.prototype.searchForEasterEgg = function() {
 
 GameScreen.prototype.draw = function (g, x, y) {
     g.font = "15px Arial";
-    g.fillText("Number of pipes used: ", 10, 35); // missing the function that counts the number of pipes used
+    g.fillText("Number of pipes used: " + this.pipesPlaced, 10, 35); // missing the function that counts the number of pipes used
 
     this.grid.draw(g, this.GRID_LOCATION.x, this.GRID_LOCATION.y);
     this.pipeSelection.draw(g, 33, 270);
@@ -143,8 +145,10 @@ GameScreen.prototype.onMouseUp = function(location) {
  
             if(oldPipe !== null && oldPipe.isFilled())
                 this.pipeSelection.pushPipe(this.draggingPipe);
-            else
+            else {
                 this.grid.setPipe(gridCoord, this.draggingPipe);
+                this.pipesPlaced++;
+            }
         } else
             this.pipeSelection.pushPipe(this.draggingPipe);
     }
