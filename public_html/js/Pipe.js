@@ -47,14 +47,16 @@ Pipe.prototype.fill = function (dir) {
     this.checkAttached();
     
     if (this.filled) {
-        var pipeArray = getConnections(dir);
+        var pipeArray = this.getConnections(dir);
 
         if (pipeArray.length !== this.connectionDirections.length) {
             this.leaked = true;
-        } else {
-            for (i = 0; i < pipeArray.length; i++) {
-                pipeArray[i].fill();
-            }
+        }
+        
+        
+        for (i = 0; i < pipeArray.length; i++) {
+            var delta = this.location.difference(pipeArray[i].location);
+            pipeArray[i].fill(Direction.fromVector(delta));
         }
     } else
         this.filled = true;
@@ -69,6 +71,14 @@ Pipe.prototype.fill = function (dir) {
  */
 Pipe.prototype.draw = function (g, x, y) {
     this.graphic.draw(g, x, y);
+    
+    g.font = "10px Arial";
+    
+    if(this.isPump())
+        g.fillText("Pump", x-20, y - 10);
+    
+    g.fillText("Is Full: " + this.filled, x-20, y);
+
 };
 
 /**
@@ -89,7 +99,7 @@ Pipe.prototype.getConnections = function (dir) {
     var pipeRight =
             this.parentGrid.getPipe(this.location.add(Direction.Right.delta));
     var pipeLeft =
-            this.parentGrid.getPipe(this.location.add(Direction.Left.delta()));
+            this.parentGrid.getPipe(this.location.add(Direction.Left.delta));
 
     //sets the pipe where the pump is coming from to null
     switch (dir) {
@@ -111,25 +121,25 @@ Pipe.prototype.getConnections = function (dir) {
         switch (this.connectionDirections[i]) {
             case Direction.Up:
                 if (pipeUp !== null &&
-                        pipeUp.getDirections.indexOf(Direction.Down) !== -1) {
+                        pipeUp.getDirections().indexOf(Direction.Down) !== -1) {
                     pipeArray.push(pipeUp);
                 }
                 break;
             case Direction.Down:
                 if (pipeDown !== null &&
-                        pipeDown.getDirections.indexOf(Direction.Up) !== -1) {
+                        pipeDown.getDirections().indexOf(Direction.Up) !== -1) {
                     pipeArray.push(pipeDown);
                 }
                 break;
             case Direction.Right:
                 if (pipeRight !== null &&
-                        pipeRight.getDirections.indexOf(Direction.Right) !== -1) {
+                        pipeRight.getDirections().indexOf(Direction.Left) !== -1) {
                     pipeArray.push(pipeRight);
                 }
                 break;
             case Direction.Left:
                 if (pipeLeft !== null &&
-                        pipeLeft.getDirections.indexOf(Direction.Left) !== -1) {
+                        pipeLeft.getDirections().indexOf(Direction.Right) !== -1) {
                     pipeArray.push(pipeLeft);
                 }
                 break;
