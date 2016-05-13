@@ -25,6 +25,31 @@ function GameScreen() {
     
     this.newlyFilledPipes = [];
     
+    this.demoStack = [];
+    this.demoStack.push(Pipes.Horizontal);
+    this.demoStack.push(Pipes.Horizontal);
+    this.demoStack.push(Pipes.Vertical);
+    
+    this.demoStack.push(Pipes.Horizontal);
+    this.demoStack.push(Pipes.Horizontal);
+    this.demoStack.push(Pipes.Vertical);
+    
+    this.demoStack.push(Pipes.LeftUp);
+    this.demoStack.push(Pipes.Vertical);
+    this.demoStack.push(Pipes.Horizontal);
+    
+    this.demoStack.push(Pipes.RightUp);
+    this.demoStack.push(Pipes.RightDown);
+    this.demoStack.push(Pipes.LeftUp);
+    
+    this.demoStack.push(Pipes.RightUp);
+    this.demoStack.push(Pipes.Horizontal);
+    this.demoStack.push(Pipes.Vertical);
+    
+    this.demoStack.push(Pipes.RightDown);
+    this.demoStack.push(Pipes.Horizontal);
+    this.demoStack.push(Pipes.RightUp);
+    
     this.fillPipeSelection();
 }
 
@@ -42,7 +67,7 @@ GameScreen.prototype.fillPipeSelection = function() {
     
     do {
         do {
-            pipe = pipes[Math.floor(Math.random()*pipes.length)];
+            pipe = this.demoStack.length > 0 ? this.demoStack.shift() : pipes[Math.floor(Math.random()*pipes.length)];
         } while(generatedPipes.indexOf(pipe) !== -1);
         
         generatedPipes.push(pipe);
