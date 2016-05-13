@@ -71,9 +71,10 @@ var Pipes = {
         array.push(Pipes.Vertical);
         array.push(Pipes.Horizontal);
         
+        array.push(Pipes.RightDown);
         array.push(Pipes.LeftDown);
-        array.push(Pipes.RightUp);
         
+        array.push(Pipes.RightUp);
         array.push(Pipes.LeftUp);
         
         return array;
