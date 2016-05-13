@@ -4,19 +4,24 @@ function GameScreen() {
     
     this.GRID_LOCATION = new Vector(10, 55);
     this.PIPE_SELECTION_LOCATION = new Vector(33, 270);
+    
+    this.playing = true;
 
-    this.elapsedSinceLastPump = 0;
+    this.elapsedSinceLastPump = this.PUMP_INTERVAL;
 
     this.grid = new Grid(this.CELL_DIMENSIONS, 4, 4);
     this.pipeSelection = new PipeSelectionQueue();
+        
+    this.drain = Pipes.Drain.create();
+    this.pump = Pipes.Pump.create();
     
-    var pump = Pipes.Vertical.create();
-    pump.setAsPump();
-    
-    this.grid.setPipe(new Vector(0,0), pump);
+    this.grid.setPipe(new Vector(1,0), this.pump);
+    this.grid.setPipe(new Vector(3,3), this.drain);
     
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
+    
+    this.newlyFilledPipes = [];
     
     this.fillPipeSelection();
 }
@@ -29,37 +34,68 @@ GameScreen.prototype.refreshPipeSelection = function() {
 GameScreen.prototype.fillPipeSelection = function() {
     var pipes = Pipes.values();
     
+    var generatedPipes = [];
+    
     var pipe = null;
     
     do {
-        pipe = pipes[Math.floor(Math.random()*pipes.length)].create();
-    } while(this.pipeSelection.pushPipe(pipe));
+        do {
+            pipe = pipes[Math.floor(Math.random()*pipes.length)];
+        } while(generatedPipes.indexOf(pipe) !== -1);
+        
+        generatedPipes.push(pipe);
+    } while(this.pipeSelection.pushPipe(pipe.create()));
 };
 
 GameScreen.prototype.update = function (deltaTime) {
-    this.elapsedSinceLastPump += deltaTime;
     
-    if (this.elapsedSinceLastPump > this.PUMP_INTERVAL)
+    if(!this.playing)
+        return;
+    
+    var pipes = this.grid.getPipes();
+    for(var i = 0; i < pipes.length; i++)
     {
-        this.elapsedSinceLastPump -= this.PUMP_INTERVAL;
-        this.grid.pump();
-        
-        this.draggingPipe = null;
-        this.refreshPipeSelection();
-        this.fillPipeSelection();
+        if(pipes[i].isLeaking() && pipes[i] !== this.drain && pipes[i] !== this.drain)
+        {
+            alert("Your pipes are leaking. You lost this level!");
+            this.playing = false;
+            return;
+        }
+    }
+    
+    if(this.pump.getConnections().length > 0)
+    {
+        this.elapsedSinceLastPump += deltaTime;
+    
+        if (this.elapsedSinceLastPump > this.PUMP_INTERVAL)
+        {
+            this.elapsedSinceLastPump -= this.PUMP_INTERVAL;
+            this.newlyFilledPipes = this.grid.pump();
+
+            if(this.drain.isFilled()) {
+                alert("You beat this level!");
+                this.playing = false;
+            }
+
+            this.draggingPipe = null;
+            this.refreshPipeSelection();
+            this.fillPipeSelection();
+        }
     }
 };
 
 GameScreen.prototype.draw = function (g, x, y) {
     g.font = "15px Arial";
-    g.fillText("Next Pump In: " + Math.round((this.PUMP_INTERVAL - this.elapsedSinceLastPump) / 1000) + "s", 10, 15);  //missing the function that counts the score
     g.fillText("Number of pipes used: ", 10, 35); // missing the function that counts the number of pipes used
 
     this.grid.draw(g, this.GRID_LOCATION.x, this.GRID_LOCATION.y);
     this.pipeSelection.draw(g, 33, 270);
     
+    this.drawWater(g, x, y);
+    
     if(this.draggingPipe !== null)
         this.draggingPipe.draw(g, x + this.draggingLocation.x, y + this.draggingLocation.y);
+    
 };
 
 GameScreen.prototype.onMouseDown = function(location) {
@@ -95,4 +131,86 @@ GameScreen.prototype.onMouseUp = function(location) {
 GameScreen.prototype.onMouseMove = function(currentLocation) {
     if(this.draggingPipe !== null)
         this.draggingLocation = currentLocation;
+};
+
+GameScreen.prototype.drawWater = function(g, x, y) {
+    
+    var pipes = this.grid.getPipes();
+    
+    for(var i = 0; i < pipes.length; i++)
+        this.drawPipeWater(g, x, y, pipes[i]);
+};
+
+GameScreen.prototype.drawPipeWater = function(g, x, y, pipe) {
+    if(!pipe.isFilled() || pipe.isPump())
+        return;
+    
+    var inProgression = Math.min(1.0, this.elapsedSinceLastPump / (this.PUMP_INTERVAL / 2));
+    var outProgression = Math.max(0, this.elapsedSinceLastPump / (this.PUMP_INTERVAL / 2) - inProgression);
+    
+    if(this.newlyFilledPipes.indexOf(pipe) === -1)
+        inProgression = outProgression = 1.0;
+    
+    var pipeCentreLocation = this.GRID_LOCATION.add(this.grid.gridToScreen(pipe.getLocation().add(new Vector(0.5, 0.5))));
+    
+    var fillDirections = this.getFillDirections(pipe);
+    var drainDirections = this.getDrainDirections(pipe);
+
+    g.lineWidth = 8;
+    g.strokeStyle = "#60AFFF";
+
+    for(var i = 0; i < fillDirections.length; i++) {
+        var start = pipeCentreLocation.add(fillDirections[i].delta.scale(this.grid.getCellDimensions() / 2));
+        var end = pipeCentreLocation.add(fillDirections[i].delta.inverse().scale(g.lineWidth / 2));
+        var diff = end.difference(start);
+        var current = start.add(diff.scale(inProgression));
+        
+        g.beginPath();
+        g.moveTo(start.x, start.y);
+        g.lineTo(current.x, current.y);
+        g.stroke();
+    }
+    
+    for(var i = 0; i < drainDirections.length; i++) {
+        var start = pipeCentreLocation;
+        var end = pipeCentreLocation.add(drainDirections[i].delta.scale(this.grid.getCellDimensions() / 2));
+        var diff = end.difference(start);
+        
+        var current = start.add(diff.scale(outProgression));
+        
+        g.beginPath();
+        g.moveTo(start.x, start.y);
+        g.lineTo(current.x, current.y);
+        g.stroke();
+    }
+    
+    g.beginPath();
+};
+
+GameScreen.prototype.getFillDirections = function(pipe) {
+    var connections = pipe.getConnections(null);
+    var fillDirections = [];
+    
+    for(var i = 0; i < connections.length; i++) {
+        if(connections[i].isFilled()) {
+            var delta = connections[i].getLocation().difference(pipe.getLocation());
+            fillDirections.push(Direction.fromVector(delta));
+        }
+    }
+    
+    return fillDirections;
+};
+
+GameScreen.prototype.getDrainDirections = function(pipe) {
+    var fillDirections = this.getFillDirections(pipe);
+    var allDirections = pipe.getDirections();
+    var drainDirections = [];
+    
+    for(var i = 0; i < allDirections.length; i++)
+    {
+        if(fillDirections.indexOf(allDirections[i]) === -1)
+            drainDirections.push(allDirections[i]);
+    }
+    
+    return drainDirections;
 };

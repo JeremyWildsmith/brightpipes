@@ -18,6 +18,10 @@ function Grid(cellDimensions, gridWidth, gridHeight) {
     }
 }
 
+Grid.prototype.getCellDimensions = function() {
+    return this.cellDimensions;
+};
+
 Grid.prototype.validateLocation = function(location) {
     return (location.x >= 0 && location.y >= 0 &&
        location.x < this.gridWidth && location.y < this.gridHeight);
@@ -58,12 +62,18 @@ Grid.prototype.screenToGrid = function(location) {
     return translation;
 };
 
+Grid.prototype.gridToScreen = function(location) {
+   return new Vector(location.x * this.cellDimensions, location.y * this.cellDimensions);
+};
+
 Grid.prototype.draw = function(g, x, y) {
-    
-    
     g.strokeStyle = "#000";
+    g.lineWidth = 0.4;
+    
     for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
         for(var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
+            
+            g.beginPath();
             g.rect(x + xLoc * this.cellDimensions,
                   y + yLoc * this.cellDimensions,
                   this.cellDimensions,
@@ -72,8 +82,6 @@ Grid.prototype.draw = function(g, x, y) {
             g.stroke();
         }
     }
-    
-    g.beginPath();
     
     for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
         for(var yLoc = 0; yLoc < this.gridWidth; yLoc++) {
@@ -91,11 +99,56 @@ Grid.prototype.getBounds = function() {
     return new Rectangle(new Vector(0,0), this.gridWidth * this.cellDimensions, this.gridHeight * this.cellDimensions);
 };
 
+Grid.prototype.getFilledPipes = function() {
+    var filledPipes = [];
+
+    var pipes = this.getPipes();
+    for(var i = 0; i < pipes.length; i++) {
+        if(pipes[i] !== null && pipes[i].isFilled())
+            filledPipes.push(pipes[i]);
+    }
+    
+    return filledPipes;
+};
+
+/**
+ * 
+ * @returns Array of pipes that were filled in this pump cycle.
+ */
 Grid.prototype.pump = function() {
+    
+    var pipesFilledBeforePump = this.getFilledPipes();
+    
     for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
         for(var yLoc = 0; yLoc < this.gridWidth; yLoc++) {
-            if(this.pipes[xLoc][yLoc] !== null && this.pipes[xLoc][yLoc].isPump())
-                this.pipes[xLoc][yLoc].fill(null);
+            var pipe = this.pipes[xLoc][yLoc];
+            
+            if(pipe !== null && pipe.isPump())
+                pipe.fill(null);
         }
     }
+    
+    var pipesFilledAfterPump = this.getFilledPipes();
+    var newPipesFilled = [];
+    
+    for(var i = 0; i < pipesFilledAfterPump.length; i++) {
+        if(pipesFilledBeforePump.indexOf(pipesFilledAfterPump[i]) === -1)
+            newPipesFilled.push(pipesFilledAfterPump[i]);
+    }
+    
+    return newPipesFilled;
+
 };
+
+Grid.prototype.getPipes = function() {
+    var pipes = [];
+    
+    for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
+        for(var yLoc = 0; yLoc < this.gridWidth; yLoc++) {
+            if(this.pipes[xLoc][yLoc] !== null)
+                pipes.push(this.pipes[xLoc][yLoc]);
+        }
+    }
+    
+    return pipes;
+}

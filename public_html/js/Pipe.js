@@ -10,15 +10,6 @@ function Pipe(graphic, connectionDirections)
 }
 
 /**
- * Checks to see if the pipe is attached to the parent grid.
- * 
- */
-Pipe.prototype.checkAttached = function() {
-    if(this.parentGrid === null)
-        throw "Not attached to world.";
-};
-
-/**
  * Attaches the pipe to the grid/world.
  * 
  * @param grid - main grid
@@ -44,12 +35,10 @@ Pipe.prototype.detach = function() {
  * @param dir - direction of where the pipe is pumping from
  */
 Pipe.prototype.fill = function (dir) {
-    this.checkAttached();
-    
     if (this.filled) {
         var pipeArray = this.getConnections(dir);
 
-        if (pipeArray.length !== this.connectionDirections.length) {
+        if (this.getConnections(null).length !== this.connectionDirections.length) {
             this.leaked = true;
         }
         
@@ -71,13 +60,6 @@ Pipe.prototype.fill = function (dir) {
  */
 Pipe.prototype.draw = function (g, x, y) {
     this.graphic.draw(g, x, y);
-    
-    g.font = "10px Arial";
-    
-    if(this.isPump())
-        g.fillText("Pump", x-20, y - 10);
-    
-    g.fillText("Is Full: " + this.filled, x-20, y);
 
 };
 
@@ -89,8 +71,6 @@ Pipe.prototype.draw = function (g, x, y) {
  * @return pipeArray[]
  */
 Pipe.prototype.getConnections = function (dir) {
-    this.checkAttached();
-    
     var pipeArray = [];
     var pipeUp =
             this.parentGrid.getPipe(this.location.add(Direction.Up.delta));
@@ -151,8 +131,6 @@ Pipe.prototype.getConnections = function (dir) {
 };
 //Probably wont do much, at least not now
 Pipe.prototype.update = function (deltaTime) {
-    this.checkAttached();
-    
 };
 /**
  * Function used to see if the pipe is connected to the pump
@@ -160,8 +138,6 @@ Pipe.prototype.update = function (deltaTime) {
  * @return pumpBoolean - boolean value of if the pump is connected to the pipe
  */
 Pipe.prototype.connectedToPump = function () {
-    this.checkAttached();
-    
     var pipeArray = getConnections(null);
     var pumpBoolean = false;
     
@@ -179,9 +155,11 @@ Pipe.prototype.connectedToPump = function () {
  * @return this.connectionDirections 
  */
 Pipe.prototype.getDirections = function () {
-    this.checkAttached();
-    
     return this.connectionDirections;
+};
+
+Pipe.prototype.getLocation = function() {
+    return this.location;
 };
 
 /**
@@ -204,3 +182,7 @@ Pipe.prototype.isPump = function() {
 Pipe.prototype.isFilled = function() {
     return this.filled;
 };
+
+Pipe.prototype.isLeaking = function() {
+    return this.leaked;
+}

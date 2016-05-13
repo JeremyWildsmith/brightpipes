@@ -65,6 +65,35 @@ var Pipes = {
             return new Pipe(graphic, dirs);
     }},
 
+    Pump: {value: 6, create: function() {
+            var dirs = [];
+            
+            dirs.push(Direction.Down);
+            
+            var graphic = new LoadingGraphic("gfx/pump.png");
+            
+            var p = new Pipe(graphic, dirs);
+            p.setAsPump();
+            p.fill(null);
+            
+            return p;
+    }},
+
+    Drain: {value: 6, create: function() {
+            var dirs = [];
+            
+            dirs.push(Direction.Up);
+            dirs.push(Direction.Down);
+            dirs.push(Direction.Left);
+            dirs.push(Direction.Right);
+            
+            var graphic = new LoadingGraphic("gfx/drain.png");
+            
+            var p = new Pipe(graphic, dirs);
+            
+            return p;
+    }},
+
     values: function() {
         var array = [];
         
