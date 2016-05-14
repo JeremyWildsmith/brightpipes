@@ -1,5 +1,5 @@
 function GameScreen() {
-    this.PUMP_INTERVAL = 3000;
+    this.PUMP_INTERVAL = 5000;
     this.CELL_DIMENSIONS = 50;
     
     this.GRID_LOCATION = new Vector(10, 55);
@@ -123,7 +123,7 @@ GameScreen.prototype.searchForEasterEgg = function() {
             var accross = this.grid.getPipe(pipe.getLocation().add(Direction.Down.delta.add(Direction.Right.delta)));
 
             if(right === null || down === null || accross === null)
-                return;
+                continue;
             
             if(right.type === Pipes.LeftDown && down.type === Pipes.RightUp && accross.type === Pipes.LeftUp)
             {
