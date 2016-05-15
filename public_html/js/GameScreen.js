@@ -1,3 +1,10 @@
+/**
+ * Object represent the main game play screen.
+ */
+
+/**
+ * @returns {GameScreen} A new GameScreen object.
+ */
 function GameScreen() {
     this.PUMP_INTERVAL = 5000;
     this.CELL_DIMENSIONS = 50;
@@ -25,39 +32,20 @@ function GameScreen() {
     
     this.newlyFilledPipes = [];
     
-    this.demoStack = [];
-    this.demoStack.push(Pipes.Horizontal);
-    this.demoStack.push(Pipes.Horizontal);
-    this.demoStack.push(Pipes.Vertical);
-    
-    this.demoStack.push(Pipes.Horizontal);
-    this.demoStack.push(Pipes.Horizontal);
-    this.demoStack.push(Pipes.Vertical);
-    
-    this.demoStack.push(Pipes.LeftUp);
-    this.demoStack.push(Pipes.Vertical);
-    this.demoStack.push(Pipes.Horizontal);
-    
-    this.demoStack.push(Pipes.RightUp);
-    this.demoStack.push(Pipes.RightDown);
-    this.demoStack.push(Pipes.LeftUp);
-    
-    this.demoStack.push(Pipes.RightUp);
-    this.demoStack.push(Pipes.Horizontal);
-    this.demoStack.push(Pipes.Vertical);
-    
-    this.demoStack.push(Pipes.RightDown);
-    this.demoStack.push(Pipes.Horizontal);
-    this.demoStack.push(Pipes.RightUp);
-    
     this.fillPipeSelection();
 }
 
+/**
+ * Refreshes the pipe selection area with new pipes.
+ */
 GameScreen.prototype.refreshPipeSelection = function() {
     this.pipeSelection.clear();
     this.fillPipeSelection();
 };
 
+/**
+ * Fills the pipe selection area with new pipes in open slots.
+ */
 GameScreen.prototype.fillPipeSelection = function() {
     var pipes = Pipes.values();
     
@@ -67,13 +55,17 @@ GameScreen.prototype.fillPipeSelection = function() {
     
     do {
         do {
-            pipe = this.demoStack.length > 0 ? this.demoStack.shift() : pipes[Math.floor(Math.random()*pipes.length)];
+            pipe = pipes[Math.floor(Math.random()*pipes.length)];
         } while(generatedPipes.indexOf(pipe) !== -1);
         
         generatedPipes.push(pipe);
     } while(this.pipeSelection.pushPipe(pipe.create()));
 };
 
+/**
+ * Updates game screen logic. Controls pumping.
+ * @param {Number} deltaTime The delta in milliseconds from last call to update.
+ */
 GameScreen.prototype.update = function (deltaTime) {
     this.searchForEasterEgg();
     
@@ -112,6 +104,9 @@ GameScreen.prototype.update = function (deltaTime) {
     }
 };
 
+/**
+ * Searches for the easter egg condition
+ */
 GameScreen.prototype.searchForEasterEgg = function() {
     var pipes = this.grid.getPipes();
     for(var i = 0; i < pipes.length; i++) {
@@ -135,6 +130,12 @@ GameScreen.prototype.searchForEasterEgg = function() {
     }
 };
 
+/**
+ * Draws game screen.
+ * @param {Context2D} g Graphics context object through which to draw.
+ * @param {Number} x The draw offset
+ * @param {Number} y The draw offset
+ */
 GameScreen.prototype.draw = function (g, x, y) {
     g.font = "15px Arial";
     g.fillText("Number of pipes used: " + this.pipesPlaced, 10, 35); // missing the function that counts the number of pipes used
@@ -149,6 +150,10 @@ GameScreen.prototype.draw = function (g, x, y) {
     
 };
 
+/**
+ * On mouse down event handler, passes to active screen.
+ * @param {Vector} location Location of mouse cursor during event.
+ */
 GameScreen.prototype.onMouseDown = function(location) {
     var selectionBounds = this.pipeSelection.getBounds().add(this.PIPE_SELECTION_LOCATION);
     
@@ -159,6 +164,10 @@ GameScreen.prototype.onMouseDown = function(location) {
     }
 };
 
+/**
+ * On mouse up event handler, passes to active screen.
+ * @param {Vector} location Location of mouse cursor during event.
+ */
 GameScreen.prototype.onMouseUp = function(location) {
     if(this.draggingPipe !== null) {
         var gridBounds = this.grid.getBounds().add(this.GRID_LOCATION);
@@ -181,10 +190,21 @@ GameScreen.prototype.onMouseUp = function(location) {
     this.draggingPipe = null;
 };
 
+/**
+ * On mouse move event handler, passes to active screen.
+ * @param {Vector} location Location of mouse cursor during event.
+ */
 GameScreen.prototype.onMouseMove = function(currentLocation) {
     if(this.draggingPipe !== null)
         this.draggingLocation = currentLocation;
 };
+
+/**
+ * Draws game water.
+ * @param {Context2D} g Graphics context object through which to draw.
+ * @param {Number} x The draw offset
+ * @param {Number} y The draw offset
+ */
 
 GameScreen.prototype.drawWater = function(g, x, y) {
     
@@ -194,6 +214,13 @@ GameScreen.prototype.drawWater = function(g, x, y) {
         this.drawPipeWater(g, x, y, pipes[i]);
 };
 
+/**
+ * Draws water effects for individual pipe.
+ * @param {Context2D} g Graphics context object through which to draw.
+ * @param {Number} x The draw offset
+ * @param {Number} y The draw offset
+ * @param {Pipe} pipe The pipe to draw water effects for.
+ */
 GameScreen.prototype.drawPipeWater = function(g, x, y, pipe) {
     if(!pipe.isFilled() || pipe.type === Pipes.Pump)
         return;
@@ -240,6 +267,11 @@ GameScreen.prototype.drawPipeWater = function(g, x, y, pipe) {
     g.beginPath();
 };
 
+/**
+ * Gets directions respective to pipe that the pipe is being filled through
+ * @param {Pipe} pipe
+ * @returns {Array|GameScreen.prototype.getFillDirections.fillDirections}
+ */
 GameScreen.prototype.getFillDirections = function(pipe) {
     var connections = pipe.getConnections(null);
     var fillDirections = [];
@@ -254,6 +286,11 @@ GameScreen.prototype.getFillDirections = function(pipe) {
     return fillDirections;
 };
 
+/**
+ * Gets directions in respect to pipe of where the pipe is draining to.
+ * @param {Pipe} pipe
+ * @returns {Array|GameScreen.prototype.getDrainDirections.drainDirections}
+ */
 GameScreen.prototype.getDrainDirections = function(pipe) {
     var fillDirections = this.getFillDirections(pipe);
     var allDirections = pipe.getDirections();

@@ -1,3 +1,14 @@
+/**
+ * Rectangle object.
+ */
+
+/**
+ * 
+ * @param {type} location as a vector
+ * @param {type} width width of rectangle
+ * @param {type} height heighto of rectangle.
+ * @returns {Rectangle}
+ */
 function Rectangle(location, width, height) {
     this.location = location;
     this.width = width;

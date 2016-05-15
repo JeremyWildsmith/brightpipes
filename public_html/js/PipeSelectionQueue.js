@@ -1,3 +1,7 @@
+/**
+ * Represents grid from which pipes are selected and placed on main game grid.
+ */
+
 function PipeSelectionQueue() {
     this.pipeGrid = new Grid(50, 3, 1);
 }

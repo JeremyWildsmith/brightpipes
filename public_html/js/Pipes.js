@@ -1,3 +1,8 @@
+/**
+ * A list of pipes that can be used in the game as well as methods to easily create
+ * them.
+ */
+
 var Pipes = {
     Vertical: {value: 0, create: function() {
             var dirs = [];

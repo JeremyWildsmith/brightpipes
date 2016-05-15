@@ -1,3 +1,7 @@
+/**
+ * Main game loop and event handling code.
+ */
+
 var CANVAS_WIDTH = 800;
 var CANVAS_HEIGHT = 600;
 
@@ -7,6 +11,11 @@ var cursorLocation = new Vector(0, 0);
 var canvas = null;
 var game = null;
 
+/**
+ * Translate the page x & y coordinates of the specified event to canvas space
+ * @param {type} e Even to get location from
+ * @returns {Vector} The location in canvas space.
+ */
 function getLocation(e) {
     var x = 0;
     var y = 0;
