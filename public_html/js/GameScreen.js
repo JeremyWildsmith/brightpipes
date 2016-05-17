@@ -23,9 +23,11 @@ function GameScreen() {
         
     this.drain = Pipes.Drain.create();
     this.pump = Pipes.Pump.create();
+    this.obstacleTest = Pipes.Obstacle.create();
     
     this.grid.setPipe(new Vector(1,0), this.pump);
     this.grid.setPipe(new Vector(3,3), this.drain);
+    this.grid.setPipe(new Vector(2,2), this.obstacleTest);
     
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
@@ -177,7 +179,7 @@ GameScreen.prototype.onMouseUp = function(location) {
             
             var oldPipe = this.grid.getPipe(gridCoord);
  
-            if(oldPipe !== null && oldPipe.isFilled())
+            if(oldPipe !== null && !oldPipe.canReplace())
                 this.pipeSelection.pushPipe(this.draggingPipe);
             else {
                 this.grid.setPipe(gridCoord, this.draggingPipe);
@@ -192,7 +194,7 @@ GameScreen.prototype.onMouseUp = function(location) {
 
 /**
  * On mouse move event handler, passes to active screen.
- * @param {Vector} location Location of mouse cursor during event.
+ * @param {Vector} currentLocation - location of mouse cursor during event.
  */
 GameScreen.prototype.onMouseMove = function(currentLocation) {
     if(this.draggingPipe !== null)
