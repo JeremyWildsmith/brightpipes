@@ -214,4 +214,4 @@ Grid.prototype.getPipes = function() {
     }
     
     return pipes;
-}
+};
