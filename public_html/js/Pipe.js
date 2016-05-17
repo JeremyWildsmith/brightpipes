@@ -4,6 +4,7 @@
  * @param graphic - image of the pipe
  * @param connectionDirections - directions the pipe points to
  * @param type - the type of pipe
+ * @param replaceable - determines if pipe is replaceable
  */
 function Pipe(graphic, connectionDirections, type, replaceable)
 {
@@ -216,6 +217,9 @@ Pipe.prototype.isLeaking = function() {
     return this.leaked;
 };
 
+/**
+ * Returns whether or not the pipe is replaceable or not
+ */
 Pipe.prototype.canReplace = function() {
     if (this.isFilled() || !this.replaceable) {
         return false;
