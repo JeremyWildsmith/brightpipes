@@ -5,7 +5,7 @@
  * @param connectionDirections - directions the pipe points to
  * @param type - the type of pipe
  */
-function Pipe(graphic, connectionDirections, type)
+function Pipe(graphic, connectionDirections, type, replaceable)
 {
     this.location = new Vector(0, 0);
     this.parentGrid = null;
@@ -15,6 +15,7 @@ function Pipe(graphic, connectionDirections, type)
     this.leaked = false;
     this.pump = false;
     this.type = type;
+    this.replaceable = replaceable;
 }
 
 /**
@@ -213,4 +214,12 @@ Pipe.prototype.isFilled = function() {
  */
 Pipe.prototype.isLeaking = function() {
     return this.leaked;
+};
+
+Pipe.prototype.canReplace = function() {
+    if (this.isFilled() || !this.replaceable) {
+        return false;
+    } else {
+        return true;
+    }
 };
