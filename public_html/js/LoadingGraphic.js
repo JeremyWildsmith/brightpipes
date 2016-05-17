@@ -7,13 +7,13 @@
  * @param {type} path Path of graphic to be loaded and used.
  * @returns {LoadingGraphic}
  */
-function LoadingGraphic(path) {
+function LoadingGraphic(path, originX, originY) {
     this.gfx = new NullGraphic();
     
     var outer = this;
     new GraphicFactory().createFromFile(path, function(gfx) {
         outer.gfx = gfx;
-    });
+    }, originX, originY);
 };
 
 /**

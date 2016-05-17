@@ -12,11 +12,15 @@ function GraphicFactory() {
  * @param {type} callback The callback, which is invoked when the image has loaded.
  * @returns {undefined}
  */
-GraphicFactory.prototype.createFromFile = function(path, callback) {
+GraphicFactory.prototype.createFromFile = function(path, callback, originX, originY) {
     var img = new Image();
     
     img.onload = function() {
-        callback(new Graphic(img, img.width / 2, img.height / 2, 0, 0, img.width, img.height));
+        callback(new Graphic(img, 
+            originX === undefined ? img.width / 2 : originX,
+            originY === undefined ? img.height / 2 : originY,
+            0, 0,
+            img.width, img.height));
     };
     
     img.src = path;
