@@ -80,7 +80,6 @@ Pipe.prototype.fill = function (dir, filledPipes) {
  */
 Pipe.prototype.draw = function (g, x, y) {
     this.graphic.draw(g, x, y);
-
 };
 
 /**
