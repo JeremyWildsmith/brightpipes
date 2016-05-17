@@ -18,6 +18,12 @@ function Game(width, height)
     this.screen = new GameScreen(); 
 }
 
+/*Game.prototype.setScreen() {
+    this.screen = new Setting();
+    
+    
+};*/
+
 /**
  * Draws the current game screen.
  * @param {type} g Graphics context through which to draw.
