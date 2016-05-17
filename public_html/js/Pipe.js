@@ -40,8 +40,19 @@ Pipe.prototype.detach = function() {
  * Set pipe fill state to full, or if already full, fill out pipes.
  * 
  * @param dir - direction of where the pipe is pumping from
+ * @param filledPipes - array of pipes that have been filled
  */
-Pipe.prototype.fill = function (dir) {
+Pipe.prototype.fill = function (dir, filledPipes) {
+    if (filledPipes === undefined) {
+        filledPipes = [];
+    }
+    
+    if (filledPipes.indexOf(this) >= 0) {
+        return;
+    }
+    
+    filledPipes.push(this);
+    
     if (this.filled) {
         var pipeArray = this.getConnections(dir);
 
@@ -52,10 +63,10 @@ Pipe.prototype.fill = function (dir) {
         
         for (i = 0; i < pipeArray.length; i++) {
             var delta = this.location.difference(pipeArray[i].location);
-            pipeArray[i].fill(Direction.fromVector(delta));
+            pipeArray[i].fill(Direction.fromVector(delta), filledPipes);
         }
     } else
-        this.filled = true;
+        this.filled = true; 
 };
 
 /**
