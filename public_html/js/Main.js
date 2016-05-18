@@ -17,21 +17,13 @@ var game = null;
  * @returns {Vector} The location in canvas space.
  */
 function getLocation(e) {
-    var x = 0;
-    var y = 0;
-
-    if (e.pageX || e.pageY) {
-        x = e.pageX;
-        y = e.pageY;
-    } else {
-        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    
+    if(e.offsetX && e.offsetY)
+        return new Vector(e.offsetX, e.offsetY);
+    else {
+        var canvasRect = canvas.getBoundingClientRect();
+        return new Vector(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
     }
-
-    x -= canvas.offsetLeft;
-    y -= canvas.offsetTop;
-
-    return new Vector(x, y);
 }
 
 window.onload = function () {
@@ -72,18 +64,20 @@ window.onload = function () {
         e.preventDefault();
         lastLocation = getLocation(e.touches[e.touches.length - 1]);
         game.onMouseDown(lastLocation);
-        canvas.scrollIntoView();
+        return false;
     }, false);
 
     canvas.addEventListener("touchend", function (e) {
         e.preventDefault();
         game.onMouseUp(lastLocation);
+        return false;
     }, false);
 
     canvas.addEventListener("touchmove", function (e) {
         e.preventDefault();
         lastLocation = getLocation(e.touches[e.touches.length - 1]);
         game.onMouseMove(lastLocation);
+        return false;
     }, false);
 
     canvas.onmousemove = function (e) {
