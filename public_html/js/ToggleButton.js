@@ -12,11 +12,6 @@ Button.prototype.draw = function(g, x, y) {
     }
 };
 
-Button.prototype.mouseEnter = function() {
-    //Go to hover graphic
-    this.hovering = true;
-};
-
 Button.prototype.mouseClick = function() {
     if (this.toggle) {
         this.toggle = false;
