@@ -52,39 +52,49 @@ window.onload = function () {
         setTimeout(cycle, dt);
     };
 
-    var lastLocation = new Vector();
+    var logoFade = function () {
+        var logoDiv = document.getElementById("logoDiv");
+        var opacity = parseFloat(logoDiv.style.opacity === "" ? "1.0" : logoDiv.style.opacity);
 
+        if (opacity > 0) {
+            logoDiv.style.opacity = opacity - .05;
+            setTimeout(logoFade, 100);
+        }
+    };
+
+    logoFade();
+    cycle();
+
+    $("#mainDiv").scrollintoview({duration: 3000});
+    
+    var lastLocation = new Vector();
     canvas.addEventListener("touchstart", function (e) {
         e.preventDefault();
         lastLocation = getLocation(e.touches[e.touches.length - 1]);
         game.onMouseDown(lastLocation);
-        return false;
+        canvas.scrollIntoView();
     }, false);
 
     canvas.addEventListener("touchend", function (e) {
         e.preventDefault();
         game.onMouseUp(lastLocation);
-        return false;
     }, false);
 
     canvas.addEventListener("touchmove", function (e) {
         e.preventDefault();
         lastLocation = getLocation(e.touches[e.touches.length - 1]);
         game.onMouseMove(lastLocation);
-        return false;
     }, false);
 
-    cycle();
-};
+    canvas.onmousemove = function (e) {
+        game.onMouseMove(getLocation(e));
+    };
 
-document.onmousemove = function (e) {
-    game.onMouseMove(getLocation(e));
-};
+    canvas.onmousedown = function (e) {
+        game.onMouseDown(getLocation(e));
+    };
 
-document.onmousedown = function (e) {
-    game.onMouseDown(getLocation(e));
-};
-
-document.onmouseup = function (e) {
-    game.onMouseUp(getLocation(e));
+    canvas.onmouseup = function (e) {
+        game.onMouseUp(getLocation(e));
+    };
 };
