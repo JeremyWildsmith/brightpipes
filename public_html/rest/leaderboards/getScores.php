@@ -6,11 +6,7 @@ $conn = new PDO("mysql:host=$dbHost;dbname=$dbDatabase", $dbUsername, $dbPasswor
 
 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$insertScoreStmt = $conn->prepare("INSERT INTO scores (name, score, level) VALUES (:name, :score, :level)");
-
-$insertScoreStmt->bindParam(':name', $_GET["name"]);
-$insertScoreStmt->bindParam(':score', $_GET["score"]);
-$insertScoreStmt->bindParam(':level', $_GET["level"]);
+$insertScoreStmt = $conn->prepare("select name, score from scores order by score desc ");
 
 $insertScoreStmt->execute();
 

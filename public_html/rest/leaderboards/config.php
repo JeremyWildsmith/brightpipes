@@ -1,6 +1,6 @@
 <?php
 
-$dbHost = "107.170.174.151";
+$dbHost = "127.0.0.1";
 $dbDatabase = "brightpipes";
 $dbUsername = "root";
 $dbPassword = "ja*hf851/-+.,/";
