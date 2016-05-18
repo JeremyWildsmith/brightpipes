@@ -12,10 +12,14 @@ Button.prototype.draw = function(g, x, y) {
     }
 };
 
-Button.prototype.mouseClick = function() {
+Button.prototype.mouseDown = function(location) {
     if (this.toggle) {
         this.toggle = false;
     } else {
         this.toggle = true;
     }
+};
+
+Button.protoype.getState = function() {
+    return this.toggle;
 };
