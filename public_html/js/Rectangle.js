@@ -17,9 +17,9 @@ function Rectangle(location, width, height) {
 
 Rectangle.prototype.contains = function(location) {
     return (location.x >= this.location.x && 
-            location.y > this.location.y &&
-            location.x <= this.location.x + this.width &&
-            location.y <= this.location.y + this.height);
+            location.y >= this.location.y &&
+            location.x < this.location.x + this.width &&
+            location.y < this.location.y + this.height);
 };
 
 Rectangle.prototype.add = function(location) { 
