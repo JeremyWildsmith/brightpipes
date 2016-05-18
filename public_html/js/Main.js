@@ -52,6 +52,28 @@ window.onload = function () {
         setTimeout(cycle, dt);
     };
 
+    var lastLocation = new Vector();
+
+    canvas.addEventListener("touchstart", function (e) {
+        e.preventDefault();
+        lastLocation = getLocation(e.touches[e.touches.length - 1]);
+        game.onMouseDown(lastLocation);
+        return false;
+    }, false);
+
+    canvas.addEventListener("touchend", function (e) {
+        e.preventDefault();
+        game.onMouseUp(lastLocation);
+        return false;
+    }, false);
+
+    canvas.addEventListener("touchmove", function (e) {
+        e.preventDefault();
+        lastLocation = getLocation(e.touches[e.touches.length - 1]);
+        game.onMouseMove(lastLocation);
+        return false;
+    }, false);
+
     cycle();
 };
 

@@ -9,8 +9,8 @@ function GameScreen() {
     this.PUMP_INTERVAL = 5000;
     this.CELL_DIMENSIONS = 50;
     
-    this.GRID_LOCATION = new Vector(10, 55);
-    this.PIPE_SELECTION_LOCATION = new Vector(33, 270);
+    this.GRID_LOCATION = new Vector(30, 85);
+    this.PIPE_SELECTION_LOCATION = new Vector(53, 300);
     
     this.playing = true;
 
@@ -35,6 +35,9 @@ function GameScreen() {
     this.newlyFilledPipes = [];
     
     this.fillPipeSelection();
+    
+    this.overlayGraphic = new LoadingGraphic("gfx/overlay.png", 5, -2);
+    this.backgroundGraphic = new LoadingGraphic("gfx/playBackground.png", 0, 0);
 }
 
 /**
@@ -139,11 +142,15 @@ GameScreen.prototype.searchForEasterEgg = function() {
  * @param {Number} y The draw offset
  */
 GameScreen.prototype.draw = function (g, x, y) {
+    this.backgroundGraphic.draw(g, x, y);
     g.font = "15px Arial";
     g.fillText("Number of pipes used: " + this.pipesPlaced, 10, 35); // missing the function that counts the number of pipes used
 
     this.grid.draw(g, this.GRID_LOCATION.x, this.GRID_LOCATION.y);
-    this.pipeSelection.draw(g, 33, 270);
+    
+    //this.overlayGraphic.draw(g, x, y);
+    
+    this.pipeSelection.draw(g, this.PIPE_SELECTION_LOCATION.x, this.PIPE_SELECTION_LOCATION.y);
     
     this.drawWater(g, x, y);
     
