@@ -23,9 +23,17 @@ function GameScreen() {
         
     this.drain = Pipes.Drain.create();
     this.pump = Pipes.Pump.create();
+    var pumpVector = new Vector();
+    var drainVector = new Vector();
+    pumpVector.randomStart();
+    drainVector.randomStart();
     
-    this.grid.setPipe(new Vector(1,0), this.pump);
-    this.grid.setPipe(new Vector(3,3), this.drain);
+    while (pumpVector === drainVector) {
+        var drainVector = Vector.randomStart();
+    }
+    
+    this.grid.setPipe(pumpVector, this.pump);
+    this.grid.setPipe(drainVector, this.drain);
     this.grid.setPipe(new Vector(1,2), Pipes.Obstacle.create());
     this.grid.setPipe(new Vector(2,2), Pipes.Obstacle.create());
     this.grid.setPipe(new Vector(3,2), Pipes.Obstacle.create());
