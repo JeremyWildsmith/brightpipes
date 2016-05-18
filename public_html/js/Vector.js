@@ -30,3 +30,10 @@ Vector.prototype.inverse = function(v) {
 Vector.prototype.getLength = function() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
 };
+
+Vector.prototype.randomStart = function() {
+    var startValues = [[0,0],[0,1],[0,2],[0,3],[1,0],[2,0],[3,0],[3,1],[3,2],[3,3],[1,3],[2,3]];
+    var randNum = Math.floor(Math.random() * 11);
+    this.x = startValues[randNum][0];
+    this.y = startValues[randNum][1];
+};
