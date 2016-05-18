@@ -52,12 +52,14 @@ window.onload = function () {
             logoDiv.style.opacity = opacity - .05;
             setTimeout(logoFade, 100);
         }
+        
+        if(opacity === 0.7)
+            $("#mainDiv").scrollintoview({duration: 3000});
     };
 
-    logoFade();
+    setTimeout(function() {logoFade();}, 1000);
+    
     cycle();
-
-    $("#mainDiv").scrollintoview({duration: 3000});
     
     var lastLocation = new Vector();
     canvas.addEventListener("touchstart", function (e) {
