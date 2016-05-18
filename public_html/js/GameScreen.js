@@ -23,11 +23,12 @@ function GameScreen() {
         
     this.drain = Pipes.Drain.create();
     this.pump = Pipes.Pump.create();
-    this.obstacleTest = Pipes.Obstacle.create();
     
     this.grid.setPipe(new Vector(1,0), this.pump);
     this.grid.setPipe(new Vector(3,3), this.drain);
-    this.grid.setPipe(new Vector(2,2), this.obstacleTest);
+    this.grid.setPipe(new Vector(1,2), Pipes.Obstacle.create());
+    this.grid.setPipe(new Vector(2,2), Pipes.Obstacle.create());
+    this.grid.setPipe(new Vector(3,2), Pipes.Obstacle.create());
     
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
@@ -59,12 +60,20 @@ GameScreen.prototype.fillPipeSelection = function() {
     var pipe = null;
     
     do {
-        do {
-            pipe = pipes[Math.floor(Math.random()*pipes.length)];
-        } while(generatedPipes.indexOf(pipe) !== -1);
-        
-        generatedPipes.push(pipe);
+        pipe = this.getUsefulPipe();
+        if(pipe === null)
+            break;
     } while(this.pipeSelection.pushPipe(pipe.create()));
+};
+
+GameScreen.prototype.getUsefulPipe = function() {
+    var pathFinder = new AStarPathFinder(this.grid);
+    
+    var start = this.newlyFilledPipes.length === 0 ? this.pump.getLocation() : this.newlyFilledPipes[0].getLocation();
+    
+    var pipes = pathFinder.findPath(start, this.drain.getLocation()).getPipes();
+    
+    return pipes[0];
 };
 
 /**
