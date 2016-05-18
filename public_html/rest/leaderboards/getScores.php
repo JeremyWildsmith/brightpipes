@@ -11,5 +11,5 @@ $insertScoreStmt = $conn->prepare("select name, score from scores order by score
 $insertScoreStmt->execute();
 
 while($row = $insertScoreStmt->fetch(PDO::FETCH_ASSOC)) {
-    echo $row["name"];
+    echo $row["name"] . "<br>";
 }
