@@ -26,3 +26,7 @@ Vector.prototype.equals = function(v) {
 Vector.prototype.inverse = function(v) {
     return new Vector(-this.x, -this.y);
 };
+
+Vector.prototype.getLength = function() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+};
