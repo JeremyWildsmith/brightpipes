@@ -154,6 +154,10 @@ Grid.prototype.getBounds = function() {
     return new Rectangle(new Vector(0,0), this.gridWidth * this.cellDimensions, this.gridHeight * this.cellDimensions);
 };
 
+Grid.prototype.getCellBounds = function() {
+    return new Rectangle(new Vector(0,0), this.gridWidth, this.gridHeight);
+};
+
 /**
  * Gets a list of all filled pipes in the grid.
  * @returns {Array|Grid.prototype.getFilledPipes.filledPipes} Filled pipes in the grid.
