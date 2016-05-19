@@ -171,7 +171,7 @@ GameScreen.prototype.draw = function (g, x, y) {
     this.grassTiles.draw(g, x, y);
     
     g.font = "15px Arial";
-    g.fillText("Number of pipes used: " + this.pipesPlaced, 10, 35); // missing the function that counts the number of pipes used
+    g.fillText("Number of pipes used: " + this.pipesPlaced, this.GRID_LOCATION.x, 35); // missing the function that counts the number of pipes used
 
     this.grid.draw(g, this.GRID_LOCATION.x + x, this.GRID_LOCATION.y + y);
     this.pipeSelection.draw(g, this.PIPE_SELECTION_LOCATION.x + x, this.PIPE_SELECTION_LOCATION.y + y);
