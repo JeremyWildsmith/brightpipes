@@ -27,3 +27,23 @@ body {
     top: 50%;
     transform: translateY(-50%);
 }
+
+.tree0 {
+    width: 115px;;
+    height: 167px;
+    background-image: url("gfx/tree0.png");
+    background-repeat: none;
+    position: absolute;
+    z-index: 10;
+    display: block;
+}
+
+.tree1 {
+    width: 117px;;
+    height: 166px;
+    background-image: url("gfx/tree1.png");
+    background-repeat: none;
+    position: absolute;
+    z-index: 10;
+    display: block;
+}

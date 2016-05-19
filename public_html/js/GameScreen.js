@@ -9,7 +9,7 @@ function GameScreen(width, height) {
     this.PUMP_INTERVAL = 5000;
     this.CELL_DIMENSIONS = 50;
     
-    this.GRID_LOCATION = new Vector(30, 85);
+    this.GRID_LOCATION = new Vector(30, 35);
     this.PIPE_SELECTION_LOCATION = new Vector(53, 300);
     
     this.playing = true;
@@ -20,8 +20,8 @@ function GameScreen(width, height) {
 
     this.pipeSelection = new PipeSelectionQueue();
     this.grid = new Grid(this.CELL_DIMENSIONS, 
-                Math.min(10, Math.floor((width - 100) / this.CELL_DIMENSIONS)), 
-                Math.min(10, Math.floor((height - 350) / this.CELL_DIMENSIONS)));
+                Math.min(10, Math.floor((width) / this.CELL_DIMENSIONS)), 
+                Math.min(10, Math.floor((height - 300) / this.CELL_DIMENSIONS)));
         
     this.drain = Pipes.Drain.create();
     this.pump = Pipes.Pump.create();
@@ -171,7 +171,7 @@ GameScreen.prototype.draw = function (g, x, y) {
     this.grassTiles.draw(g, x, y);
     
     g.font = "15px Arial";
-    g.fillText("Number of pipes used: " + this.pipesPlaced, this.GRID_LOCATION.x, 35); // missing the function that counts the number of pipes used
+    g.fillText("Number of pipes used: " + this.pipesPlaced, this.GRID_LOCATION.x, 23); // missing the function that counts the number of pipes used
 
     this.grid.draw(g, this.GRID_LOCATION.x + x, this.GRID_LOCATION.y + y);
     this.pipeSelection.draw(g, this.PIPE_SELECTION_LOCATION.x + x, this.PIPE_SELECTION_LOCATION.y + y);
