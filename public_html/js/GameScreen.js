@@ -270,7 +270,7 @@ GameScreen.prototype.drawPipeWater = function(g, x, y, pipe) {
     var drainDirections = this.getDrainDirections(pipe);
 
     g.lineWidth = 8;
-    g.strokeStyle = "#60AFFF";
+    g.strokeStyle = "#003399";
 
     for(var i = 0; i < fillDirections.length; i++) {
         var start = pipeCentreLocation.add(fillDirections[i].delta.scale(this.grid.getCellDimensions() / 2));
