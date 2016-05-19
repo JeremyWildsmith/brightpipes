@@ -1,4 +1,4 @@
-function MenuScreen(width, height, screenController) {
+function SettingsScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
     this.TOGGLE_SFX_LOCATION = new Vecotr(0, 35);
     this.TOGGLE_FX_LOCATION = new Vector(0, 50);
@@ -16,11 +16,11 @@ function MenuScreen(width, height, screenController) {
     this.height = height;
 }
 
-MenuScreen.prototype.update = function (deltaTime) {
+SettingsScreen.prototype.update = function (deltaTime) {
 
 };
 
-MenuScreen.prototype.correctLayout = function() {
+SettingsScreen.prototype.correctLayout = function() {
     this.TOGGLE_SFX_LOCATION.x = (this.width - this.toggleSfx.getBounds().width) / 2;
     this.TOGGLE_FX_LOCATION.x = (this.width - this.toggleFx.getBounds().widht) / 2;
     this.BACK_LOCATION.x = (this.width - this.mainMenu.getBounds().widht) / 2;
@@ -32,7 +32,7 @@ MenuScreen.prototype.correctLayout = function() {
  * @param {Number} x The draw offset
  * @param {Number} y The draw offset
  */
-MenuScreen.prototype.draw = function (g, x, y) {
+SettingsScreen.prototype.draw = function (g, x, y) {
     this.dirtTiles.draw(g, x, y);
     this.grassTiles.draw(g, x, y);
     
@@ -46,7 +46,7 @@ MenuScreen.prototype.draw = function (g, x, y) {
  * On mouse down event handler, passes to active screen.
  * @param {Vector} location Location of mouse cursor during event.
  */
-MenuScreen.prototype.onMouseDown = function(location) {
+SettingsScreen.prototype.onMouseDown = function(location) {
     this.onMouseMove(location);
     
     if(this.lastActiveControl !== null)
@@ -57,12 +57,12 @@ MenuScreen.prototype.onMouseDown = function(location) {
  * On mouse up event handler, passes to active screen.
  * @param {Vector} location Location of mouse cursor during event.
  */
-MenuScreen.prototype.onMouseUp = function(location) {
+SettingsScreen.prototype.onMouseUp = function(location) {
     if(this.lastActiveControl !== null)
         this.lastActiveControl.onMouseUp(location);
 };
 
-MenuScreen.prototype.onMouseMove = function(location) {
+SettingsScreen.prototype.onMouseMove = function(location) {
     var selectedControl = null;
     
     if(this.toggleSfx.getBounds().add(this.TOGGLE_SFX_LOCATION).contains(location))
