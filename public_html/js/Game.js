@@ -15,14 +15,12 @@ function Game(width, height)
 {
     this.width = width;
     this.height = height;
-    this.screen = new GameScreen(width, height); 
+    this.screen = new MenuScreen(width, height, this); 
 }
 
-/*Game.prototype.setScreen() {
-    this.screen = new Setting();
-    
-    
-};*/
+Game.prototype.setScreen = function(screen) {
+    this.screen = screen;
+};
 
 /**
  * Draws the current game screen.
