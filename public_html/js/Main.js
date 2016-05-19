@@ -26,21 +26,6 @@ function getLocation(e) {
     }
 }
 
-function populateTrees() {
-
-    for (var x = 0; x < canvas.width; x += 70) {
-        if (Math.random() > 0.4)
-            continue;
-
-        var t = document.createElement('div');
-        
-        t.className = Math.random() > 0.49 ? "tree0" : "tree1";
-        document.body.appendChild(t);
-        t.style.left = x + "px";
-        t.style.top = (canvas.getBoundingClientRect().top - 160) + "px";
-    }
-}
-
 window.onload = function () {
     var dt = 33;
     canvas = document.getElementById("mainCanvas");
@@ -110,7 +95,5 @@ window.onload = function () {
     canvas.onmouseup = function (e) {
         game.onMouseUp(getLocation(e));
     };
-
-    populateTrees();
 };
 
