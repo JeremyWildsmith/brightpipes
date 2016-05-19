@@ -29,8 +29,9 @@ function getLocation(e) {
 window.onload = function () {
     var dt = 33;
     canvas = document.getElementById("mainCanvas");
+    canvas.width = window.innerWidth;
     var g = canvas.getContext("2d");
-    game = new Game(CANVAS_WIDTH, CANVAS_HEIGHT);
+    game = new Game(canvas.width, canvas.height);
 
     var last = Date.now();
 
@@ -47,7 +48,6 @@ window.onload = function () {
     var logoFade = function () {
         var logoDiv = document.getElementById("logoImg");
         var opacity = parseFloat(logoDiv.style.opacity === "" ? "1.0" : logoDiv.style.opacity);
-        document.getElementById("mainCanvas").style.opacity = 1.0 - opacity;
         if (opacity > 0) {
             logoDiv.style.opacity = opacity - .05;
             setTimeout(logoFade, 100);

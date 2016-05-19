@@ -5,7 +5,7 @@
 /**
  * @returns {GameScreen} A new GameScreen object.
  */
-function GameScreen() {
+function GameScreen(width, height) {
     this.PUMP_INTERVAL = 5000;
     this.CELL_DIMENSIONS = 50;
     
@@ -23,17 +23,17 @@ function GameScreen() {
         
     this.drain = Pipes.Drain.create();
     this.pump = Pipes.Pump.create();
-    var pumpVector = new Vector();
-    var drainVector = new Vector();
-    pumpVector.randomStart();
-    drainVector.randomStart();
+    //var pumpVector = new Vector();
+    //var drainVector = new Vector();
+    //pumpVector.randomStart();
+    //drainVector.randomStart();
     
-    while (pumpVector === drainVector) {
-        var drainVector = Vector.randomStart();
-    }
+    //while (pumpVector === drainVector) {
+    //    var drainVector = Vector.randomStart();
+    //}
     
-    this.grid.setPipe(pumpVector, this.pump);
-    this.grid.setPipe(drainVector, this.drain);
+    this.grid.setPipe(new Vector(0, 0), this.pump);
+    this.grid.setPipe(new Vector(2, 0), this.drain);
     this.grid.setPipe(new Vector(1,2), Pipes.Obstacle.create());
     this.grid.setPipe(new Vector(2,2), Pipes.Obstacle.create());
     this.grid.setPipe(new Vector(3,2), Pipes.Obstacle.create());
@@ -45,8 +45,8 @@ function GameScreen() {
     
     this.fillPipeSelection();
     
-    this.overlayGraphic = new LoadingGraphic("gfx/overlay.png", 5, -2);
-    this.backgroundGraphic = new LoadingGraphic("gfx/playBackground.png", 0, 0);
+    this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
+    this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
 }
 
 /**
@@ -159,14 +159,13 @@ GameScreen.prototype.searchForEasterEgg = function() {
  * @param {Number} y The draw offset
  */
 GameScreen.prototype.draw = function (g, x, y) {
-    this.backgroundGraphic.draw(g, x, y);
+    this.dirtTiles.draw(g, x, y);
+    this.grassTiles.draw(g, x, y);
+    
     g.font = "15px Arial";
     g.fillText("Number of pipes used: " + this.pipesPlaced, 10, 35); // missing the function that counts the number of pipes used
 
     this.grid.draw(g, this.GRID_LOCATION.x, this.GRID_LOCATION.y);
-    
-    //this.overlayGraphic.draw(g, x, y);
-    
     this.pipeSelection.draw(g, this.PIPE_SELECTION_LOCATION.x, this.PIPE_SELECTION_LOCATION.y);
     
     this.drawWater(g, x, y);

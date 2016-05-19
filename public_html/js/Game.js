@@ -15,7 +15,7 @@ function Game(width, height)
 {
     this.width = width;
     this.height = height;
-    this.screen = new GameScreen(); 
+    this.screen = new GameScreen(width, height); 
 }
 
 /*Game.prototype.setScreen() {

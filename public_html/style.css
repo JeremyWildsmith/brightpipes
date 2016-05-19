@@ -1,24 +1,24 @@
 body {
     background: black;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
-.screen {
-    height: 100vh;
-}
-
-.screen img {
+#logoDiv img {
     top: 50%;
     transform: translateY(25%);
+    transform: translateX(-25%);
 }
 
-
 #logoDiv {
-    background: linear-gradient(rgb(96, 175, 255), rgb(132,190,251));
+    background: linear-gradient(rgb(26, 105, 185), rgb(132,190,251));
+    height: 100vh;
 }
 
 #mainDiv {
     background-color: rgb(132,190,251);
+    height: 50vh;
 }
 
 #mainCanvas {
