@@ -45,9 +45,9 @@ window.onload = function () {
     };
 
     var logoFade = function () {
-        var logoDiv = document.getElementById("logoDiv");
+        var logoDiv = document.getElementById("logoImg");
         var opacity = parseFloat(logoDiv.style.opacity === "" ? "1.0" : logoDiv.style.opacity);
-        document.getElementById("mainDiv").style.opacity = 1.0 - opacity;
+        document.getElementById("mainCanvas").style.opacity = 1.0 - opacity;
         if (opacity > 0) {
             logoDiv.style.opacity = opacity - .05;
             setTimeout(logoFade, 100);
