@@ -132,7 +132,7 @@ Grid.prototype.draw = function(g, x, y) {
     }
     
     for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
-        for(var yLoc = 0; yLoc < this.gridWidth; yLoc++) {
+        for(var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
             if(this.pipes[xLoc][yLoc] === null)
                 continue;
             
@@ -180,7 +180,7 @@ Grid.prototype.pump = function() {
     var pipesFilledBeforePump = this.getFilledPipes();
     
     for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
-        for(var yLoc = 0; yLoc < this.gridWidth; yLoc++) {
+        for(var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
             var pipe = this.pipes[xLoc][yLoc];
             
             if(pipe !== null && pipe.isPump())
