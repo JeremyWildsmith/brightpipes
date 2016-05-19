@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(96, 175, 255);
+    background: black;
     overflow: hidden;
 }
 
@@ -12,8 +12,16 @@ body {
     transform: translateY(25%);
 }
 
+
+#logoDiv {
+    background: linear-gradient(rgb(96, 175, 255), rgb(132,190,251));
+}
+
+#mainDiv {
+    background-color: rgb(132,190,251);
+}
+
 #mainCanvas {
-    border: solid rgba(0,0,0,5) 1px;
     position: relative;
     top: 50%;
     transform: translateY(-50%);
