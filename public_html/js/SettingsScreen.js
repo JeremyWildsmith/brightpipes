@@ -7,8 +7,8 @@ function MenuScreen(width, height, screenController) {
     this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
     this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
 
-    this.toggleSfx = new Button("SFX On", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
-    this.toggleFx = new Button("FX On", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
+    this.toggleSfx = new Button("SFX On", function() {});
+    this.toggleFx = new Button("FX On", function() {});
     this.mainMenu = new Button("Main Menu", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
     this.lastActiveControl = null;
     
