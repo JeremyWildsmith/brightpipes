@@ -8,9 +8,18 @@ function MenuScreen(width, height, screenController) {
     this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
     this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
 
-    this.startButton = new Button("Start", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
-    this.leaderboardsButton = new Button("Leaderboard", function() {});
-    this.settingsButton = new Button("Settings", function() {});
+    this.startButton = new Button("Start", function() {
+        screenController.setScreen(new GameScreen(width, height, screenController));
+    });
+    
+    this.leaderboardsButton = new Button("Leaderboard", function() {
+        
+    });
+    
+    this.settingsButton = new Button("Settings", function() {
+        screenController.setScreen(new SettingsScreen(width, height, screenController));
+    });
+
     this.lastActiveControl = null;
     
     this.width = width;
