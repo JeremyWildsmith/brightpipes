@@ -18,11 +18,16 @@ function GameScreen(width, height) {
 
     this.elapsedSinceLastPump = this.PUMP_INTERVAL;
 
-    this.grid = new Grid(this.CELL_DIMENSIONS, 4, 4);
+    this.grid = new Grid(this.CELL_DIMENSIONS, Math.floor((width - 100) / this.CELL_DIMENSIONS), Math.floor((height - 250) / this.CELL_DIMENSIONS));
     this.pipeSelection = new PipeSelectionQueue();
         
     this.drain = Pipes.Drain.create();
     this.pump = Pipes.Pump.create();
+    
+    this.GRID_LOCATION.x = (width - this.grid.getBounds().width) / 2;
+    this.PIPE_SELECTION_LOCATION.x = (width - this.pipeSelection.getBounds().width) / 2;
+    this.PIPE_SELECTION_LOCATION.y = this.GRID_LOCATION.y + this.grid.getBounds().height + 20;
+    
     //var pumpVector = new Vector();
     //var drainVector = new Vector();
     //pumpVector.randomStart();
@@ -33,7 +38,7 @@ function GameScreen(width, height) {
     //}
     
     this.grid.setPipe(new Vector(0, 0), this.pump);
-    this.grid.setPipe(new Vector(2, 0), this.drain);
+    this.grid.setPipe(new Vector(2, 4), this.drain);
     this.grid.setPipe(new Vector(1,2), Pipes.Obstacle.create());
     this.grid.setPipe(new Vector(2,2), Pipes.Obstacle.create());
     this.grid.setPipe(new Vector(3,2), Pipes.Obstacle.create());

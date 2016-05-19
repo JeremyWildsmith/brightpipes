@@ -3,22 +3,23 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
+    height: 100vh;
 }
 
 #logoDiv img {
-    top: 50%;
-    transform: translateY(25%);
-    transform: translateX(-25%);
+    width: 80%;
+    max-width: 399px;
 }
 
 #logoDiv {
     background: linear-gradient(rgb(26, 105, 185), rgb(132,190,251));
-    height: 100vh;
+    height: 200vh;
+    display: block;
 }
 
 #mainDiv {
     background-color: rgb(132,190,251);
-    height: 50vh;
+    height: 40vh;
 }
 
 #mainCanvas {
