@@ -11,7 +11,13 @@
 					});
 
 					request.done(function(msg) {
-						$("#content").html(msg);			
+						var object = JSON.parse(msg);
+						var index;
+						
+						for (index = 0; index < object.scores.length; ++index){
+							alert(object.scores[index].name);
+							alert(object.scores[index].score);
+						}								
 					});
 
 					request.fail(function(jqXHR, textStatus) {
