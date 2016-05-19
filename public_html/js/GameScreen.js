@@ -5,7 +5,7 @@
 /**
  * @returns {GameScreen} A new GameScreen object.
  */
-function GameScreen(width, height) {
+function GameScreen(width, height, screenController) {
     this.PUMP_INTERVAL = 5000;
     this.CELL_DIMENSIONS = 50;
     
@@ -54,6 +54,10 @@ function GameScreen(width, height) {
     
     this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
     this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
+    
+    this.screenController = screenController;
+    this.width = width;
+    this.height = height;
 }
 
 /**
@@ -106,9 +110,8 @@ GameScreen.prototype.update = function (deltaTime) {
     {
         if(pipes[i].isLeaking() && pipes[i] !== this.drain && pipes[i] !== this.drain)
         {
-            alert("Your pipes are leaking. You lost this level!");
             this.playing = false;
-            return;
+            this.screenController.setScreen(new GameOverScreen(this.width, this.height, this.screenController));
         }
     }
     
