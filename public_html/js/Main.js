@@ -28,7 +28,7 @@ function getLocation(e) {
 
 function populateTrees() {
 
-    for (var x = 50; x < canvas.width-50; x += 70) {
+    for (var x = 0; x < canvas.width; x += 70) {
         if (Math.random() > 0.4)
             continue;
 
