@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+		<script>							
+				function call() {
+					var request = $.ajax({
+						url: "getScores.php",
+						type: "GET",			
+						dataType: "html"
+					});
+
+					request.done(function(msg) {
+						$("#content").html(msg);			
+					});
+
+					request.fail(function(jqXHR, textStatus) {
+						alert("Request failed: " + textStatus);
+					});
+				}
+			
+		</script>
+	</head>
+	<body>
+		<script>call();</script>
+		<div id="content">
+		</div>
+	</body>
+</html>
