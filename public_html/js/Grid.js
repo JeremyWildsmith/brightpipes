@@ -15,15 +15,12 @@ function Grid(cellDimensions, gridWidth, gridHeight) {
     this.cellDimensions = cellDimensions;
     
     this.pipes = [];
-    this.obstacles = [];
     
     for(var x = 0; x < this.gridWidth; x++) {
         this.pipes[x] = [];
-        this.obstacles[x] = [];
         
-        for(var y = 0; y < this.gridWidth; y++) {
+        for(var y = 0; y < this.gridHeight; y++) {
             this.pipes[x][y] = null;
-            this.obstacles[x][y] = null;
         }
     }
 }
