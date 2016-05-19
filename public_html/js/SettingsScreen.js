@@ -9,7 +9,7 @@ function SettingsScreen(width, height, screenController) {
 
     this.toggleSfx = new Button("SFX On", function() {});
     this.toggleFx = new Button("FX On", function() {});
-    this.mainMenu = new Button("Main Menu", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
+    this.mainMenu = new Button("Main Menu", function() {screenController.setScreen(new MainMenu(width, height, screenController));});
     this.lastActiveControl = null;
     
     this.width = width;
