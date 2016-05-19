@@ -9,7 +9,7 @@ function Button(label, callback) {
 }
 
 Button.prototype.draw = function(g, x, y) {
-    g.font = "20px Showcard Gothic";
+    g.font = "20px Trade Winds";
     
     var drawGraphic = this.hovering ? this.hoverGraphic : this.defaultGraphic;
     var textColor = this.hovering ? this.hoverColor : this.defaultColor;
