@@ -20,8 +20,7 @@ function GameScreen(width, height) {
 
     this.pipeSelection = new PipeSelectionQueue();
     this.grid = new Grid(this.CELL_DIMENSIONS, 
-                Math.min(10, Math.floor((width) / this.CELL_DIMENSIONS)), 
-                Math.min(10, Math.floor((height - 300) / this.CELL_DIMENSIONS)));
+                6, 7);
         
     this.drain = Pipes.Drain.create();
     this.pump = Pipes.Pump.create();
