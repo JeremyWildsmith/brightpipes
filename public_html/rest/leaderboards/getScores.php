@@ -11,5 +11,10 @@ $insertScoreStmt = $conn->prepare("select name, score from scores order by score
 $insertScoreStmt->execute();
 
 while($row = $insertScoreStmt->fetch(PDO::FETCH_ASSOC)) {
-    echo $row["name"] . "<br>,";
+    echo '{scores: [ {name: "' . $row["name"] . '"} ]'
+    . '}';
+    echo '{scores: [ {score: "' . $row["score"] . '"} ]'
+    . '}';
+    echo '{scores: [ {level: "' . $row["level"] . '"} ]'
+    . '}';
 }
