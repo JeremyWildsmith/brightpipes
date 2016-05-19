@@ -1,8 +1,8 @@
 function SettingsScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
     this.TOGGLE_SFX_LOCATION = new Vector(0, 35);
-    this.TOGGLE_FX_LOCATION = new Vector(0, 50);
-    this.BACK_LOCATION = new Vector(0,85);
+    this.TOGGLE_FX_LOCATION = new Vector(0, 85);
+    this.BACK_LOCATION = new Vector(0,135);
     
     this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
     this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
