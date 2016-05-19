@@ -1,6 +1,6 @@
 function SettingsScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
-    this.TOGGLE_SFX_LOCATION = new Vecotr(0, 35);
+    this.TOGGLE_SFX_LOCATION = new Vector(0, 35);
     this.TOGGLE_FX_LOCATION = new Vector(0, 50);
     this.BACK_LOCATION = new Vector(0,85);
     
@@ -22,8 +22,8 @@ SettingsScreen.prototype.update = function (deltaTime) {
 
 SettingsScreen.prototype.correctLayout = function() {
     this.TOGGLE_SFX_LOCATION.x = (this.width - this.toggleSfx.getBounds().width) / 2;
-    this.TOGGLE_FX_LOCATION.x = (this.width - this.toggleFx.getBounds().widht) / 2;
-    this.BACK_LOCATION.x = (this.width - this.mainMenu.getBounds().widht) / 2;
+    this.TOGGLE_FX_LOCATION.x = (this.width - this.toggleFx.getBounds().width) / 2;
+    this.BACK_LOCATION.x = (this.width - this.mainMenu.getBounds().width) / 2;
 };
 
 /**

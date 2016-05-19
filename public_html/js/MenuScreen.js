@@ -12,7 +12,10 @@ function MenuScreen(width, height, screenController) {
     this.startButton = new Button("Start", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
     this.leaderboardsButton = new Button("Leaderboard", function() {});
     this.tutorialButton = new Button("Tutorial", function() {screenController.setScreen(new TutorialScreen(width, height, screenController))});
-    this.settingsButton = new Button("Settings", function() {});
+    this.settingsButton = new Button("Settings", function() {
+        screenController.setScreen(new SettingsScreen(width, height, screenController));
+    });
+    
     this.lastActiveControl = null;
     
     this.width = width;
