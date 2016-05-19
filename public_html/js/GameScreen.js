@@ -18,13 +18,16 @@ function GameScreen(width, height) {
 
     this.elapsedSinceLastPump = this.PUMP_INTERVAL;
 
-    this.grid = new Grid(this.CELL_DIMENSIONS, Math.floor((width - 100) / this.CELL_DIMENSIONS), Math.floor((height - 250) / this.CELL_DIMENSIONS));
     this.pipeSelection = new PipeSelectionQueue();
+    this.grid = new Grid(this.CELL_DIMENSIONS, 
+                Math.min(10, Math.floor((width - 100) / this.CELL_DIMENSIONS)), 
+                Math.min(10, Math.floor((height - 350) / this.CELL_DIMENSIONS)));
         
     this.drain = Pipes.Drain.create();
     this.pump = Pipes.Pump.create();
     
     this.GRID_LOCATION.x = (width - this.grid.getBounds().width) / 2;
+    
     this.PIPE_SELECTION_LOCATION.x = (width - this.pipeSelection.getBounds().width) / 2;
     this.PIPE_SELECTION_LOCATION.y = this.GRID_LOCATION.y + this.grid.getBounds().height + 20;
     
@@ -38,7 +41,7 @@ function GameScreen(width, height) {
     //}
     
     this.grid.setPipe(new Vector(0, 0), this.pump);
-    this.grid.setPipe(new Vector(2, 4), this.drain);
+    this.grid.setPipe(new Vector(2, 1), this.drain);
     this.grid.setPipe(new Vector(1,2), Pipes.Obstacle.create());
     this.grid.setPipe(new Vector(2,2), Pipes.Obstacle.create());
     this.grid.setPipe(new Vector(3,2), Pipes.Obstacle.create());
@@ -170,8 +173,8 @@ GameScreen.prototype.draw = function (g, x, y) {
     g.font = "15px Arial";
     g.fillText("Number of pipes used: " + this.pipesPlaced, 10, 35); // missing the function that counts the number of pipes used
 
-    this.grid.draw(g, this.GRID_LOCATION.x, this.GRID_LOCATION.y);
-    this.pipeSelection.draw(g, this.PIPE_SELECTION_LOCATION.x, this.PIPE_SELECTION_LOCATION.y);
+    this.grid.draw(g, this.GRID_LOCATION.x + x, this.GRID_LOCATION.y + y);
+    this.pipeSelection.draw(g, this.PIPE_SELECTION_LOCATION.x + x, this.PIPE_SELECTION_LOCATION.y + y);
     
     this.drawWater(g, x, y);
     
