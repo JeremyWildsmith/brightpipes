@@ -36,3 +36,7 @@ Graphic.prototype.draw = function(g, x, y) {
                 x - this.originX, y - this.originY,
                 this.width, this.height);
 };
+
+Graphic.prototype.getBounds = function() {
+    return new Rectangle(-this.originX, -this.originY, this.width, this.height);
+};

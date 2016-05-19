@@ -26,3 +26,7 @@ function LoadingGraphic(path, originX, originY) {
 LoadingGraphic.prototype.draw = function(g, x, y) {
     this.gfx.draw(g, x, y);
 };
+
+LoadingGraphic.prototype.getBounds = function() {
+    return this.gfx.getBounds();
+};

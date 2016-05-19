@@ -7,3 +7,7 @@
 function NullGraphic() {}
 
 NullGraphic.prototype.draw = function(g, x, y) { };
+
+NullGraphic.prototype.getBounds = function() {
+    return new Rectangle(0, 0, 0, 0);
+};
