@@ -8,7 +8,7 @@ function SubmitScoreScreen(width, height, screenController, score) {
         var request = $.ajax({
             url: "rest/leaderboards/insertScore.php",
             type: "GET",
-            data: {name: outer.name, score: score, level: 0}
+            data: {name: outer.name, score: score, level: 0, rand: Math.random()}
         });
         
         outer.submitButton.label = "Submitting...";
