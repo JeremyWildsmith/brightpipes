@@ -16,6 +16,9 @@ function Game(width, height)
     this.width = width;
     this.height = height;
     this.screen = new MenuScreen(width, height, this); 
+    
+    this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
+    this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
 }
 
 Game.prototype.setScreen = function(screen) {
@@ -31,7 +34,9 @@ Game.prototype.setScreen = function(screen) {
 Game.prototype.draw = function(g, x, y) {
     
     g.clearRect(0, 0, this.width, this.height);
-    
+    this.dirtTiles.draw(g, x, y);
+    this.grassTiles.draw(g, x, y);
+
     this.screen.draw(g, x, y);
 };
 

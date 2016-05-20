@@ -6,9 +6,6 @@ function MenuScreen(width, height, screenController) {
     this.TUTORIAL_BUTTON_LOCATION = new Vector(0, 135);
     this.SETTINGS_BUTTON_LOCATION = new Vector(0, 185);
     
-    this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
-    this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
-
     this.startButton = new Button("Start", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
     this.leaderboardsButton = new Button("Leaderboard", function() {});
     this.tutorialButton = new Button("Tutorial", function() {screenController.setScreen(new TutorialScreen(width, height, screenController))});
@@ -40,9 +37,6 @@ MenuScreen.prototype.correctLayout = function() {
  * @param {Number} y The draw offset
  */
 MenuScreen.prototype.draw = function (g, x, y) {
-    this.dirtTiles.draw(g, x, y);
-    this.grassTiles.draw(g, x, y);
-    
     this.correctLayout();
     this.startButton.draw(g, x + this.START_BUTTON_LOCATION.x, y + this.START_BUTTON_LOCATION.y);
     this.leaderboardsButton.draw(g, x + this.LEADERBOARDS_BUTTON_LOCATION.x, y + this.LEADERBOARDS_BUTTON_LOCATION.y);

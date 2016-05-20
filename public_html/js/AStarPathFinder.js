@@ -9,6 +9,9 @@ AStarPathFinder.prototype.findPath = function (start, end) {
 
     var startNode = new AStarNode(null, start);
 
+    if(!this.isWalkable(startNode, end))
+        return null;
+
     open.push(startNode);
 
     for (var i = 0; i < this.MAX_ITERATIONS; i++)
@@ -31,7 +34,6 @@ AStarPathFinder.prototype.findPath = function (start, end) {
 
         closed.push(smallestScore);
         open.splice(open.indexOf(smallestScore), 1);
-        //open.remove(smallestScore);
     }
 
     return null;

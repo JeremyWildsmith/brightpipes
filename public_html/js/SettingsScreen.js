@@ -4,9 +4,6 @@ function SettingsScreen(width, height, screenController) {
     this.TOGGLE_FX_LOCATION = new Vector(0, 85);
     this.BACK_LOCATION = new Vector(0,135);
     
-    this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
-    this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
-
     this.toggleSfx = new Button("SFX On", function() {});
     this.toggleFx = new Button("FX On", function() {});
     this.mainMenu = new Button("Main Menu", function() {screenController.setScreen(new MenuScreen(width, height, screenController))});
@@ -33,9 +30,6 @@ SettingsScreen.prototype.correctLayout = function() {
  * @param {Number} y The draw offset
  */
 SettingsScreen.prototype.draw = function (g, x, y) {
-    this.dirtTiles.draw(g, x, y);
-    this.grassTiles.draw(g, x, y);
-    
     this.correctLayout();
     this.toggleSfx.draw(g, x + this.TOGGLE_SFX_LOCATION.x, y + this.TOGGLE_SFX_LOCATION.y);
     this.toggleFx.draw(g, x + this.TOGGLE_FX_LOCATION.x, y + this.TOGGLE_FX_LOCATION.y);

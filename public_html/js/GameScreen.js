@@ -8,10 +8,10 @@
 function GameScreen(width, height, screenController) {
     this.PUMP_INTERVAL = 5000;
     this.CELL_DIMENSIONS = 50;
-    
+
     this.GRID_LOCATION = new Vector(30, 35);
     this.PIPE_SELECTION_LOCATION = new Vector(53, 300);
-    
+
     this.playing = true;
 
     this.pipesPlaced = 0;
@@ -19,42 +19,39 @@ function GameScreen(width, height, screenController) {
     this.elapsedSinceLastPump = this.PUMP_INTERVAL;
 
     this.pipeSelection = new PipeSelectionQueue();
-    this.grid = new Grid(this.CELL_DIMENSIONS, 
-                6, 7);
-        
+    this.grid = new Grid(this.CELL_DIMENSIONS,
+            6, 7);
+
     this.drain = Pipes.Drain.create();
     this.pump = Pipes.Pump.create();
-    
+
     this.GRID_LOCATION.x = (width - this.grid.getBounds().width) / 2;
-    
+
     this.PIPE_SELECTION_LOCATION.x = (width - this.pipeSelection.getBounds().width) / 2;
     this.PIPE_SELECTION_LOCATION.y = this.GRID_LOCATION.y + this.grid.getBounds().height + 20;
-    
+
     //var pumpVector = new Vector();
     //var drainVector = new Vector();
     //pumpVector.randomStart();
     //drainVector.randomStart();
-    
+
     //while (pumpVector === drainVector) {
     //    var drainVector = Vector.randomStart();
     //}
-    
-    this.grid.setPipe(new Vector(0, 0), this.pump);
+
+    this.grid.setPipe(new Vector(0, 1), this.pump);
     this.grid.setPipe(new Vector(2, 1), this.drain);
-    this.grid.setPipe(new Vector(1,2), Pipes.Obstacle.create());
-    this.grid.setPipe(new Vector(2,2), Pipes.Obstacle.create());
-    this.grid.setPipe(new Vector(3,2), Pipes.Obstacle.create());
-    
+    this.grid.setPipe(new Vector(1, 2), Pipes.Obstacle.create());
+    this.grid.setPipe(new Vector(2, 2), Pipes.Obstacle.create());
+    this.grid.setPipe(new Vector(3, 2), Pipes.Obstacle.create());
+
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
-    
+
     this.newlyFilledPipes = [];
-    
+
     this.fillPipeSelection();
-    
-    this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
-    this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
-    
+
     this.screenController = screenController;
     this.width = width;
     this.height = height;
@@ -63,7 +60,7 @@ function GameScreen(width, height, screenController) {
 /**
  * Refreshes the pipe selection area with new pipes.
  */
-GameScreen.prototype.refreshPipeSelection = function() {
+GameScreen.prototype.refreshPipeSelection = function () {
     this.pipeSelection.clear();
     this.fillPipeSelection();
 };
@@ -71,28 +68,90 @@ GameScreen.prototype.refreshPipeSelection = function() {
 /**
  * Fills the pipe selection area with new pipes in open slots.
  */
-GameScreen.prototype.fillPipeSelection = function() {
+GameScreen.prototype.fillPipeSelection = function () {
     var pipes = Pipes.values();
-    
+
     var generatedPipes = [];
+
+    var pipe = this.getUsefulPipe();
     
-    var pipe = null;
+    if(pipe !== null) {
+        this.pipeSelection.pushPipe(pipe.create());
+        generatedPipes.push(pipe);
+    }
     
     do {
-        pipe = this.getUsefulPipe();
-        if(pipe === null)
-            break;
-    } while(this.pipeSelection.pushPipe(pipe.create()));
+        do {
+            pipe = pipes[Math.floor(Math.random() * pipes.length)];
+        } while(generatedPipes.indexOf(pipe) >= 0);
+        
+        generatedPipes.push(pipe);
+
+    } while (this.pipeSelection.pushPipe(pipe.create()));
 };
 
-GameScreen.prototype.getUsefulPipe = function() {
+GameScreen.prototype.getUsefulPipe = function () {
+    var pipes = Pipes.values();
+    var pipe = null;
+
+    for (var i = 0; i < 100; i++) {
+        pipe = pipes[Math.floor(Math.random() * pipes.length)];
+        if (this.isPipeUseable(pipe.create()))
+            return pipe;
+    }
+    
+    return null;
+};
+
+GameScreen.prototype.isPipeUseable = function (pipe) {
+    var starts = [];
+
+    if (this.newlyFilledPipes.length > 0) {
+        for (var i = 0; i < this.newlyFilledPipes.length; i++) {
+            starts.push(this.newlyFilledPipes[i]);
+        }
+    } else
+        starts.push(this.pump);
+
     var pathFinder = new AStarPathFinder(this.grid);
-    
-    var start = this.newlyFilledPipes.length === 0 ? this.pump.getLocation() : this.newlyFilledPipes[0].getLocation();
-    
-    var pipes = pathFinder.findPath(start, this.drain.getLocation()).getPipes();
-    
-    return pipes[0];
+
+    for (var i = 0; i < starts.length; i++) {
+        var drainDirections = this.getDrainDirections(starts[i]);
+
+        for (var x = 0; x < drainDirections.length; x++) {
+            var newLocation = starts[i].getLocation().add(drainDirections[x].delta);
+
+            if (this.grid.getPipe(newLocation) !== null ||
+                    !this.grid.getCellBounds().contains(newLocation))
+                continue;
+
+            this.grid.setPipe(newLocation, pipe);
+
+            var n = null;
+            //Check if pipe is connecting to the start point
+            if (pipe.getConnections().indexOf(starts[i]) >= 0) {
+                var newDrainDirections = this.getDrainDirections(pipe);
+                for (var y = 0; y < newDrainDirections.length; y++) {
+                    var testLocation = pipe.getLocation().add(newDrainDirections[i].delta);
+
+                    if (!this.grid.getCellBounds().contains(testLocation))
+                        continue;
+
+                    n = pathFinder.findPath(pipe.getLocation().add(newDrainDirections[i].delta), this.drain.getLocation());
+
+                    if (n !== null)
+                        break;
+                }
+            }
+
+            this.grid.clearPipe(newLocation);
+
+            if (n !== null)
+                return true;
+        }
+    }
+
+    return false;
 };
 
 /**
@@ -101,37 +160,36 @@ GameScreen.prototype.getUsefulPipe = function() {
  */
 GameScreen.prototype.update = function (deltaTime) {
     this.searchForEasterEgg();
-    
-    if(!this.playing)
+
+    if (!this.playing)
         return;
-    
+
     var pipes = this.grid.getPipes();
-    for(var i = 0; i < pipes.length; i++)
+    for (var i = 0; i < pipes.length; i++)
     {
-        if(pipes[i].isLeaking() && pipes[i] !== this.drain && pipes[i] !== this.drain)
+        if (pipes[i].isLeaking() && pipes[i] !== this.drain && pipes[i] !== this.drain)
         {
             this.playing = false;
             this.screenController.setScreen(new GameOverScreen(this.width, this.height, this.screenController));
         }
     }
-    
-    if(this.pump.getConnections().length > 0)
+
+    if (this.pump.getConnections().length > 0)
     {
         this.elapsedSinceLastPump += deltaTime;
-    
+
         if (this.elapsedSinceLastPump > this.PUMP_INTERVAL)
         {
             this.elapsedSinceLastPump -= this.PUMP_INTERVAL;
             this.newlyFilledPipes = this.grid.pump();
 
-            if(this.drain.isFilled()) {
+            if (this.drain.isFilled()) {
                 alert("You beat this level!");
                 this.playing = false;
             }
 
             this.draggingPipe = null;
             this.refreshPipeSelection();
-            this.fillPipeSelection();
         }
     }
 };
@@ -139,22 +197,22 @@ GameScreen.prototype.update = function (deltaTime) {
 /**
  * Searches for the easter egg condition
  */
-GameScreen.prototype.searchForEasterEgg = function() {
+GameScreen.prototype.searchForEasterEgg = function () {
     var pipes = this.grid.getPipes();
-    for(var i = 0; i < pipes.length; i++) {
+    for (var i = 0; i < pipes.length; i++) {
         var pipe = pipes[i];
-        
-        if(pipe.type === Pipes.RightDown) {
+
+        if (pipe.type === Pipes.RightDown) {
             var right = this.grid.getPipe(pipe.getLocation().add(Direction.Right.delta));
             var down = this.grid.getPipe(pipe.getLocation().add(Direction.Down.delta));
             var accross = this.grid.getPipe(pipe.getLocation().add(Direction.Down.delta.add(Direction.Right.delta)));
 
-            if(right === null || down === null || accross === null)
+            if (right === null || down === null || accross === null)
                 continue;
-            
-            if(right.type === Pipes.LeftDown && down.type === Pipes.RightUp && accross.type === Pipes.LeftUp)
+
+            if (right.type === Pipes.LeftDown && down.type === Pipes.RightUp && accross.type === Pipes.LeftUp)
             {
-                if(!pipe.isFilled()) {
+                if (!pipe.isFilled()) {
                     pipe.setAsPump();
                 }
             }
@@ -169,30 +227,27 @@ GameScreen.prototype.searchForEasterEgg = function() {
  * @param {Number} y The draw offset
  */
 GameScreen.prototype.draw = function (g, x, y) {
-    this.dirtTiles.draw(g, x, y);
-    this.grassTiles.draw(g, x, y);
-    
     g.font = "15px Trade Winds";
     g.fillText("Number of pipes used: " + this.pipesPlaced, this.GRID_LOCATION.x, 23); // missing the function that counts the number of pipes used
 
     this.grid.draw(g, this.GRID_LOCATION.x + x, this.GRID_LOCATION.y + y);
     this.pipeSelection.draw(g, this.PIPE_SELECTION_LOCATION.x + x, this.PIPE_SELECTION_LOCATION.y + y);
-    
+
     this.drawWater(g, x, y);
-    
-    if(this.draggingPipe !== null)
+
+    if (this.draggingPipe !== null)
         this.draggingPipe.draw(g, x + this.draggingLocation.x, y + this.draggingLocation.y);
-    
+
 };
 
 /**
  * On mouse down event handler, passes to active screen.
  * @param {Vector} location Location of mouse cursor during event.
  */
-GameScreen.prototype.onMouseDown = function(location) {
+GameScreen.prototype.onMouseDown = function (location) {
     var selectionBounds = this.pipeSelection.getBounds().add(this.PIPE_SELECTION_LOCATION);
-    
-    if(selectionBounds.contains(location)) {
+
+    if (selectionBounds.contains(location)) {
         var pipe = this.pipeSelection.popPipe(location.difference(this.PIPE_SELECTION_LOCATION));
         this.draggingPipe = pipe;
         this.draggingLocation = location;
@@ -203,16 +258,16 @@ GameScreen.prototype.onMouseDown = function(location) {
  * On mouse up event handler, passes to active screen.
  * @param {Vector} location Location of mouse cursor during event.
  */
-GameScreen.prototype.onMouseUp = function(location) {
-    if(this.draggingPipe !== null) {
+GameScreen.prototype.onMouseUp = function (location) {
+    if (this.draggingPipe !== null) {
         var gridBounds = this.grid.getBounds().add(this.GRID_LOCATION);
-        
-        if(gridBounds.contains(location)) {
+
+        if (gridBounds.contains(location)) {
             var gridCoord = this.grid.screenToGrid(location.difference(this.GRID_LOCATION));
-            
+
             var oldPipe = this.grid.getPipe(gridCoord);
- 
-            if(oldPipe !== null && !oldPipe.canReplace())
+
+            if (oldPipe !== null && !oldPipe.canReplace())
                 this.pipeSelection.pushPipe(this.draggingPipe);
             else {
                 this.grid.setPipe(gridCoord, this.draggingPipe);
@@ -221,7 +276,7 @@ GameScreen.prototype.onMouseUp = function(location) {
         } else
             this.pipeSelection.pushPipe(this.draggingPipe);
     }
-    
+
     this.draggingPipe = null;
 };
 
@@ -229,8 +284,8 @@ GameScreen.prototype.onMouseUp = function(location) {
  * On mouse move event handler, passes to active screen.
  * @param {Vector} currentLocation - location of mouse cursor during event.
  */
-GameScreen.prototype.onMouseMove = function(currentLocation) {
-    if(this.draggingPipe !== null)
+GameScreen.prototype.onMouseMove = function (currentLocation) {
+    if (this.draggingPipe !== null)
         this.draggingLocation = currentLocation;
 };
 
@@ -241,11 +296,11 @@ GameScreen.prototype.onMouseMove = function(currentLocation) {
  * @param {Number} y The draw offset
  */
 
-GameScreen.prototype.drawWater = function(g, x, y) {
-    
+GameScreen.prototype.drawWater = function (g, x, y) {
+
     var pipes = this.grid.getPipes();
-    
-    for(var i = 0; i < pipes.length; i++)
+
+    for (var i = 0; i < pipes.length; i++)
         this.drawPipeWater(g, x, y, pipes[i]);
 };
 
@@ -256,49 +311,49 @@ GameScreen.prototype.drawWater = function(g, x, y) {
  * @param {Number} y The draw offset
  * @param {Pipe} pipe The pipe to draw water effects for.
  */
-GameScreen.prototype.drawPipeWater = function(g, x, y, pipe) {
-    if(!pipe.isFilled() || pipe.type === Pipes.Pump)
+GameScreen.prototype.drawPipeWater = function (g, x, y, pipe) {
+    if (!pipe.isFilled() || pipe.type === Pipes.Pump)
         return;
-    
+
     var inProgression = Math.min(1.0, this.elapsedSinceLastPump / (this.PUMP_INTERVAL / 2));
     var outProgression = Math.max(0, this.elapsedSinceLastPump / (this.PUMP_INTERVAL / 2) - inProgression);
-    
-    if(this.newlyFilledPipes.indexOf(pipe) === -1)
+
+    if (this.newlyFilledPipes.indexOf(pipe) === -1)
         inProgression = outProgression = 1.0;
-    
+
     var pipeCentreLocation = this.GRID_LOCATION.add(this.grid.gridToScreen(pipe.getLocation().add(new Vector(0.5, 0.5))));
-    
+
     var fillDirections = this.getFillDirections(pipe);
     var drainDirections = this.getDrainDirections(pipe);
 
     g.lineWidth = 8;
     g.strokeStyle = "#003399";
 
-    for(var i = 0; i < fillDirections.length; i++) {
+    for (var i = 0; i < fillDirections.length; i++) {
         var start = pipeCentreLocation.add(fillDirections[i].delta.scale(this.grid.getCellDimensions() / 2));
         var end = pipeCentreLocation.add(fillDirections[i].delta.inverse().scale(g.lineWidth / 2));
         var diff = end.difference(start);
         var current = start.add(diff.scale(inProgression));
-        
+
         g.beginPath();
         g.moveTo(start.x, start.y);
         g.lineTo(current.x, current.y);
         g.stroke();
     }
-    
-    for(var i = 0; i < drainDirections.length; i++) {
+
+    for (var i = 0; i < drainDirections.length; i++) {
         var start = pipeCentreLocation;
         var end = pipeCentreLocation.add(drainDirections[i].delta.scale(this.grid.getCellDimensions() / 2));
         var diff = end.difference(start);
-        
+
         var current = start.add(diff.scale(outProgression));
-        
+
         g.beginPath();
         g.moveTo(start.x, start.y);
         g.lineTo(current.x, current.y);
         g.stroke();
     }
-    
+
     g.beginPath();
 };
 
@@ -307,17 +362,17 @@ GameScreen.prototype.drawPipeWater = function(g, x, y, pipe) {
  * @param {Pipe} pipe
  * @returns {Array|GameScreen.prototype.getFillDirections.fillDirections}
  */
-GameScreen.prototype.getFillDirections = function(pipe) {
+GameScreen.prototype.getFillDirections = function (pipe) {
     var connections = pipe.getConnections(null);
     var fillDirections = [];
-    
-    for(var i = 0; i < connections.length; i++) {
-        if(connections[i].isFilled()) {
+
+    for (var i = 0; i < connections.length; i++) {
+        if (connections[i].isFilled()) {
             var delta = connections[i].getLocation().difference(pipe.getLocation());
             fillDirections.push(Direction.fromVector(delta));
         }
     }
-    
+
     return fillDirections;
 };
 
@@ -326,16 +381,16 @@ GameScreen.prototype.getFillDirections = function(pipe) {
  * @param {Pipe} pipe
  * @returns {Array|GameScreen.prototype.getDrainDirections.drainDirections}
  */
-GameScreen.prototype.getDrainDirections = function(pipe) {
+GameScreen.prototype.getDrainDirections = function (pipe) {
     var fillDirections = this.getFillDirections(pipe);
     var allDirections = pipe.getDirections();
     var drainDirections = [];
-    
-    for(var i = 0; i < allDirections.length; i++)
+
+    for (var i = 0; i < allDirections.length; i++)
     {
-        if(fillDirections.indexOf(allDirections[i]) === -1)
+        if (fillDirections.indexOf(allDirections[i]) === -1)
             drainDirections.push(allDirections[i]);
     }
-    
+
     return drainDirections;
 };

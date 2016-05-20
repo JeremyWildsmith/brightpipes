@@ -4,9 +4,6 @@ function GameOverScreen(width, height, screenController) {
     this.GAME_OVER_LOCATION = new Vector(0, 35);
     this.MAIN_MENU_LOCATION = new Vector(0, 85);
     this.PLAY_AGAIN_LOCATION = new Vector(0, 135);
-    
-    this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
-    this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
 
     this.playAgainButton = new Button("Play Again", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
     this.mainMenuButton = new Button("Main Menu", function() {screenController.setScreen(new MenuScreen(width, height, screenController))});
@@ -32,10 +29,7 @@ GameOverScreen.prototype.correctLayout = function() {
  * @param {Number} y The draw offset
  */
 GameOverScreen.prototype.draw = function (g, x, y) {
-    this.dirtTiles.draw(g, x, y);
-    this.grassTiles.draw(g, x, y);
-    
-    this.correctLayout();
+        this.correctLayout();
     this.playAgainButton.draw(g, x + this.PLAY_AGAIN_LOCATION.x, y + this.PLAY_AGAIN_LOCATION.y);
     this.mainMenuButton.draw(g, x + this.MAIN_MENU_LOCATION.x, y + this.MAIN_MENU_LOCATION.y);
 
