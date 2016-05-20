@@ -18,7 +18,6 @@ PipeSelectionQueue.prototype.popPipe = function(location) {
     
     var pipe = this.pipeGrid.getPipe(coord);
     this.pipeGrid.clearPipe(coord);
-    
     return pipe;
 };
 
@@ -34,10 +33,28 @@ PipeSelectionQueue.prototype.pushPipe = function(pipe) {
             return true;
         }
     }
-    
     return false;
+};
+
+PipeSelectionQueue.prototype.getPipes = function() {
+    return this.pipeGrid.getPipes();
 };
 
 PipeSelectionQueue.prototype.getBounds = function() {
     return this.pipeGrid.getBounds();
+};
+
+PipeSelectionQueue.prototype.shiftLeft = function() {
+    if(this.pipeGrid.getPipe(new Vector(1, 0)) !== null)
+        this.pipeGrid.setPipe(new Vector(0, 0), this.pipeGrid.getPipe(new Vector(1, 0)));
+    
+    this.pipeGrid.setPipe(new Vector(1, 0), this.pipeGrid.getPipe(new Vector(2, 0)));
+    this.pipeGrid.clearPipe(new Vector(2, 0));
+};
+
+PipeSelectionQueue.prototype.shiftIn = function(pipe) {
+    if(this.pipeGrid.getPipe(new Vector(2, 0)) !== null)
+        this.shiftLeft();
+
+    this.pipeGrid.setPipe(new Vector(2, 0), pipe);
 };

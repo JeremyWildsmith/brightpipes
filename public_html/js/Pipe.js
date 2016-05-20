@@ -34,7 +34,13 @@ Pipe.prototype.attach = function(grid, location) {
  * Detaches the pipe from the grid/world.
  */
 Pipe.prototype.detach = function() {
+    
+    if(this.parentGrid === null)
+        return;
+    
+    var parent = this.parentGrid;
     this.parentGrid = null;
+    parent.removePipe(this);
     this.location = new Vector(0, 0);
 };
 

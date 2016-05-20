@@ -2,7 +2,7 @@
  * Grid used to store an arrangement of pipes
  */
 
- /* @param {type} cellDimensions Dimensions of each grid cell
+/* @param {type} cellDimensions Dimensions of each grid cell
  * @param {type} gridWidth The grid width in cells
  * @param {type} gridHeight The grid height in cells.
  * @returns {Grid}
@@ -11,15 +11,15 @@
 function Grid(cellDimensions, gridWidth, gridHeight) {
     this.gridWidth = gridWidth;
     this.gridHeight = gridHeight;
-    
+
     this.cellDimensions = cellDimensions;
-    
+
     this.pipes = [];
-    
-    for(var x = 0; x < this.gridWidth; x++) {
+
+    for (var x = 0; x < this.gridWidth; x++) {
         this.pipes[x] = [];
-        
-        for(var y = 0; y < this.gridHeight; y++) {
+
+        for (var y = 0; y < this.gridHeight; y++) {
             this.pipes[x][y] = null;
         }
     }
@@ -28,7 +28,7 @@ function Grid(cellDimensions, gridWidth, gridHeight) {
 /**
  * @returns {Number} Cell dimensions 
  */
-Grid.prototype.getCellDimensions = function() {
+Grid.prototype.getCellDimensions = function () {
     return this.cellDimensions;
 };
 
@@ -37,9 +37,9 @@ Grid.prototype.getCellDimensions = function() {
  * @param {type} location Location to test if valid
  * @returns {Boolean} Whether the specified grid location is valid.
  */
-Grid.prototype.validateLocation = function(location) {
+Grid.prototype.validateLocation = function (location) {
     return (location.x >= 0 && location.y >= 0 &&
-       location.x < this.gridWidth && location.y < this.gridHeight);
+            location.x < this.gridWidth && location.y < this.gridHeight);
 };
 
 /**
@@ -48,11 +48,11 @@ Grid.prototype.validateLocation = function(location) {
  * @returns {Grid.prototype@arr;@arr;pipes} Pipe at the specified location or
  * null if location is empty.
  */
-Grid.prototype.getPipe = function(location) {
-   if(!this.validateLocation(location))
-       return null;
-   
-   return this.pipes[location.x][location.y];
+Grid.prototype.getPipe = function (location) {
+    if (!this.validateLocation(location))
+        return null;
+
+    return this.pipes[location.x][location.y];
 };
 
 /**
@@ -61,26 +61,40 @@ Grid.prototype.getPipe = function(location) {
  * @param {type} pipe The pipe to place at the specified location.
  * @returns {unresolved}
  */
-Grid.prototype.setPipe = function(location, pipe) { 
-   if(!this.validateLocation(location))
-       return null;
-   
-   this.clearPipe(location);
-   
-   this.pipes[location.x][location.y] = pipe;
-   
-   pipe.attach(this, location);
+Grid.prototype.setPipe = function (location, pipe) {
+    if (!this.validateLocation(location))
+        return null;
+
+    if (pipe !== null)
+        pipe.detach();
+    
+    this.clearPipe(location);
+
+    if (pipe !== null) {
+        this.pipes[location.x][location.y] = pipe;
+
+        pipe.attach(this, location);
+    }
 };
 
 /**
  * Clears a pipe at a specified grid location.
  * @param {type} location Location at which to clear the pipe/contents of.
  */
-Grid.prototype.clearPipe = function(location) {
-    if(this.pipes[location.x][location.y] !== null)
+Grid.prototype.clearPipe = function (location) {
+    if (this.pipes[location.x][location.y] !== null)
         this.pipes[location.x][location.y].detach();
-    
-   this.pipes[location.x][location.y] = null;
+
+    this.pipes[location.x][location.y] = null;
+};
+
+Grid.prototype.removePipe = function (pipe) {
+    for (var x = 0; x < this.gridWidth; x++) {
+        for (var y = 0; y < this.gridHeight; y++) {
+            if (this.pipes[x][y] === pipe)
+                this.clearPipe(new Vector(x, y));
+        }
+    }
 };
 
 /**
@@ -88,13 +102,13 @@ Grid.prototype.clearPipe = function(location) {
  * @param {type} location Location to be translated in grid space.
  * @returns {Vector|Grid.prototype.screenToGrid.translation} Translated location.
  */
-Grid.prototype.screenToGrid = function(location) {
+Grid.prototype.screenToGrid = function (location) {
     var translation = new Vector(location.x / this.cellDimensions, location.y / this.cellDimensions).floor();
-    
-    if(translation.x < 0 || translation.x > this.gridWidth ||
-       translation.y < 0 || translation.y > this.gridHeight)
+
+    if (translation.x < 0 || translation.x > this.gridWidth ||
+            translation.y < 0 || translation.y > this.gridHeight)
         throw "Specified coordinates are not inside screen bounds.";
-    
+
     return translation;
 };
 
@@ -103,8 +117,8 @@ Grid.prototype.screenToGrid = function(location) {
  * @param {type} location The location to translate to screen space.
  * @returns {Vector} The translated location.
  */
-Grid.prototype.gridToScreen = function(location) {
-   return new Vector(location.x * this.cellDimensions, location.y * this.cellDimensions);
+Grid.prototype.gridToScreen = function (location) {
+    return new Vector(location.x * this.cellDimensions, location.y * this.cellDimensions);
 };
 
 /**
@@ -114,31 +128,31 @@ Grid.prototype.gridToScreen = function(location) {
  * @param {type} y The y draw offset.
  * @returns {undefined}
  */
-Grid.prototype.draw = function(g, x, y) {
+Grid.prototype.draw = function (g, x, y) {
     g.strokeStyle = "#000";
     g.lineWidth = 0.4;
-    
-    for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
-        for(var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
-            
+
+    for (var xLoc = 0; xLoc < this.gridWidth; xLoc++) {
+        for (var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
+
             g.beginPath();
             g.rect(x + xLoc * this.cellDimensions,
-                  y + yLoc * this.cellDimensions,
-                  this.cellDimensions,
-                  this.cellDimensions);
-            
+                    y + yLoc * this.cellDimensions,
+                    this.cellDimensions,
+                    this.cellDimensions);
+
             g.stroke();
         }
     }
-    
-    for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
-        for(var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
-            if(this.pipes[xLoc][yLoc] === null)
+
+    for (var xLoc = 0; xLoc < this.gridWidth; xLoc++) {
+        for (var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
+            if (this.pipes[xLoc][yLoc] === null)
                 continue;
-            
+
             this.pipes[xLoc][yLoc].draw(g,
-                            x + xLoc * this.cellDimensions + this.cellDimensions / 2,
-                            y + yLoc * this.cellDimensions + this.cellDimensions / 2);
+                    x + xLoc * this.cellDimensions + this.cellDimensions / 2,
+                    y + yLoc * this.cellDimensions + this.cellDimensions / 2);
         }
     }
 };
@@ -147,27 +161,27 @@ Grid.prototype.draw = function(g, x, y) {
  * Gets the screen space bounds of grid.
  * @returns {Rectangle} The screen space bounds of grid.
  */
-Grid.prototype.getBounds = function() {
-    return new Rectangle(new Vector(0,0), this.gridWidth * this.cellDimensions, this.gridHeight * this.cellDimensions);
+Grid.prototype.getBounds = function () {
+    return new Rectangle(new Vector(0, 0), this.gridWidth * this.cellDimensions, this.gridHeight * this.cellDimensions);
 };
 
-Grid.prototype.getCellBounds = function() {
-    return new Rectangle(new Vector(0,0), this.gridWidth, this.gridHeight);
+Grid.prototype.getCellBounds = function () {
+    return new Rectangle(new Vector(0, 0), this.gridWidth, this.gridHeight);
 };
 
 /**
  * Gets a list of all filled pipes in the grid.
  * @returns {Array|Grid.prototype.getFilledPipes.filledPipes} Filled pipes in the grid.
  */
-Grid.prototype.getFilledPipes = function() {
+Grid.prototype.getFilledPipes = function () {
     var filledPipes = [];
 
     var pipes = this.getPipes();
-    for(var i = 0; i < pipes.length; i++) {
-        if(pipes[i] !== null && pipes[i].isFilled())
+    for (var i = 0; i < pipes.length; i++) {
+        if (pipes[i] !== null && pipes[i].isFilled())
             filledPipes.push(pipes[i]);
     }
-    
+
     return filledPipes;
 };
 
@@ -175,27 +189,27 @@ Grid.prototype.getFilledPipes = function() {
  * 
  * @returns Array of pipes that were filled in this pump cycle.
  */
-Grid.prototype.pump = function() {
-    
+Grid.prototype.pump = function () {
+
     var pipesFilledBeforePump = this.getFilledPipes();
-    
-    for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
-        for(var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
+
+    for (var xLoc = 0; xLoc < this.gridWidth; xLoc++) {
+        for (var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
             var pipe = this.pipes[xLoc][yLoc];
-            
-            if(pipe !== null && pipe.isPump())
+
+            if (pipe !== null && pipe.isPump())
                 pipe.fill(null);
         }
     }
-    
+
     var pipesFilledAfterPump = this.getFilledPipes();
     var newPipesFilled = [];
-    
-    for(var i = 0; i < pipesFilledAfterPump.length; i++) {
-        if(pipesFilledBeforePump.indexOf(pipesFilledAfterPump[i]) === -1)
+
+    for (var i = 0; i < pipesFilledAfterPump.length; i++) {
+        if (pipesFilledBeforePump.indexOf(pipesFilledAfterPump[i]) === -1)
             newPipesFilled.push(pipesFilledAfterPump[i]);
     }
-    
+
     return newPipesFilled;
 
 };
@@ -204,15 +218,15 @@ Grid.prototype.pump = function() {
  * Returns a list of all pipes in grid.
  * @returns {Array|Grid.prototype.getPipes.pipes} List of all pipes in grid.
  */
-Grid.prototype.getPipes = function() {
+Grid.prototype.getPipes = function () {
     var pipes = [];
-    
-    for(var xLoc = 0; xLoc < this.gridWidth; xLoc++) {   
-        for(var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
-            if(this.pipes[xLoc][yLoc] !== null)
+
+    for (var xLoc = 0; xLoc < this.gridWidth; xLoc++) {
+        for (var yLoc = 0; yLoc < this.gridHeight; yLoc++) {
+            if (this.pipes[xLoc][yLoc] !== null)
                 pipes.push(this.pipes[xLoc][yLoc]);
         }
     }
-    
+
     return pipes;
 };

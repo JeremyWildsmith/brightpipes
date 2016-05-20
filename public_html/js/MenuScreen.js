@@ -1,13 +1,15 @@
 function MenuScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
     
-    this.START_BUTTON_LOCATION = new Vector(0, 35);
-    this.LEADERBOARDS_BUTTON_LOCATION = new Vector(0, 85);
-    this.TUTORIAL_BUTTON_LOCATION = new Vector(0, 135);
-    this.SETTINGS_BUTTON_LOCATION = new Vector(0, 185);
+    this.START_BUTTON_LOCATION = new Vector(0, 95);
+    this.LEADERBOARDS_BUTTON_LOCATION = new Vector(0, 145);
+    this.TUTORIAL_BUTTON_LOCATION = new Vector(0, 195);
+    this.SETTINGS_BUTTON_LOCATION = new Vector(0, 245);
     
     this.startButton = new Button("Start", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
-    this.leaderboardsButton = new Button("Leaderboard", function() {});
+    this.leaderboardsButton = new Button("Leaderboard", function() {
+            screenController.setScreen(new LeaderboardScreen(width, height, screenController));
+    });
     this.tutorialButton = new Button("Tutorial", function() {screenController.setScreen(new TutorialScreen(width, height, screenController))});
     this.settingsButton = new Button("Settings", function() {
         screenController.setScreen(new SettingsScreen(width, height, screenController));
@@ -38,6 +40,13 @@ MenuScreen.prototype.correctLayout = function() {
  */
 MenuScreen.prototype.draw = function (g, x, y) {
     this.correctLayout();
+    
+    g.fillStyle = "#F4BF09";
+    g.font = "60px Trade Winds";
+    var text = "Menu";
+    var txtX = (this.width - g.measureText(text).width) / 2;
+    g.fillText(text, x + txtX, 60);
+    
     this.startButton.draw(g, x + this.START_BUTTON_LOCATION.x, y + this.START_BUTTON_LOCATION.y);
     this.leaderboardsButton.draw(g, x + this.LEADERBOARDS_BUTTON_LOCATION.x, y + this.LEADERBOARDS_BUTTON_LOCATION.y);
     this.tutorialButton.draw(g, x + this.TUTORIAL_BUTTON_LOCATION.x, y + this.TUTORIAL_BUTTON_LOCATION.y);
@@ -86,4 +95,8 @@ MenuScreen.prototype.onMouseMove = function(location) {
     }
     
     this.lastActiveControl = selectedControl;
+};
+
+MenuScreen.prototype.onKeyDown = function(keyCode) {
+    
 };

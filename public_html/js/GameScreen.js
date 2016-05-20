@@ -5,10 +5,12 @@
 /**
  * @returns {GameScreen} A new GameScreen object.
  */
-function GameScreen(width, height, screenController) {
-    this.PUMP_INTERVAL = 5000;
+function GameScreen(width, height, screenController, drainLocation, score) {
+    this.PUMP_INTERVAL = 3000;
     this.CELL_DIMENSIONS = 50;
-
+    this.PIPES_PLACED_BEFORE_PLAY = 5;
+    this.PASS_LEVEL_SCORE = 200;
+    
     this.GRID_LOCATION = new Vector(30, 35);
     this.PIPE_SELECTION_LOCATION = new Vector(53, 300);
 
@@ -19,8 +21,7 @@ function GameScreen(width, height, screenController) {
     this.elapsedSinceLastPump = this.PUMP_INTERVAL;
 
     this.pipeSelection = new PipeSelectionQueue();
-    this.grid = new Grid(this.CELL_DIMENSIONS,
-            6, 7);
+    this.grid = new Grid(this.CELL_DIMENSIONS, 6, 7);
 
     this.drain = Pipes.Drain.create();
     this.pump = Pipes.Pump.create();
@@ -29,21 +30,8 @@ function GameScreen(width, height, screenController) {
 
     this.PIPE_SELECTION_LOCATION.x = (width - this.pipeSelection.getBounds().width) / 2;
     this.PIPE_SELECTION_LOCATION.y = this.GRID_LOCATION.y + this.grid.getBounds().height + 20;
-
-    //var pumpVector = new Vector();
-    //var drainVector = new Vector();
-    //pumpVector.randomStart();
-    //drainVector.randomStart();
-
-    //while (pumpVector === drainVector) {
-    //    var drainVector = Vector.randomStart();
-    //}
-
-    this.grid.setPipe(new Vector(0, 1), this.pump);
-    this.grid.setPipe(new Vector(2, 1), this.drain);
-    this.grid.setPipe(new Vector(1, 2), Pipes.Obstacle.create());
-    this.grid.setPipe(new Vector(2, 2), Pipes.Obstacle.create());
-    this.grid.setPipe(new Vector(3, 2), Pipes.Obstacle.create());
+    
+    this.generateLevel(2, 7, drainLocation);
 
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
@@ -55,7 +43,52 @@ function GameScreen(width, height, screenController) {
     this.screenController = screenController;
     this.width = width;
     this.height = height;
+    
+    this.score = score === undefined ? 0 : score;
 }
+
+GameScreen.prototype.randomizePlacement = function(object) {
+    object.detach();
+    var gridBounds = this.grid.getCellBounds();
+    
+    var location;
+    do {
+        location = new Vector(Math.floor(Math.random() * gridBounds.width),
+                                Math.floor(Math.random() * gridBounds.height));
+    } while(this.grid.getPipe(location) !== null);
+    
+    this.grid.setPipe(location, object);
+};
+
+GameScreen.prototype.generateLevel = function(minDistance, maxDistance, drainLocation) {
+    do {
+        if(drainLocation === undefined)
+            this.randomizePlacement(this.pump);
+        else
+            this.grid.setPipe(drainLocation, this.pump);
+        
+        this.randomizePlacement(this.drain);
+    } while(!this.isLevelSolvable() ||
+            this.pump.getLocation().difference(this.drain.getLocation()).getLength() > maxDistance ||
+            this.pump.getLocation().difference(this.drain.getLocation()).getLength() < minDistance);
+    
+    var obstacles = Pipes.obstacles();
+    
+    for(var x = 0; x < 15; x++) {
+        var obstacle = obstacles[Math.floor(Math.random() * obstacles.length)].create();
+        do {
+            this.randomizePlacement(obstacle);
+        } while(!this.isLevelSolvable());    
+    }
+};
+
+GameScreen.prototype.isLevelSolvable = function() {
+    var pathFinder = new AStarPathFinder(this.grid);
+    
+    var start = this.pump.getLocation().add(this.pump.getDirections()[0].delta);
+    
+    return pathFinder.findPath(start, this.drain.getLocation()) !== null;
+};
 
 /**
  * Refreshes the pipe selection area with new pipes.
@@ -69,17 +102,31 @@ GameScreen.prototype.refreshPipeSelection = function () {
  * Fills the pipe selection area with new pipes in open slots.
  */
 GameScreen.prototype.fillPipeSelection = function () {
-    var pipes = Pipes.values();
-
+    
+    //Count number of useable pipes in selection queue.
+    var containedUseablePipe = 0;
+    var containedPipes = this.pipeSelection.getPipes();
+    for(var i = 0; i < containedPipes.length; i++) {
+        if(this.isPipeUseable(containedPipes[i].type))
+            containedUseablePipe++;
+        
+        console.log("Contained useable pipe: " + this.containedPipes[i].type.value);
+    }
+    
     var generatedPipes = [];
 
-    var pipe = this.getUsefulPipe();
-    
-    if(pipe !== null) {
-        this.pipeSelection.pushPipe(pipe.create());
-        generatedPipes.push(pipe);
+    //If there are no useable pipes, make sure we add one.
+    if(containedUseablePipe === 0) {
+        var pipe = this.getUsefulPipe();
+
+        if(pipe !== null) {
+            this.pipeSelection.pushPipe(pipe.create());
+            generatedPipes.push(pipe);
+        }
     }
-/*    
+    
+    var pipes = Pipes.values();
+
     do {
         do {
             pipe = pipes[Math.floor(Math.random() * pipes.length)];
@@ -88,7 +135,30 @@ GameScreen.prototype.fillPipeSelection = function () {
         generatedPipes.push(pipe);
 
     } while (this.pipeSelection.pushPipe(pipe.create()));
-*/};
+};
+
+GameScreen.prototype.shiftInPipe = function () {
+    var pipes = Pipes.values();
+    
+    //Count number of useable pipes in selection queue.
+    var containedUseablePipe = 0;
+    var containedPipes = this.pipeSelection.getPipes();
+    
+    //Start from 1, because 0 will be shifted out.
+    for(var i = 1; i < containedPipes.length; i++) {
+        if(this.isPipeUseable(containedPipes[i].type))
+            containedUseablePipe++;
+    }
+
+    var pipe = pipes[Math.floor(Math.random() * pipes.length)];
+    //If there are no useable pipes, make sure we add one.
+    if(containedUseablePipe === 0) {
+        var useful = this.getUsefulPipe();
+        pipe = useful === null ? pipe : useful;
+    }
+    
+    this.pipeSelection.shiftIn(pipe.create());
+};
 
 GameScreen.prototype.getUsefulPipe = function () {
     var pipes = Pipes.values();
@@ -96,14 +166,16 @@ GameScreen.prototype.getUsefulPipe = function () {
 
     for (var i = 0; i < 100; i++) {
         pipe = pipes[Math.floor(Math.random() * pipes.length)];
-        if (this.isPipeUseable(pipe.create()))
+        if (this.isPipeUseable(pipe))
             return pipe;
     }
     
     return null;
 };
 
-GameScreen.prototype.isPipeUseable = function (pipe) {
+GameScreen.prototype.isPipeUseable = function (pipeType) {
+    var pipe = pipeType.create();
+    pipe.fill(null);
     var starts = [];
 
     if (this.newlyFilledPipes.length > 0) {
@@ -170,11 +242,11 @@ GameScreen.prototype.update = function (deltaTime) {
         if (pipes[i].isLeaking() && pipes[i] !== this.drain && pipes[i] !== this.drain)
         {
             this.playing = false;
-            this.screenController.setScreen(new GameOverScreen(this.width, this.height, this.screenController));
+            this.screenController.setScreen(new GameOverScreen(this.width, this.height, this.screenController, this.score));
         }
     }
 
-    if (this.pump.getConnections().length > 0)
+    if (this.pump.getConnections().length > 0 || this.pipesPlaced >= this.PIPES_PLACED_BEFORE_PLAY)
     {
         this.elapsedSinceLastPump += deltaTime;
 
@@ -184,12 +256,11 @@ GameScreen.prototype.update = function (deltaTime) {
             this.newlyFilledPipes = this.grid.pump();
 
             if (this.drain.isFilled()) {
-                alert("You beat this level!");
+                this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.drain.getLocation(), this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 10));
                 this.playing = false;
             }
-
-            this.draggingPipe = null;
-            this.refreshPipeSelection();
+            
+            this.shiftInPipe();
         }
     }
 };
@@ -272,6 +343,9 @@ GameScreen.prototype.onMouseUp = function (location) {
             else {
                 this.grid.setPipe(gridCoord, this.draggingPipe);
                 this.pipesPlaced++;
+                this.shiftInPipe();
+                
+                this.draggingPipe = null;
             }
         } else
             this.pipeSelection.pushPipe(this.draggingPipe);
@@ -393,4 +467,8 @@ GameScreen.prototype.getDrainDirections = function (pipe) {
     }
 
     return drainDirections;
+};
+
+GameScreen.prototype.onKeyDown = function(keyCode) {
+    
 };

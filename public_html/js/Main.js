@@ -97,3 +97,7 @@ window.onload = function () {
     };
 };
 
+window.addEventListener('keydown', function(e) {
+    game.onKeyDown(e.keyCode);
+    e.preventDefault();
+},false);

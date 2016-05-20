@@ -13,3 +13,5 @@ $insertScoreStmt->bindParam(':score', $_GET["score"]);
 $insertScoreStmt->bindParam(':level', $_GET["level"]);
 
 $insertScoreStmt->execute();
+
+echo "asdf";

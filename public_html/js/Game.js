@@ -71,3 +71,7 @@ Game.prototype.onMouseDown = function (location) {
 Game.prototype.onMouseUp = function(location) {
     this.screen.onMouseUp(location);
 };
+
+Game.prototype.onKeyDown = function(keyCode) {
+    return this.screen.onKeyDown(keyCode);
+};

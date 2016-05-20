@@ -77,3 +77,7 @@ TutorialScreen.prototype.onMouseMove = function(location) {
     
     this.lastActiveControl = selectedControl;
 };
+
+TutorialScreen.prototype.onKeyDown = function(keyCode) {
+    
+};
