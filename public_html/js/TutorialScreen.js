@@ -1,11 +1,16 @@
 function TutorialScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
     
-    this.MAIN_MENU_LOCATION = new Vector(0, 85);
-    this.PLAY_LOCATION = new Vector(0, 135);
-
-    this.playButton = new Button("Play", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
+    this.MAIN_MENU_LOCATION = new Vector(0, 35);
+    this.BACK_LOCATION = new Vector(0, 285);
+    this.NEXT_LOCATION = new Vector(0, 285);
+    
+    this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
+    this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
+    
     this.mainMenuButton = new Button("Main Menu", function() {screenController.setScreen(new MenuScreen(width, height, screenController))});
+    this.nextButton = new Button("Next", function() {});
+    this.backButton = new Button("Back", function() {});
     this.lastActiveControl = null;
     
     this.width = width;
@@ -17,8 +22,9 @@ TutorialScreen.prototype.update = function (deltaTime) {
 };
 
 TutorialScreen.prototype.correctLayout = function() {
-    this.PLAY_LOCATION.x = (this.width - this.playButton.getBounds().width) / 2;
-    this.MAIN_MENU_LOCATION.x = (this.width - this.mainMenuButton.getBounds().width) / 2;
+    this.BACK_LOCATION.x = ((this.width - this.backButton.getBounds().width) / 2) - 100;
+    this.NEXT_LOCATION.x = ((this.width - this.nextButton.getBounds().width) / 2) + 100;
+    this.MAIN_MENU_LOCATION.x = ((this.width - this.mainMenuButton.getBounds().width) / 2) - 100;
 };
 
 /**
@@ -29,7 +35,8 @@ TutorialScreen.prototype.correctLayout = function() {
  */
 TutorialScreen.prototype.draw = function (g, x, y) {
     this.correctLayout();
-    this.playButton.draw(g, x + this.PLAY_LOCATION.x, y + this.PLAY_LOCATION.y);
+    this.backButton.draw(g, x + this.BACK_LOCATION.x, y + this.BACK_LOCATION.y);
+    this.nextButton.draw(g, x + this.NEXT_LOCATION.x, y + this.NEXT_LOCATION.y);
     this.mainMenuButton.draw(g, x + this.MAIN_MENU_LOCATION.x, y + this.MAIN_MENU_LOCATION.y);
 };
 
@@ -56,8 +63,10 @@ TutorialScreen.prototype.onMouseUp = function(location) {
 TutorialScreen.prototype.onMouseMove = function(location) {
     var selectedControl = null;
     
-    if(this.playButton.getBounds().add(this.PLAY_LOCATION).contains(location))
-        selectedControl = this.playButton;
+    if(this.backButton.getBounds().add(this.BACK_LOCATION).contains(location))
+        selectedControl = this.backButton;
+    else if(this.nextButton.getBounds().add(this.NEXT_LOCATION).contains(location))
+        selectedControl = this.nextButton;
     else if(this.mainMenuButton.getBounds().add(this.MAIN_MENU_LOCATION).contains(location))
         selectedControl = this.mainMenuButton;
     

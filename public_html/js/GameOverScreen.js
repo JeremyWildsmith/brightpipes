@@ -2,8 +2,11 @@ function GameOverScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
     
     this.GAME_OVER_LOCATION = new Vector(0, 35);
-    this.MAIN_MENU_LOCATION = new Vector(0, 85);
-    this.PLAY_AGAIN_LOCATION = new Vector(0, 135);
+    this.MAIN_MENU_LOCATION = new Vector(0, 285);
+    this.PLAY_AGAIN_LOCATION = new Vector(0, 285);
+    
+    this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
+    this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
 
     this.playAgainButton = new Button("Play Again", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
     this.mainMenuButton = new Button("Main Menu", function() {screenController.setScreen(new MenuScreen(width, height, screenController))});
@@ -18,8 +21,8 @@ GameOverScreen.prototype.update = function (deltaTime) {
 };
 
 GameOverScreen.prototype.correctLayout = function() {
-    this.PLAY_AGAIN_LOCATION.x = (this.width - this.playAgainButton.getBounds().width) / 2;
-    this.MAIN_MENU_LOCATION.x = (this.width - this.mainMenuButton.getBounds().width) / 2;
+    this.PLAY_AGAIN_LOCATION.x = ((this.width - this.playAgainButton.getBounds().width) / 2) - 100;
+    this.MAIN_MENU_LOCATION.x = ((this.width - this.mainMenuButton.getBounds().width) / 2) + 100;
 };
 
 /**
