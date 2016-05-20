@@ -1,7 +1,7 @@
 function LeaderboardScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
 
-    this.SUBMIT_LOCATION = new Vector(0, 500);
+    this.SUBMIT_LOCATION = new Vector(0, 400);
 
     this.submitButton = new Button("Main Menu", function () {
         screenController.setScreen(new MenuScreen(width, height, screenController));
