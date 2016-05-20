@@ -79,7 +79,7 @@ GameScreen.prototype.fillPipeSelection = function () {
         this.pipeSelection.pushPipe(pipe.create());
         generatedPipes.push(pipe);
     }
-    
+/*    
     do {
         do {
             pipe = pipes[Math.floor(Math.random() * pipes.length)];
@@ -88,7 +88,7 @@ GameScreen.prototype.fillPipeSelection = function () {
         generatedPipes.push(pipe);
 
     } while (this.pipeSelection.pushPipe(pipe.create()));
-};
+*/};
 
 GameScreen.prototype.getUsefulPipe = function () {
     var pipes = Pipes.values();

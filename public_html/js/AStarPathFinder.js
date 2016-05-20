@@ -18,6 +18,9 @@ AStarPathFinder.prototype.findPath = function (start, end) {
     {
         var smallestScore = this.smallestScore(open, end);
 
+        if(smallestScore == null)
+            var i =0;
+
         if (smallestScore.getLocation().equals(end))
             return smallestScore;
 

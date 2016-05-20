@@ -5,9 +5,6 @@ function TutorialScreen(width, height, screenController) {
     this.BACK_LOCATION = new Vector(0, 285);
     this.NEXT_LOCATION = new Vector(0, 285);
     
-    this.grassTiles = new TilingGraphic(new LoadingGraphic("gfx/grassTile.png", 0, 0), width, 50);
-    this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
-    
     this.mainMenuButton = new Button("Main Menu", function() {screenController.setScreen(new MenuScreen(width, height, screenController))});
     this.nextButton = new Button("Next", function() {});
     this.backButton = new Button("Back", function() {});
