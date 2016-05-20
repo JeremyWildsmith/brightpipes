@@ -183,12 +183,7 @@ var Pipes = {
         var array = [];
 
         array.push(Pipes.Obstacle);
-        array.push(Pipes.LeftRightDown);
-        array.push(Pipes.LeftRightUp);
-        array.push(Pipes.LeftUpDown);
-        array.push(Pipes.RightUpDown);
-        array.push(Pipes.CrossPipe);
-
+    
         return array;
     }
 };
