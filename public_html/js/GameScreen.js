@@ -62,11 +62,7 @@ GameScreen.prototype.randomizePlacement = function(object) {
 
 GameScreen.prototype.generateLevel = function(minDistance, maxDistance, drainLocation) {
     do {
-        if(drainLocation === undefined)
-            this.randomizePlacement(this.pump);
-        else
-            this.grid.setPipe(drainLocation, this.pump);
-        
+        this.randomizePlacement(this.pump);
         this.randomizePlacement(this.drain);
     } while(!this.isLevelSolvable() ||
             this.pump.getLocation().difference(this.drain.getLocation()).getLength() > maxDistance ||
