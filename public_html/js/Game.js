@@ -1,6 +1,4 @@
 /**
- * 
- * @param {type} width
  * The game object manages and delegates render/control to
  * individual game screens.
  */
@@ -9,7 +7,6 @@
  * Constructs a new game object
  * @param {Number} width The game canvas width
  * @param {Number} height the game canvas height
- * @returns {Game}
  */
 function Game(width, height)
 {
@@ -21,6 +18,10 @@ function Game(width, height)
     this.dirtTiles = new TilingGraphic(new LoadingGraphic("gfx/dirtTile.png", 0, 0), width, height);
 }
 
+/**
+ * Sets the active game screen.
+ * @param {type} screen The screen to make the new active game screen.
+ */
 Game.prototype.setScreen = function(screen) {
     this.screen = screen;
 };
@@ -65,13 +66,17 @@ Game.prototype.onMouseDown = function (location) {
 };
 
 /**
- * On mouse up event handler, passes to active screen.
+ * On mouse up event handler, passed to active screen.
  * @param {Vector} location Location of mouse cursor during event.
  */
 Game.prototype.onMouseUp = function(location) {
     this.screen.onMouseUp(location);
 };
 
+/**
+ * On key down event handler, passed to active screen.
+ * @param {type} keyCode The key-code of key that was pressed down.
+ */
 Game.prototype.onKeyDown = function(keyCode) {
     return this.screen.onKeyDown(keyCode);
 };

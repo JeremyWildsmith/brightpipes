@@ -1,3 +1,13 @@
+/**
+ * MenuScreen handles all drawing and input related to the menu screen.
+ */
+
+/**
+ * Creates a new MenuScreen
+ * @param {type} width The width of the canvas
+ * @param {type} height The height of the canvas
+ * @param {type} screenController The screen controller
+ */
 function MenuScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
     
@@ -21,10 +31,17 @@ function MenuScreen(width, height, screenController) {
     this.height = height;
 }
 
+/**
+ * Performs any update to the logic in this screen.
+ * @param {type} deltaTime The time that has past since this method was last invoked.
+ */
 MenuScreen.prototype.update = function (deltaTime) {
 
 };
 
+/**
+ * Corrects the layout respective to the canvas size.
+ */
 MenuScreen.prototype.correctLayout = function() {
     this.START_BUTTON_LOCATION.x = (this.width - this.startButton.getBounds().width) / 2;
     this.LEADERBOARDS_BUTTON_LOCATION.x = (this.width - this.leaderboardsButton.getBounds().width) / 2;
@@ -55,7 +72,7 @@ MenuScreen.prototype.draw = function (g, x, y) {
 };
 
 /**
- * On mouse down event handler, passes to active screen.
+ * On mouse down event handler.
  * @param {Vector} location Location of mouse cursor during event.
  */
 MenuScreen.prototype.onMouseDown = function(location) {
@@ -74,6 +91,10 @@ MenuScreen.prototype.onMouseUp = function(location) {
         this.lastActiveControl.onMouseUp(location);
 };
 
+/**
+ * On mouse down event handler.
+ * @param {Vector} location Location of mouse cursor during event.
+ */
 MenuScreen.prototype.onMouseMove = function(location) {
     var selectedControl = null;
     
@@ -97,6 +118,10 @@ MenuScreen.prototype.onMouseMove = function(location) {
     this.lastActiveControl = selectedControl;
 };
 
+/**
+ * Handles key events for this screen.
+ * @param {type} keyCode The key code for the key that was pressed.
+ */
 MenuScreen.prototype.onKeyDown = function(keyCode) {
     
 };

@@ -1,3 +1,14 @@
+/**
+ * GameOverScreen handles all drawing and input related to the game over screen.
+ */
+
+/**
+ * Creates a new GameOverScreen
+ * @param {type} width The width of the canvas
+ * @param {type} height The height of the canvas
+ * @param {type} screenController The screen controller
+ * @param {type} score The score of the user entering this screen.
+ */
 function GameOverScreen(width, height, screenController, score) {
     this.CELL_DIMENSIONS = 50;
 
@@ -25,10 +36,17 @@ function GameOverScreen(width, height, screenController, score) {
     this.score = score;
 }
 
+/**
+ * Performs any update to the logic in this screen.
+ * @param {type} deltaTime The time that has past since this method was last invoked.
+ */
 GameOverScreen.prototype.update = function (deltaTime) {
 
 };
 
+/**
+ * Corrects the layout respective to the canvas size.
+ */
 GameOverScreen.prototype.correctLayout = function () {
     
     this.PLAY_AGAIN_LOCATION.x = ((this.width - this.playAgainButton.getBounds().width) / 2) - 100;
@@ -64,7 +82,7 @@ GameOverScreen.prototype.draw = function (g, x, y) {
 };
 
 /**
- * On mouse down event handler, passes to active screen.
+ * On mouse down event handler.
  * @param {Vector} location Location of mouse cursor during event.
  */
 GameOverScreen.prototype.onMouseDown = function (location) {
@@ -75,7 +93,7 @@ GameOverScreen.prototype.onMouseDown = function (location) {
 };
 
 /**
- * On mouse up event handler, passes to active screen.
+ * On mouse up event handler.
  * @param {Vector} location Location of mouse cursor during event.
  */
 GameOverScreen.prototype.onMouseUp = function (location) {
@@ -83,6 +101,10 @@ GameOverScreen.prototype.onMouseUp = function (location) {
         this.lastActiveControl.onMouseUp(location);
 };
 
+/**
+ * Handles mouse move events.
+ * @param {type} location The current location of the mouse.
+ */
 GameOverScreen.prototype.onMouseMove = function (location) {
     var selectedControl = null;
 
@@ -104,6 +126,10 @@ GameOverScreen.prototype.onMouseMove = function (location) {
     this.lastActiveControl = selectedControl;
 };
 
+/**
+ * Handles key events for this screen.
+ * @param {type} keyCode The key code for the key that was pressed.
+ */
 GameOverScreen.prototype.onKeyDown = function(keyCode) {
     
 };

@@ -1,3 +1,13 @@
+/**
+ * TutorialScreen handles all drawing and input related to the tutorial screen.
+ */
+
+/**
+ * Creates a new GameOverScreen
+ * @param {type} width The width of the canvas
+ * @param {type} height The height of the canvas
+ * @param {type} screenController The screen controller
+ */
 function TutorialScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
     
@@ -14,10 +24,17 @@ function TutorialScreen(width, height, screenController) {
     this.height = height;
 }
 
+/**
+ * Performs any update to the logic in this screen.
+ * @param {type} deltaTime The time that has past since this method was last invoked.
+ */
 TutorialScreen.prototype.update = function (deltaTime) {
 
 };
 
+/**
+ * Corrects the layout respective to the canvas size.
+ */
 TutorialScreen.prototype.correctLayout = function() {
     this.BACK_LOCATION.x = ((this.width - this.backButton.getBounds().width) / 2) - 100;
     this.NEXT_LOCATION.x = ((this.width - this.nextButton.getBounds().width) / 2) + 100;
@@ -38,7 +55,7 @@ TutorialScreen.prototype.draw = function (g, x, y) {
 };
 
 /**
- * On mouse down event handler, passes to active screen.
+ * On mouse down event handler.
  * @param {Vector} location Location of mouse cursor during event.
  */
 TutorialScreen.prototype.onMouseDown = function(location) {
@@ -57,6 +74,10 @@ TutorialScreen.prototype.onMouseUp = function(location) {
         this.lastActiveControl.onMouseUp(location);
 };
 
+/**
+ * On mouse down event handler.
+ * @param {Vector} location Location of mouse cursor during event.
+ */
 TutorialScreen.prototype.onMouseMove = function(location) {
     var selectedControl = null;
     
@@ -78,6 +99,10 @@ TutorialScreen.prototype.onMouseMove = function(location) {
     this.lastActiveControl = selectedControl;
 };
 
+/**
+ * Handles key events for this screen.
+ * @param {type} keyCode The key code for the key that was pressed.
+ */
 TutorialScreen.prototype.onKeyDown = function(keyCode) {
     
 };

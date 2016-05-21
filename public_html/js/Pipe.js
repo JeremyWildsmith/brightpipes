@@ -154,9 +154,14 @@ Pipe.prototype.getConnections = function (dir) {
     return pipeArray;
 
 };
-//Probably wont do much, at least not now
+
+/**
+ * Updates any time related properties of the pipe object.
+ * @param {type} deltaTime Time since this method was last called.
+ */
 Pipe.prototype.update = function (deltaTime) {
 };
+
 /**
  * Function used to see if the pipe is connected to the pump
  * 
@@ -183,6 +188,10 @@ Pipe.prototype.getDirections = function () {
     return this.connectionDirections;
 };
 
+/**
+ * Gets the pipes current location.
+ * @returns {Vector} The current location of the pipe.
+ */
 Pipe.prototype.getLocation = function() {
     return this.location;
 };

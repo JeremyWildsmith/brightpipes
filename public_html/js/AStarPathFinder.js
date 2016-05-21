@@ -1,8 +1,19 @@
+/**
+ * Creats a new A Start Path Finder instance for the specified game grid.
+ * @param {type} grid The game grid to locate the path for.
+ * @returns {AStarPathFinder}
+ */
 function AStarPathFinder(grid) {
     this.grid = grid;
     this.MAX_ITERATIONS = 200;
 }
 
+/**
+ * Attempts to find a path between two specified points in the game grid.
+ * @param {type} start The start of the path
+ * @param {type} end The location you want to path to.
+ * @returns {AStarNode} An AStarNode equal to the end location or null if no path could be found.
+ */
 AStarPathFinder.prototype.findPath = function (start, end) {
     var open = [];
     var closed = [];
@@ -42,15 +53,27 @@ AStarPathFinder.prototype.findPath = function (start, end) {
     return null;
 };
 
-AStarPathFinder.prototype.contains = function(node, openSet) {
-    for(var i = 0; i < openSet.length; i++) {
-        if(openSet[i].equals(node))
+/**
+ * Test whether a node is contained in a specified set.
+ * @param {type} node The node to test
+ * @param {type} set The set to test against.
+ * @returns {Boolean} Whether the node is contained in the specified set.
+ */
+AStarPathFinder.prototype.contains = function(node, set) {
+    for(var i = 0; i < set.length; i++) {
+        if(set[i].equals(node))
             return true;
     }
     
     return false;
 };
 
+/**
+ * Gets the smallest scored node in a specified set.
+ * @param {type} adjacent Set of nodes to search
+ * @param {type} start Start location of path.
+ * @returns {AStarNode} The smallest score node in specified set.
+ */
 AStarPathFinder.prototype.smallestScore = function (adjacent, start) {
     var smallestScore = Number.MAX_VALUE;
     var smallest = null;
@@ -69,6 +92,12 @@ AStarPathFinder.prototype.smallestScore = function (adjacent, start) {
     return smallest;
 };
 
+/**
+ * Tests whether a node is 'walkable', or can have pipes placed on it.
+ * @param {type} node The node to test the useability of.
+ * @param {type} dest The destination you are trying to reach.
+ * @returns {Boolean} Whether the specified node can have pipes placed on it.
+ */
 AStarPathFinder.prototype.isWalkable = function (node, dest) {
     
     if(node.getLocation().equals(dest))

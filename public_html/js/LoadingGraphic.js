@@ -27,6 +27,10 @@ LoadingGraphic.prototype.draw = function(g, x, y) {
     this.gfx.draw(g, x, y);
 };
 
+/**
+ * Returns the bounds of the graphic in its current state.
+ * @returns {Rectangle} The bounds of the graphic.
+ */
 LoadingGraphic.prototype.getBounds = function() {
     return this.gfx.getBounds();
 };

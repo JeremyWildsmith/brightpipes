@@ -1,3 +1,13 @@
+/**
+ * SettingsScreen handles all drawing and input related to the game settings screen.
+ */
+
+/**
+ * Creates a new SettingsScreen
+ * @param {type} width The width of the canvas
+ * @param {type} height The height of the canvas
+ * @param {type} screenController The screen controller
+ */
 function SettingsScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
     this.TOGGLE_SFX_LOCATION = new Vector(0, 35);
@@ -13,10 +23,17 @@ function SettingsScreen(width, height, screenController) {
     this.height = height;
 }
 
+/**
+ * Performs any update to the logic in this screen.
+ * @param {type} deltaTime The time that has past since this method was last invoked.
+ */
 SettingsScreen.prototype.update = function (deltaTime) {
 
 };
 
+/**
+ * Corrects the layout respective to the canvas size.
+ */
 SettingsScreen.prototype.correctLayout = function() {
     this.TOGGLE_SFX_LOCATION.x = (this.width - this.toggleSfx.getBounds().width) / 2;
     this.TOGGLE_FX_LOCATION.x = (this.width - this.toggleFx.getBounds().width) / 2;
@@ -37,7 +54,7 @@ SettingsScreen.prototype.draw = function (g, x, y) {
 };
 
 /**
- * On mouse down event handler, passes to active screen.
+ * On mouse down event handler.
  * @param {Vector} location Location of mouse cursor during event.
  */
 SettingsScreen.prototype.onMouseDown = function(location) {
@@ -56,6 +73,10 @@ SettingsScreen.prototype.onMouseUp = function(location) {
         this.lastActiveControl.onMouseUp(location);
 };
 
+/**
+ * Handles mouse move events.
+ * @param {type} location The current location of the mouse.
+ */
 SettingsScreen.prototype.onMouseMove = function(location) {
     var selectedControl = null;
     
@@ -75,4 +96,12 @@ SettingsScreen.prototype.onMouseMove = function(location) {
     }
     
     this.lastActiveControl = selectedControl;
+};
+
+/**
+ * Handles key events for this screen.
+ * @param {type} keyCode The key code for the key that was pressed.
+ */
+SettingsScreen.prototype.onKeyDown = function(keyCode) {
+    
 };

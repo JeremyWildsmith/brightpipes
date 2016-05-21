@@ -1,3 +1,13 @@
+/**
+ * LeaderboardScreen handles all drawing and input related to the leaderboard screen.
+ */
+
+/**
+ * Creates a new LeaderboardScreen
+ * @param {type} width The width of the canvas
+ * @param {type} height The height of the canvas
+ * @param {type} screenController The screen controller
+ */
 function LeaderboardScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
 
@@ -27,16 +37,23 @@ function LeaderboardScreen(width, height, screenController) {
     });
 }
 
+/**
+ * Performs any update to the logic in this screen.
+ * @param {type} deltaTime The time that has past since this method was last invoked.
+ */
 LeaderboardScreen.prototype.update = function (deltaTime) {
 
 };
 
+/**
+ * Corrects the layout respective to the canvas size.
+ */
 LeaderboardScreen.prototype.correctLayout = function () {
     this.SUBMIT_LOCATION.x = ((this.width - this.submitButton.getBounds().width) / 2);
 };
 
 /**
- * Draws game screen.
+ * Draws leaderboard screen.
  * @param {Context2D} g Graphics context object through which to draw.
  * @param {Number} x The draw offset
  * @param {Number} y The draw offset
@@ -63,7 +80,7 @@ LeaderboardScreen.prototype.draw = function (g, x, y) {
 };
 
 /**
- * On mouse down event handler, passes to active screen.
+ * On mouse down event handler.
  * @param {Vector} location Location of mouse cursor during event.
  */
 LeaderboardScreen.prototype.onMouseDown = function (location) {
@@ -74,7 +91,7 @@ LeaderboardScreen.prototype.onMouseDown = function (location) {
 };
 
 /**
- * On mouse up event handler, passes to active screen.
+ * On mouse up event handler.
  * @param {Vector} location Location of mouse cursor during event.
  */
 LeaderboardScreen.prototype.onMouseUp = function (location) {
@@ -82,6 +99,10 @@ LeaderboardScreen.prototype.onMouseUp = function (location) {
         this.lastActiveControl.onMouseUp(location);
 };
 
+/**
+ * Handles mouse move events.
+ * @param {type} location The current location of the mouse.
+ */
 LeaderboardScreen.prototype.onMouseMove = function (location) {
     var selectedControl = null;
 
@@ -99,6 +120,10 @@ LeaderboardScreen.prototype.onMouseMove = function (location) {
     this.lastActiveControl = selectedControl;
 };
 
+/**
+ * Handles key events for this screen.
+ * @param {type} keyCode The key code for the key that was pressed.
+ */
 LeaderboardScreen.prototype.onKeyDown = function (keyCode) {
 
     //Backspace

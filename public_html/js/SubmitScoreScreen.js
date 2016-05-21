@@ -1,3 +1,14 @@
+/**
+ * SubmitScoreScreen handles all drawing and input related to the submit score screen.
+ */
+
+/**
+ * Creates a new SubmitScoreScreen
+ * @param {type} width The width of the canvas
+ * @param {type} height The height of the canvas
+ * @param {type} screenController The screen controller
+ * @param {type} score The score of the user entering this screen.
+ */
 function SubmitScoreScreen(width, height, screenController, score) {
     this.CELL_DIMENSIONS = 50;
 
@@ -26,10 +37,17 @@ function SubmitScoreScreen(width, height, screenController, score) {
     this.name = "";
 }
 
+/**
+ * Performs any update to the logic in this screen.
+ * @param {type} deltaTime The time that has past since this method was last invoked.
+ */
 SubmitScoreScreen.prototype.update = function (deltaTime) {
 
 };
 
+/**
+ * Corrects the layout respective to the canvas size.
+ */
 SubmitScoreScreen.prototype.correctLayout = function () {
     this.SUBMIT_LOCATION.x = ((this.width - this.submitButton.getBounds().width) / 2);
 };
@@ -70,7 +88,7 @@ SubmitScoreScreen.prototype.draw = function (g, x, y) {
 };
 
 /**
- * On mouse down event handler, passes to active screen.
+ * On mouse down event handler.
  * @param {Vector} location Location of mouse cursor during event.
  */
 SubmitScoreScreen.prototype.onMouseDown = function (location) {
@@ -106,6 +124,10 @@ SubmitScoreScreen.prototype.onMouseMove = function (location) {
     this.lastActiveControl = selectedControl;
 };
 
+/**
+ * Handles key events for this screen.
+ * @param {type} keyCode The key code for the key that was pressed.
+ */
 SubmitScoreScreen.prototype.onKeyDown = function (keyCode) {
 
     //Backspace

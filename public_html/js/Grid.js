@@ -88,6 +88,10 @@ Grid.prototype.clearPipe = function (location) {
     this.pipes[location.x][location.y] = null;
 };
 
+/**
+ * Removes all instances of the specified pipe from the grid.
+ * @param {type} pipe The pipe to be removed.
+ */
 Grid.prototype.removePipe = function (pipe) {
     for (var x = 0; x < this.gridWidth; x++) {
         for (var y = 0; y < this.gridHeight; y++) {
@@ -165,13 +169,17 @@ Grid.prototype.getBounds = function () {
     return new Rectangle(new Vector(0, 0), this.gridWidth * this.cellDimensions, this.gridHeight * this.cellDimensions);
 };
 
+/**
+ * Gets the bounds of the grid, in terms of cells.
+ * @returns {Rectangle} The bounds of the grid, in terms of cells.
+ */
 Grid.prototype.getCellBounds = function () {
     return new Rectangle(new Vector(0, 0), this.gridWidth, this.gridHeight);
 };
 
 /**
  * Gets a list of all filled pipes in the grid.
- * @returns {Array|Grid.prototype.getFilledPipes.filledPipes} Filled pipes in the grid.
+ * @returns Array of all filled pipes in the grid.
  */
 Grid.prototype.getFilledPipes = function () {
     var filledPipes = [];

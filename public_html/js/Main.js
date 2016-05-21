@@ -26,6 +26,9 @@ function getLocation(e) {
     }
 }
 
+/**
+ * Sets up the game loop.
+ */
 window.onload = function () {
     var dt = 33;
     canvas = document.getElementById("mainCanvas");
@@ -97,6 +100,9 @@ window.onload = function () {
     };
 };
 
+/**
+ * Register an event listener to tunnel all key events in to the game.
+ */
 window.addEventListener('keydown', function(e) {
     game.onKeyDown(e.keyCode);
     e.preventDefault();

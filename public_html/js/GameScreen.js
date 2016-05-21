@@ -3,7 +3,11 @@
  */
 
 /**
- * @returns {GameScreen} A new GameScreen object.
+ * Creates a new GameScreen
+ * @param {type} width The width of the canvas
+ * @param {type} height The height of the canvas
+ * @param {type} screenController The screen controller
+ * @param {type} score The score of the user entering this screen.
  */
 function GameScreen(width, height, screenController, drainLocation, score) {
     this.PUMP_INTERVAL = 3000;
@@ -47,6 +51,10 @@ function GameScreen(width, height, screenController, drainLocation, score) {
     this.score = score === undefined ? 0 : score;
 }
 
+/**
+ * Randomized the placement of the specified object on the game grid.
+ * @param {type} object The object to place on the game grid.
+ */
 GameScreen.prototype.randomizePlacement = function(object) {
     object.detach();
     var gridBounds = this.grid.getCellBounds();
@@ -60,6 +68,13 @@ GameScreen.prototype.randomizePlacement = function(object) {
     this.grid.setPipe(location, object);
 };
 
+/**
+ * Generates a solvable game level.
+ * @param {type} minDistance The minimum distance between the pump & pipe.
+ * @param {type} maxDistance The maximum distance between the pump & pipe.
+ * @param {type} drainLocation The location of the drain in the last level.
+ * @returns {undefined}
+ */
 GameScreen.prototype.generateLevel = function(minDistance, maxDistance, drainLocation) {
     do {
         this.randomizePlacement(this.pump);
@@ -78,6 +93,10 @@ GameScreen.prototype.generateLevel = function(minDistance, maxDistance, drainLoc
     }
 };
 
+/*
+ * Tests whether the level is solvable in its current state.
+ * @returns {Boolean} Whether the level is solvable.
+ */
 GameScreen.prototype.isLevelSolvable = function() {
     var pathFinder = new AStarPathFinder(this.grid);
     
@@ -87,7 +106,7 @@ GameScreen.prototype.isLevelSolvable = function() {
 };
 
 /**
- * Refreshes the pipe selection area with new pipes.
+ * Refreshes the pipe selection queue with new pipes.
  */
 GameScreen.prototype.refreshPipeSelection = function () {
     this.pipeSelection.clear();
@@ -95,7 +114,7 @@ GameScreen.prototype.refreshPipeSelection = function () {
 };
 
 /**
- * Fills the pipe selection area with new pipes in open slots.
+ * Fills the pipe selection queue with new pipes.
  */
 GameScreen.prototype.fillPipeSelection = function () {
     
@@ -133,6 +152,9 @@ GameScreen.prototype.fillPipeSelection = function () {
     } while (this.pipeSelection.pushPipe(pipe.create()));
 };
 
+/**
+ * Shifts a new pipe in from the right hand side of the pipe selection queue.
+ */
 GameScreen.prototype.shiftInPipe = function () {
     var pipes = Pipes.values();
     
@@ -156,6 +178,10 @@ GameScreen.prototype.shiftInPipe = function () {
     this.pipeSelection.shiftIn(pipe.create());
 };
 
+/**
+ * Gets a useful pipe.
+ * @returns {Pipe} A pipe that is useable.
+ */
 GameScreen.prototype.getUsefulPipe = function () {
     var pipes = Pipes.values();
     var pipe = null;
@@ -169,6 +195,11 @@ GameScreen.prototype.getUsefulPipe = function () {
     return null;
 };
 
+/**
+ * Tests whether the specified pipe is useable.
+ * @param {type} pipeType The type of the pipe to test the usability off.
+ * @returns {Boolean} Whether the pipe is useable.
+ */
 GameScreen.prototype.isPipeUseable = function (pipeType) {
     var pipe = pipeType.create();
     pipe.fill(null);
@@ -308,7 +339,7 @@ GameScreen.prototype.draw = function (g, x, y) {
 };
 
 /**
- * On mouse down event handler, passes to active screen.
+ * On mouse down event handler.
  * @param {Vector} location Location of mouse cursor during event.
  */
 GameScreen.prototype.onMouseDown = function (location) {
@@ -322,7 +353,7 @@ GameScreen.prototype.onMouseDown = function (location) {
 };
 
 /**
- * On mouse up event handler, passes to active screen.
+ * On mouse up event handler.
  * @param {Vector} location Location of mouse cursor during event.
  */
 GameScreen.prototype.onMouseUp = function (location) {
@@ -351,8 +382,8 @@ GameScreen.prototype.onMouseUp = function (location) {
 };
 
 /**
- * On mouse move event handler, passes to active screen.
- * @param {Vector} currentLocation - location of mouse cursor during event.
+ * Handles mouse move events.
+ * @param {type} location The current location of the mouse.
  */
 GameScreen.prototype.onMouseMove = function (currentLocation) {
     if (this.draggingPipe !== null)
@@ -465,6 +496,10 @@ GameScreen.prototype.getDrainDirections = function (pipe) {
     return drainDirections;
 };
 
+/**
+ * Handles key events for this screen.
+ * @param {type} keyCode The key code for the key that was pressed.
+ */
 GameScreen.prototype.onKeyDown = function(keyCode) {
     
 };
