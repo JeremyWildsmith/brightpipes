@@ -64,7 +64,69 @@ var Pipes = {
 
             return new Pipe(graphic, dirs, Pipes.LeftUp, true);
         }},
-    Pump: {value: 6, create: function () {
+    
+    FixedVertical: {value: 6, create: function () {
+            var dirs = [];
+
+            dirs.push(Direction.Up);
+            dirs.push(Direction.Down);
+
+            var graphic = new LoadingGraphic("gfx/vertical.png");
+
+            return new Pipe(graphic, dirs, Pipes.Vertical, false);
+        }},
+    FixedHorizontal: {value: 7, create: function () {
+            var dirs = [];
+
+            dirs.push(Direction.Left);
+            dirs.push(Direction.Right);
+
+            var graphic = new LoadingGraphic("gfx/horizontal.png");
+
+            return new Pipe(graphic, dirs, Pipes.Horizontal, false);
+        }},
+    FixedRightDown: {value: 8, create: function () {
+            var dirs = [];
+
+            dirs.push(Direction.Right);
+            dirs.push(Direction.Down);
+
+            var graphic = new LoadingGraphic("gfx/rightDown.png");
+
+            return new Pipe(graphic, dirs, Pipes.RightDown, false);
+        }},
+    FixedLeftDown: {value: 9, create: function () {
+            var dirs = [];
+
+            dirs.push(Direction.Left);
+            dirs.push(Direction.Down);
+
+            var graphic = new LoadingGraphic("gfx/leftDown.png");
+
+            return new Pipe(graphic, dirs, Pipes.LeftDown, false);
+        }},
+    FixedRightUp: {value: 10, create: function () {
+            var dirs = [];
+
+            dirs.push(Direction.Right);
+            dirs.push(Direction.Up);
+
+            var graphic = new LoadingGraphic("gfx/rightUp.png");
+
+            return new Pipe(graphic, dirs, Pipes.RightUp, false);
+        }},
+    FixedLeftUp: {value: 11, create: function () {
+            var dirs = [];
+
+            dirs.push(Direction.Left);
+            dirs.push(Direction.Up);
+
+            var graphic = new LoadingGraphic("gfx/leftUp.png");
+
+            return new Pipe(graphic, dirs, Pipes.LeftUp, false);
+        }},
+    ////////////
+    Pump: {value: 12, create: function () {
             var dirs = [];
 
             dirs.push(Direction.Down);
@@ -77,7 +139,7 @@ var Pipes = {
 
             return p;
         }},
-    Drain: {value: 7, create: function () {
+    Drain: {value: 13, create: function () {
             var dirs = [];
 
             dirs.push(Direction.Up);
@@ -91,7 +153,7 @@ var Pipes = {
 
             return p;
         }},
-    Obstacle: {value: 8, create: function () {
+    Obstacle: {value: 14, create: function () {
             var dirs = [];
 
             var graphic = new LoadingGraphic("gfx/demoblock.png");
@@ -100,7 +162,7 @@ var Pipes = {
 
             return p;
         }},
-    LeftRightDown: {value: 9, create: function () {
+    LeftRightDown: {value: 15, create: function () {
             var dirs = [];
 
             dirs.push(Direction.Down);
@@ -111,7 +173,7 @@ var Pipes = {
 
             return new Pipe(graphic, dirs, Pipes.LeftRightDown, false);
         }},
-    LeftRightUp: {value: 10, create: function () {
+    LeftRightUp: {value: 16, create: function () {
             var dirs = [];
 
             dirs.push(Direction.Up);
@@ -122,7 +184,7 @@ var Pipes = {
 
             return new Pipe(graphic, dirs, Pipes.LeftRightUp, false);
         }},
-    LeftUpDown: {value: 11, create: function () {
+    LeftUpDown: {value: 17, create: function () {
             var dirs = [];
 
             dirs.push(Direction.Down);
@@ -133,7 +195,7 @@ var Pipes = {
 
             return new Pipe(graphic, dirs, Pipes.LeftUpDown, false);
         }},
-    RightUpDown: {value: 12, create: function () {
+    RightUpDown: {value: 18, create: function () {
             var dirs = [];
 
             dirs.push(Direction.Down);
@@ -144,8 +206,7 @@ var Pipes = {
 
             return new Pipe(graphic, dirs, Pipes.RightUpDown, false);
         }},
-    
-    CrossPipe: {value: 13, create: function () {
+    CrossPipe: {value: 19, create: function () {
             var dirs = [];
 
             dirs.push(Direction.Down);
@@ -170,7 +231,7 @@ var Pipes = {
         array.push(Pipes.RightUp);
         array.push(Pipes.LeftUp);
 
-        if (includeComplex === true) {
+        if (includeComplex) {
             array.push(Pipes.LeftRightDown);
             array.push(Pipes.LeftRightUp);
             array.push(Pipes.LeftUpDown);
@@ -179,11 +240,28 @@ var Pipes = {
 
         return array;
     },
+    complexValues: function () {
+        var array = [];
+        array.push(Pipes.LeftRightDown);
+        array.push(Pipes.LeftRightUp);
+        array.push(Pipes.LeftUpDown);
+        array.push(Pipes.RightUpDown);
+
+        return array;
+    },
     obstacles: function () {
         var array = [];
 
         array.push(Pipes.Obstacle);
-    
+
+        array.push(Pipes.FixedVertical);
+        array.push(Pipes.FixedHorizontal);
+
+        array.push(Pipes.FixedRightDown);
+        array.push(Pipes.FixedLeftDown);
+
+        array.push(Pipes.FixedRightUp);
+        array.push(Pipes.FixedLeftUp);
         return array;
     }
 };

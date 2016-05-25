@@ -32,8 +32,8 @@ Rectangle.prototype.contains = function(location) {
  * @param {type} location The location to offset the rectangle by.
  * @returns {Rectangle} A new rectangle of the same width/height but offset by the specified location.
  */
-Rectangle.prototype.add = function(location) { 
-    var location = this.location.add(location);
+Rectangle.prototype.add = function(difference) { 
+    var location = this.location.add(difference);
     
     return new Rectangle(location, this.width, this.height);
 };
