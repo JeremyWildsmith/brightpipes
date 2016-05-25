@@ -17,6 +17,9 @@ function GameScreen(width, height, screenController, drainLocation, score) {
 
     this.GRID_LOCATION = new Vector(30, 35);
     this.PIPE_SELECTION_LOCATION = new Vector(53, 300);
+    this.SETTINGS_LOCATION = new Vector(53, 400);
+
+    this.settingsButton = new SettingsButton(function() {screenController.setScreen(new SettingsScreenGame(width, height, screenController));});
 
     this.playing = true;
 
@@ -49,6 +52,8 @@ function GameScreen(width, height, screenController, drainLocation, score) {
     this.height = height;
 
     this.score = score === undefined ? 0 : score;
+    
+    this.lastActiveControl = null;
 }
 
 /**
@@ -343,6 +348,7 @@ GameScreen.prototype.draw = function (g, x, y) {
 
     this.grid.draw(g, this.GRID_LOCATION.x + x, this.GRID_LOCATION.y + y);
     this.pipeSelection.draw(g, this.PIPE_SELECTION_LOCATION.x + x, this.PIPE_SELECTION_LOCATION.y + y);
+    this.settingsButton.draw(g, this.SETTINGS_LOCATION.x + x, this.SETTINGS_LOCATION.y + y);
 
     this.drawWater(g, x, y);
 
@@ -357,12 +363,15 @@ GameScreen.prototype.draw = function (g, x, y) {
  */
 GameScreen.prototype.onMouseDown = function (location) {
     var selectionBounds = this.pipeSelection.getBounds().add(this.PIPE_SELECTION_LOCATION);
+    this.onMouseMove(location);
 
     if (selectionBounds.contains(location)) {
         var pipe = this.pipeSelection.popPipe(location.difference(this.PIPE_SELECTION_LOCATION));
         this.draggingPipe = pipe;
         this.draggingLocation = location;
     }
+    if(this.lastActiveControl !== null)
+        this.lastActiveControl.onMouseDown(location);
 };
 
 /**
@@ -392,15 +401,33 @@ GameScreen.prototype.onMouseUp = function (location) {
     }
 
     this.draggingPipe = null;
+    
+    if(this.lastActiveControl !== null)
+        this.lastActiveControl.onMouseUp(location);
 };
 
 /**
  * Handles mouse move events.
  * @param {type} location The current location of the mouse.
  */
-GameScreen.prototype.onMouseMove = function (currentLocation) {
+GameScreen.prototype.onMouseMove = function (location) {
+    var selectedControl = null;
+  
     if (this.draggingPipe !== null)
-        this.draggingLocation = currentLocation;
+        this.draggingLocation = location;
+    
+    if(this.settingsButton.getBounds().add(this.SETTINGS_LOCATION).contains(location))
+        selectedControl = this.settingsButton;
+    
+    if(selectedControl !== this.lastActiveControl) {
+        if(this.lastActiveControl !== null)
+            this.lastActiveControl.onMouseLeave();
+        
+        if(selectedControl !== null)
+            selectedControl.onMouseEnter();
+    }
+    
+    this.lastActiveControl = selectedControl;
 };
 
 /**
