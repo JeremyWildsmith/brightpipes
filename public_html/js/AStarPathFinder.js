@@ -24,7 +24,7 @@ AStarPathFinder.prototype.findPath = function (start, end) {
         if (smallestScore.getLocation().equals(end))
             return smallestScore;
 
-        var possibleDirections = Direction.values();
+        var possibleDirections = this.getPossibleDirections(smallestScore);
 
         for (var x = 0; x < possibleDirections.length; x++)
         {
@@ -70,7 +70,6 @@ AStarPathFinder.prototype.smallestScore = function (adjacent, start) {
 };
 
 AStarPathFinder.prototype.isWalkable = function (node, dest) {
-    
     if(node.getLocation().equals(dest))
         return true;
     
@@ -79,5 +78,14 @@ AStarPathFinder.prototype.isWalkable = function (node, dest) {
     
     var pipe = this.grid.getPipe(node.getLocation());
 
-    return pipe === null || pipe.canReplace();
+    return pipe === null || pipe.isFilled();
+};
+
+AStarPathFinder.prototype.getPossibleDirections = function(node) {
+    var pipe = this.grid.getPipe(node.getLocation());
+    
+    if(pipe === null)
+        return Direction.values();
+    
+    return pipe.getDirections();
 };

@@ -61,6 +61,19 @@ GameScreen.prototype.randomizePlacement = function(object) {
 };
 
 GameScreen.prototype.generateLevel = function(minDistance, maxDistance, drainLocation) {
+    this.grid.setPipe(new Vector(0, 0), this.pump);
+    this.grid.setPipe(new Vector(3, 1), this.drain);
+    
+    this.grid.setPipe(new Vector(1, 0), Pipes.Obstacle.create());
+    this.grid.setPipe(new Vector(1, 1), Pipes.Obstacle.create());
+    this.grid.setPipe(new Vector(1, 2), Pipes.Obstacle.create());
+    this.grid.setPipe(new Vector(1, 3), Pipes.Obstacle.create());
+    this.grid.setPipe(new Vector(1, 4), Pipes.Obstacle.create());
+    this.grid.setPipe(new Vector(1, 5), Pipes.Horizontal.create());
+    this.grid.setPipe(new Vector(1, 6), Pipes.Obstacle.create());
+    
+    
+    /*
     do {
         this.randomizePlacement(this.pump);
         this.randomizePlacement(this.drain);
@@ -70,12 +83,12 @@ GameScreen.prototype.generateLevel = function(minDistance, maxDistance, drainLoc
     
     var obstacles = Pipes.obstacles();
     
-    for(var x = 0; x < 15; x++) {
+    for(var x = 0; x < 5; x++) {
         var obstacle = obstacles[Math.floor(Math.random() * obstacles.length)].create();
         do {
             this.randomizePlacement(obstacle);
         } while(!this.isLevelSolvable());    
-    }
+    }*/
 };
 
 GameScreen.prototype.isLevelSolvable = function() {
@@ -140,8 +153,8 @@ GameScreen.prototype.shiftInPipe = function () {
     var containedUseablePipe = 0;
     var containedPipes = this.pipeSelection.getPipes();
     
-    //Start from 1, because 0 will be shifted out.
-    for(var i = 1; i < containedPipes.length; i++) {
+    //Go to length - 1 because it will be shifted out.
+    for(var i = 0; i < containedPipes.length - 1; i++) {
         if(this.isPipeUseable(containedPipes[i].type))
             containedUseablePipe++;
     }
