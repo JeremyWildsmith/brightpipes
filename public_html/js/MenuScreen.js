@@ -16,11 +16,11 @@ function MenuScreen(width, height, screenController) {
     this.TUTORIAL_BUTTON_LOCATION = new Vector(0, 195);
     this.SETTINGS_BUTTON_LOCATION = new Vector(0, 245);
     
-    this.startButton = new Button("Start", function() {screenController.setScreen(new GameScreen(width, height, screenController))});
+    this.startButton = new Button("Start", function() {screenController.setScreen(new GameScreen(width, height, screenController));});
     this.leaderboardsButton = new Button("Leaderboard", function() {
             screenController.setScreen(new LeaderboardScreen(width, height, screenController));
     });
-    this.tutorialButton = new Button("Tutorial", function() {screenController.setScreen(new TutorialScreen(width, height, screenController))});
+    this.tutorialButton = new Button("Tutorial", function() {screenController.setScreen(new TutorialScreen(width, height, screenController));});
     this.settingsButton = new Button("Settings", function() {
         screenController.setScreen(new SettingsScreen(width, height, screenController));
     });
