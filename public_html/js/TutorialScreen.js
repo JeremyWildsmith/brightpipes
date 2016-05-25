@@ -15,7 +15,7 @@ function TutorialScreen(width, height, screenController) {
     this.BACK_LOCATION = new Vector(0, 285);
     this.NEXT_LOCATION = new Vector(0, 285);
     
-    this.mainMenuButton = new Button("Main Menu", function() {screenController.setScreen(new MenuScreen(width, height, screenController))});
+    this.mainMenuButton = new Button("Main Menu", function() {screenController.setScreen(new MenuScreen(width, height, screenController));});
     this.nextButton = new Button("Next", function() {});
     this.backButton = new Button("Back", function() {});
     this.lastActiveControl = null;
