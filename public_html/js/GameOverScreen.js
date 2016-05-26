@@ -18,11 +18,11 @@ function GameOverScreen(width, height, screenController, score) {
     this.SUBMIT_LOCATION = new Vector(0, 285);
 
     this.playAgainButton = new Button("Play Again", function () {
-        screenController.setScreen(new GameScreen(width, height, screenController))
+        screenController.setScreen(new GameScreen(width, height, screenController));
     });
     
     this.mainMenuButton = new Button("Main Menu", function () {
-        screenController.setScreen(new MenuScreen(width, height, screenController))
+        screenController.setScreen(new MenuScreen(width, height, screenController));
     });
     
     this.submitButton = new Button("Submit Score", function() {
@@ -68,6 +68,11 @@ GameOverScreen.prototype.draw = function (g, x, y) {
     var text = "Game Over!";
     var txtX = (this.width - g.measureText(text).width) / 2;
     g.fillText(text, x + txtX, 60);
+    
+    g.font = "20px Trade Winds";
+    text = "Water leaked out of the pipe !";
+    txtX = (this.width - g.measureText(text).width) / 2;
+    g.fillText(text, x + txtX, 115);
     
     g.font = "40px Trade Winds";
     text = "Final Score: " + this.score;
