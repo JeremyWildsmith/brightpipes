@@ -310,6 +310,11 @@ GameScreen.prototype.isPipeUseable = function (pipeType) {
     return false;
 };
 
+GameScreen.prototype.loseGame = function(leaked) {
+      this.playing = false;
+      this.screenController.setScreen(new GameOverScreen(this.width, this.height, this.screenController, this.score));
+};
+
 /**
  * Updates game screen logic. Controls pumping.
  * @param {Number} deltaTime The delta in milliseconds from last call to update.
@@ -325,8 +330,7 @@ GameScreen.prototype.update = function (deltaTime) {
     {
         if (pipes[i].isLeaking() && pipes[i] !== this.drain && pipes[i] !== this.drain)
         {
-            this.playing = false;
-            this.screenController.setScreen(new GameOverScreen(this.width, this.height, this.screenController, this.score));
+            this.loseGame(true);
         }
     }
 
@@ -338,12 +342,18 @@ GameScreen.prototype.update = function (deltaTime) {
         {
             this.elapsedSinceLastPump = 0;
             this.newlyFilledPipes = this.grid.pump();
-
+            
             var filledDrains = 0;
             for(var i = 0; i < this.drains.length; i++)
             {
                 if(this.drains[i].isFilled())
                     filledDrains++;
+            }
+            
+            
+            if(this.newlyFilledPipes.length === 0 && filledDrains > 0)
+            {
+                this.loseGame(false);
             }
             
             if (filledDrains === this.drains.length) {
