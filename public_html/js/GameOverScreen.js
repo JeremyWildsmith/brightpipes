@@ -34,6 +34,8 @@ function GameOverScreen(width, height, screenController, score) {
     this.width = width;
     this.height = height;
     this.score = score;
+    
+    new Audio('sound/Lose.wav').play();
 }
 
 /**

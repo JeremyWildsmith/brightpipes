@@ -468,6 +468,7 @@ GameScreen.prototype.onMouseUp = function (location) {
                 this.grid.setPipe(gridCoord, this.draggingPipe);
                 this.pipesPlaced++;
                 this.draggingPipe = null;
+                new Audio('sound/Sound 3.wav').play();
             }
         } else
             this.pipeSelection.pushPipe(this.draggingPipe);
@@ -526,7 +527,7 @@ GameScreen.prototype.drawWater = function (g, x, y) {
  * @param {Pipe} pipe The pipe to draw water effects for.
  */
 GameScreen.prototype.drawPipeWater = function (g, x, y, pipe) {
-    if (!pipe.isFilled() || pipe.type === Pipes.Pump || pipe.type == Pipes.Drain)
+    if (!pipe.isFilled() || pipe.type == Pipes.Drain)
         return;
 
     var inProgression = Math.min(1.0, this.elapsedSinceLastPump / (this.PUMP_INTERVAL / 2));
