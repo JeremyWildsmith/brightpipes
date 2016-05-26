@@ -30,6 +30,12 @@ function getLocation(e) {
  * Sets up the game loop.
  */
 window.onload = function () {
+
+    var bgrMusic = new Audio('sound/Marimba Festiva.aif'); 
+    bgrMusic.loop = true;
+    
+    bgrMusic.play();
+    
     var dt = 33;
     canvas = document.getElementById("mainCanvas");
     canvas.width = window.innerWidth;
