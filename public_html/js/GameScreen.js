@@ -20,7 +20,9 @@ function GameScreen(width, height, screenController, score, level) {
 
     this.GRID_LOCATION = new Vector(30, 35);
     this.PIPE_SELECTION_LOCATION = new Vector(53, 300);
-    this.SETTINGS_LOCATION = new Vector(53, 400);
+    this.SETTINGS_LOCATION = new Vector(0, 0);
+
+    this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6)
 
     this.settingsButton = new SettingsButton(function() {screenController.setScreen(new SettingsScreenGame(width, height, screenController));});
 
