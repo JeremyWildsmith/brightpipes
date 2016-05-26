@@ -131,7 +131,7 @@ SubmitScoreScreen.prototype.onMouseMove = function (location) {
 SubmitScoreScreen.prototype.onKeyDown = function (keyCode) {
 
     //Backspace
-    if (keyCode === 8 && this.name.length > 0) {
+    if (keyCode === 8 && this.name.length > 0 && this.name.length < 11) {
         this.name = this.name.slice(0, -1);
     } else if ((keyCode > 64 && keyCode < 91) ||
             (keyCode > 95 && keyCode < 112) ||
