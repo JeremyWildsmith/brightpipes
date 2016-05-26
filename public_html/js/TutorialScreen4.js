@@ -54,7 +54,7 @@ TutorialScreen4.prototype.draw = function (g, x, y) {
     
     g.font = "20px Trade Winds";
     g.fillText("If water leaks out of the pipe you", this.TEXT_LOCATION.x, this.TEXT_LOCATION.y);
-    g.fillText("lose the game ! This inclues leaking", this.TEXT_LOCATION.x, this.TEXT_LOCATION.y + 25);
+    g.fillText("lose the game !  This inclues leaking", this.TEXT_LOCATION.x, this.TEXT_LOCATION.y + 25);
     g.fillText("into an obstacle and out of the grid .", this.TEXT_LOCATION.x, this.TEXT_LOCATION.y + 50);
     
     this.backButton.draw(g, x + this.BACK_LOCATION.x, y + this.BACK_LOCATION.y);
