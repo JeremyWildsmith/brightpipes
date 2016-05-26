@@ -30,6 +30,16 @@ function getLocation(e) {
  * Sets up the game loop.
  */
 window.onload = function () {
+    
+    var bgrMusic = new Audio('sound/Marimba Festiva.wav');
+    var repeatMethod = function () {
+        bgrMusic = new Audio('sound/Marimba Festiva.wav');
+        bgrMusic.addEventListener('ended', repeatMethod, false);
+        bgrMusic.play();
+    };
+    bgrMusic.addEventListener('ended', repeatMethod, false);
+    bgrMusic.play();
+
     var dt = 33;
     canvas = document.getElementById("mainCanvas");
     canvas.width = window.innerWidth;
@@ -103,7 +113,7 @@ window.onload = function () {
 /**
  * Register an event listener to tunnel all key events in to the game.
  */
-window.addEventListener('keydown', function(e) {
+window.addEventListener('keydown', function (e) {
     game.onKeyDown(e.keyCode);
     e.preventDefault();
-},false);
+}, false);
