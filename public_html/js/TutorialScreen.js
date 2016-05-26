@@ -3,7 +3,7 @@
  */
 
 /**
- * Creates a new GameOverScreen
+ * Creates a new Tutorial Screen
  * @param {type} width The width of the canvas
  * @param {type} height The height of the canvas
  * @param {type} screenController The screen controller
@@ -12,12 +12,11 @@ function TutorialScreen(width, height, screenController) {
     this.CELL_DIMENSIONS = 50;
     
     this.MAIN_MENU_LOCATION = new Vector(0, 35);
-    this.BACK_LOCATION = new Vector(0, 285);
     this.NEXT_LOCATION = new Vector(0, 285);
+    this.TEXT_LOCATION = new Vector(0, 100);
     
     this.mainMenuButton = new Button("Main Menu", function() {screenController.setScreen(new MenuScreen(width, height, screenController));});
-    this.nextButton = new Button("Next", function() {});
-    this.backButton = new Button("Back", function() {});
+    this.nextButton = new Button("Next", function() {screenController.setScreen(new TutorialScreen2(width, height, screenController));});
     this.lastActiveControl = null;
     
     this.width = width;
@@ -36,9 +35,9 @@ TutorialScreen.prototype.update = function (deltaTime) {
  * Corrects the layout respective to the canvas size.
  */
 TutorialScreen.prototype.correctLayout = function() {
-    this.BACK_LOCATION.x = ((this.width - this.backButton.getBounds().width) / 2) - 100;
     this.NEXT_LOCATION.x = ((this.width - this.nextButton.getBounds().width) / 2) + 100;
     this.MAIN_MENU_LOCATION.x = ((this.width - this.mainMenuButton.getBounds().width) / 2) - 100;
+    this.TEXT_LOCATION.x = this.MAIN_MENU_LOCATION.x;
 };
 
 /**
@@ -49,7 +48,12 @@ TutorialScreen.prototype.correctLayout = function() {
  */
 TutorialScreen.prototype.draw = function (g, x, y) {
     this.correctLayout();
-    this.backButton.draw(g, x + this.BACK_LOCATION.x, y + this.BACK_LOCATION.y);
+    
+    g.font = "20px Trade Winds";
+    g.fillText("Drag and drop the pipes below the", this.TEXT_LOCATION.x, this.TEXT_LOCATION.y);
+    g.fillText("playing field to place them onto", this.TEXT_LOCATION.x, this.TEXT_LOCATION.y + 25);
+    g.fillText("the grid .", this.TEXT_LOCATION.x, this.TEXT_LOCATION.y + 50);
+    
     this.nextButton.draw(g, x + this.NEXT_LOCATION.x, y + this.NEXT_LOCATION.y);
     this.mainMenuButton.draw(g, x + this.MAIN_MENU_LOCATION.x, y + this.MAIN_MENU_LOCATION.y);
 };
@@ -81,9 +85,7 @@ TutorialScreen.prototype.onMouseUp = function(location) {
 TutorialScreen.prototype.onMouseMove = function(location) {
     var selectedControl = null;
     
-    if(this.backButton.getBounds().add(this.BACK_LOCATION).contains(location))
-        selectedControl = this.backButton;
-    else if(this.nextButton.getBounds().add(this.NEXT_LOCATION).contains(location))
+    if(this.nextButton.getBounds().add(this.NEXT_LOCATION).contains(location))
         selectedControl = this.nextButton;
     else if(this.mainMenuButton.getBounds().add(this.MAIN_MENU_LOCATION).contains(location))
         selectedControl = this.mainMenuButton;
