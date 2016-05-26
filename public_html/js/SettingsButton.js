@@ -8,7 +8,7 @@
  * @returns {Button}
  */
 function SettingsButton(callback) {
-    this.graphic = new LoadingGraphic("gfx/btnUp.png", 0, 0);
+    this.graphic = new LoadingGraphic("gfx/gear.png", 0, 0);
     this.callback = callback;
 }
 
