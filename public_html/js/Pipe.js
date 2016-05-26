@@ -6,7 +6,7 @@
  * @param type - the type of pipe
  * @param replaceable - determines if pipe is replaceable
  */
-function Pipe(graphic, connectionDirections, type, replaceable)
+function Pipe(graphic, connectionDirections, type, replaceable, canLeak)
 {
     this.location = new Vector(0, 0);
     this.parentGrid = null;
@@ -17,6 +17,7 @@ function Pipe(graphic, connectionDirections, type, replaceable)
     this.pump = false;
     this.type = type;
     this.replaceable = replaceable;
+    this.canLeak = canLeak === undefined ? true : canLeak;
 }
 
 /**
@@ -64,12 +65,11 @@ Pipe.prototype.fill = function (dir, filledPipes) {
     if (this.filled) {
         var pipeArray = this.getConnections(dir);
 
-        if (this.getConnections(null).length !== this.connectionDirections.length) {
+        if (this.canLeak && this.getConnections(null).length !== this.connectionDirections.length) {
             this.leaked = true;
         }
         
-        
-        for (i = 0; i < pipeArray.length; i++) {
+        for (var i = 0; i < pipeArray.length; i++) {
             var delta = this.location.difference(pipeArray[i].location);
             pipeArray[i].fill(Direction.fromVector(delta), filledPipes);
         }

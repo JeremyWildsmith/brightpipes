@@ -6,7 +6,8 @@
  * Creates a new pipe selection queue.
  */
 function PipeSelectionQueue() {
-    this.pipeGrid = new Grid(50, 3, 1);
+    this.QUEUE_SIZE = 6;
+    this.pipeGrid = new Grid(50, this.QUEUE_SIZE, 1);
 }
 
 /**
@@ -27,7 +28,7 @@ PipeSelectionQueue.prototype.draw = function(g, x, y) {
 PipeSelectionQueue.prototype.popPipe = function(location) {
     var coord = this.pipeGrid.screenToGrid(location);
     
-    if(coord.x < 0 || coord.x > 2 || coord.y !== 0)
+    if(coord.x < 0 || coord.x > this.QUEUE_SIZE || coord.y !== 0)
         return null;
     
     var pipe = this.pipeGrid.getPipe(coord);
@@ -39,7 +40,7 @@ PipeSelectionQueue.prototype.popPipe = function(location) {
  * Clears the pipe selection queue.
  */
 PipeSelectionQueue.prototype.clear = function() {
-    for(var x = 0; x < 3; x++)
+    for(var x = 0; x < this.QUEUE_SIZE; x++)
         this.pipeGrid.clearPipe(new Vector(x, 0));
 };
 
@@ -49,7 +50,7 @@ PipeSelectionQueue.prototype.clear = function() {
  * @returns {Boolean} Whether there was room to push the pipe.
  */
 PipeSelectionQueue.prototype.pushPipe = function(pipe) {
-    for(var i = 0; i < 3; i++) {
+    for(var i = 0; i < this.QUEUE_SIZE; i++) {
         if(this.pipeGrid.getPipe(new Vector(i, 0)) === null) {
             this.pipeGrid.setPipe(new Vector(i, 0), pipe);
             return true;
@@ -78,11 +79,24 @@ PipeSelectionQueue.prototype.getBounds = function() {
  * Shifts all pipes in the queue left one.
  */
 PipeSelectionQueue.prototype.shiftLeft = function() {
+    
+    for(var i = 0; i < this.QUEUE_SIZE - 1; i++) {
+        var pipeAt = this.pipeGrid.getPipe(new Vector(i, 0));
+        var pipeNext = this.pipeGrid.getPipe(new Vector(i + 1, 0));
+        
+        if(pipeNext === null)
+            continue;
+        
+        this.pipeGrid.setPipe(new Vector(i, 0), pipeNext);
+    }
+    
+    this.pipeGrid.clearPipe(new Vector(this.QUEUE_SIZE - 1, 0));
+    /*
     if(this.pipeGrid.getPipe(new Vector(1, 0)) !== null)
         this.pipeGrid.setPipe(new Vector(0, 0), this.pipeGrid.getPipe(new Vector(1, 0)));
     
     this.pipeGrid.setPipe(new Vector(1, 0), this.pipeGrid.getPipe(new Vector(2, 0)));
-    this.pipeGrid.clearPipe(new Vector(2, 0));
+    this.pipeGrid.clearPipe(new Vector(2, 0));*/
 };
 
 /**
@@ -90,8 +104,8 @@ PipeSelectionQueue.prototype.shiftLeft = function() {
  * @param {type} pipe The pipe to be pushed into the queue.
  */
 PipeSelectionQueue.prototype.shiftIn = function(pipe) {
-    if(this.pipeGrid.getPipe(new Vector(2, 0)) !== null)
+    if(this.pipeGrid.getPipe(new Vector(this.QUEUE_SIZE - 1, 0)) !== null)
         this.shiftLeft();
 
-    this.pipeGrid.setPipe(new Vector(2, 0), pipe);
+    this.pipeGrid.setPipe(new Vector(this.QUEUE_SIZE - 1, 0), pipe);
 };

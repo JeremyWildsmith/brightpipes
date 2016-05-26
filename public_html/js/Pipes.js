@@ -149,7 +149,7 @@ var Pipes = {
 
             var graphic = new LoadingGraphic("gfx/drain.png");
 
-            var p = new Pipe(graphic, dirs, Pipes.Drain, false);
+            var p = new Pipe(graphic, dirs, Pipes.Drain, false, false);
 
             return p;
         }},
