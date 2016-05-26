@@ -10,7 +10,7 @@
  * @param {type} score The score of the user entering this screen.
  */
 function GameScreen(width, height, screenController, drainLocation, score) {
-    this.PUMP_INTERVAL = 3000;
+    this.PUMP_INTERVAL = 9000;
     this.CELL_DIMENSIONS = 50;
     this.PIPES_PLACED_BEFORE_PLAY = 5;
     this.PASS_LEVEL_SCORE = 200;
@@ -30,7 +30,7 @@ function GameScreen(width, height, screenController, drainLocation, score) {
     this.pipeSelection = new PipeSelectionQueue();
     this.grid = new Grid(this.CELL_DIMENSIONS, 6, 7);
 
-    this.drain = Pipes.Drain.create();
+    this.drains = [];
     this.pump = Pipes.Pump.create();
 
     this.GRID_LOCATION.x = (width - this.grid.getBounds().width) / 2;
@@ -38,7 +38,7 @@ function GameScreen(width, height, screenController, drainLocation, score) {
     this.PIPE_SELECTION_LOCATION.x = (width - this.pipeSelection.getBounds().width) / 2;
     this.PIPE_SELECTION_LOCATION.y = this.GRID_LOCATION.y + this.grid.getBounds().height + 20;
 
-    this.generateLevel(2, 7, drainLocation);
+    this.generateLevel(3);
 
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
@@ -71,12 +71,12 @@ GameScreen.prototype.randomizePlacement = function (object) {
                 Math.floor(Math.random() * gridBounds.height));
         x++;
     } while (this.grid.getPipe(location) !== null && x < 1000);
-    
-    if(x === 1000)
+
+    if (x === 1000)
         return false;
-    
+
     this.grid.setPipe(location, object);
-    
+
     return true;
 };
 
@@ -87,29 +87,49 @@ GameScreen.prototype.randomizePlacement = function (object) {
  * @param {type} drainLocation The location of the drain in the last level.
  * @returns {undefined}
  */
-GameScreen.prototype.generateLevel = function (minDistance, maxDistance, drainLocation) {
+GameScreen.prototype.generateLevel = function (numDrains) {
+
+    var complexPipes = Pipes.complexValues();
+    
+    var splits = [];
+    for(var i = 0; i < numDrains - 1; i++)
+        splits[i] = complexPipes[Math.floor(Math.random() * complexPipes.length)].create();
+    
+    for (var i = 0; i < numDrains; i++)
+        this.drains[i] = Pipes.Drain.create();
+
+generateWorld:
     do {
+        for (var i = 0; i < this.drains.length; i++) {
+            this.randomizePlacement(this.drains[i]);
+        }
+        
+        for(var i = 0; i < splits.length; i++) {
+            this.randomizePlacement(splits[i]);
+        }
+
         this.randomizePlacement(this.pump);
-        this.randomizePlacement(this.drain);
-    } while (!this.isLevelSolvable() ||
-            this.pump.getLocation().difference(this.drain.getLocation()).getLength() > maxDistance ||
-            this.pump.getLocation().difference(this.drain.getLocation()).getLength() < minDistance ||
-            this.pump.getLocation().difference(this.drain.getLocation()).x === 0 ||
-            this.pump.getLocation().difference(this.drain.getLocation()).y === 0);
+
+        for (var i = 0; i < this.drains.length; i++) {
+            var delta = this.drains[i].getLocation().difference(this.pump.getLocation());
+            if (delta.x === 0 || delta.y === 0)
+                continue generateWorld;
+        }
+    } while (!this.isLevelSolvable());
 
     var basicObstacles = Pipes.obstacles();
     var complexObstacles = Pipes.complexValues();
-    
-    for (var x = 0; x < 100; x++) {
-        
+/*
+    for (var x = 0; x < 20; x++) {
+
         var obstacleSource = Math.random() < 0.7 ? basicObstacles : complexObstacles;
         var obstacle = obstacleSource[Math.floor(Math.random() * obstacleSource.length)].create();
-        if(!this.randomizePlacement(obstacle))
+        if (!this.randomizePlacement(obstacle))
             break;
-        
-        if(!this.isLevelSolvable())
+
+        if (!this.isLevelSolvable())
             this.grid.removePipe(obstacle);
-    }
+    }*/
 };
 
 /*
@@ -119,7 +139,12 @@ GameScreen.prototype.generateLevel = function (minDistance, maxDistance, drainLo
 GameScreen.prototype.isLevelSolvable = function () {
     var pathFinder = new AStarPathFinder(this.grid);
 
-    return pathFinder.findPath(this.pump.getLocation(), this.drain.getLocation(), this.pump.getDirections()[0]) !== null;
+    var solvable = true;
+    for(var i = 0; i < this.drains.length; i++) {
+        solvable = solvable && pathFinder.findPath(this.pump.getLocation(), this.drains[i].getLocation(), this.pump.getDirections()[0]) !== null;
+    }
+    
+    return solvable;
 };
 
 /**
@@ -158,9 +183,11 @@ GameScreen.prototype.fillPipeSelection = function () {
     var pipes = Pipes.values(false);
 
     do {
+        var x = 0;
         do {
             pipe = pipes[Math.floor(Math.random() * pipes.length)];
-        } while (generatedPipes.indexOf(pipe) >= 0);
+            x++;
+        } while (generatedPipes.indexOf(pipe) >= 0 && x < 1000);
 
         generatedPipes.push(pipe);
 
@@ -241,7 +268,7 @@ GameScreen.prototype.isPipeUseable = function (pipeType) {
 
             this.grid.setPipe(newLocation, pipe);
 
-            var n = null;
+            var useable = false;
             //Check if pipe is connecting to the start point
             if (pipe.getConnections().indexOf(starts[i]) >= 0) {
                 var newDrainDirections = this.getDrainDirections(pipe);
@@ -251,16 +278,18 @@ GameScreen.prototype.isPipeUseable = function (pipeType) {
                     if (!this.grid.getCellBounds().contains(testLocation))
                         continue;
 
-                    n = pathFinder.findPath(pipe.getLocation(), this.drain.getLocation(), newDrainDirections[i]);
-
-                    if (n !== null)
-                        break;
+                    for(var i = 0; i < this.drains.length; i++) {
+                        if(this.drains[i].isFilled())
+                            continue;
+                        
+                        useable = useable || pathFinder.findPath(pipe.getLocation(), this.drains[i].getLocation(), newDrainDirections[i]) !== null;
+                    }
                 }
             }
 
             this.grid.clearPipe(newLocation);
 
-            if (n !== null)
+            if (useable)
                 return true;
         }
     }
@@ -279,16 +308,13 @@ GameScreen.prototype.update = function (deltaTime) {
         return;
 
     var pipes = this.grid.getPipes();
-    var leaks = 0;
     for (var i = 0; i < pipes.length; i++)
     {
         if (pipes[i].isLeaking() && pipes[i] !== this.drain && pipes[i] !== this.drain)
-            leaks++;
-    }
-
-    if(leaks > 10) {
-        this.playing = false;
-        this.screenController.setScreen(new GameOverScreen(this.width, this.height, this.screenController, this.score));
+        {
+            this.playing = false;
+            this.screenController.setScreen(new GameOverScreen(this.width, this.height, this.screenController, this.score));
+        }
     }
 
     if (this.pump.getConnections().length > 0 || this.pipesPlaced >= this.PIPES_PLACED_BEFORE_PLAY)
@@ -300,11 +326,18 @@ GameScreen.prototype.update = function (deltaTime) {
             this.elapsedSinceLastPump = 0;
             this.newlyFilledPipes = this.grid.pump();
 
-            if (this.drain.isFilled()) {
+            var filledDrains = 0;
+            for(var i = 0; i < this.drains.length; i++)
+            {
+                if(this.drains[i].isFilled())
+                    filledDrains++;
+            }
+            
+            if (filledDrains === this.drains.length) {
                 this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.drain.getLocation(), this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 10));
                 this.playing = false;
             }
-            
+
             this.shiftInPipe();
         }
     }
@@ -540,6 +573,6 @@ GameScreen.prototype.getDrainDirections = function (pipe) {
  * Handles key events for this screen.
  * @param {type} keyCode The key code for the key that was pressed.
  */
-GameScreen.prototype.onKeyDown = function(keyCode) {
+GameScreen.prototype.onKeyDown = function (keyCode) {
 
 };
