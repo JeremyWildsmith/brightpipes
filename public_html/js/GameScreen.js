@@ -9,8 +9,11 @@
  * @param {type} screenController The screen controller
  * @param {type} score The score of the user entering this screen.
  */
-function GameScreen(width, height, screenController, drainLocation, score) {
-    this.PUMP_INTERVAL = 9000;
+function GameScreen(width, height, screenController, score, level) {
+    this.score = score === undefined ? 0 : score;
+    this.level = level === undefined ? 1 : level;
+    
+    this.PUMP_INTERVAL = 4000;
     this.CELL_DIMENSIONS = 50;
     this.PIPES_PLACED_BEFORE_PLAY = 5;
     this.PASS_LEVEL_SCORE = 200;
@@ -37,8 +40,11 @@ function GameScreen(width, height, screenController, drainLocation, score) {
 
     this.PIPE_SELECTION_LOCATION.x = (width - this.pipeSelection.getBounds().width) / 2;
     this.PIPE_SELECTION_LOCATION.y = this.GRID_LOCATION.y + this.grid.getBounds().height + 20;
-
-    this.generateLevel(3);
+    
+    this.PUMP_INTERVAL = 6000;
+    this.PUMP_INTERVAL = Math.max(2000, this.PUMP_INTERVAL * ((3 - ((this.level - 1) % 3)) / 3.0));
+    
+    this.generateLevel(4, 2);
 
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
@@ -50,9 +56,6 @@ function GameScreen(width, height, screenController, drainLocation, score) {
     this.screenController = screenController;
     this.width = width;
     this.height = height;
-
-    this.score = score === undefined ? 0 : score;
-    
     this.lastActiveControl = null;
 }
 
@@ -60,20 +63,46 @@ function GameScreen(width, height, screenController, drainLocation, score) {
  * Randomized the placement of the specified object on the game grid.
  * @param {type} object The object to place on the game grid.
  */
-GameScreen.prototype.randomizePlacement = function (object) {
+GameScreen.prototype.randomizePlacement = function (object, minDistance, avoidSet) {
     object.detach();
     var gridBounds = this.grid.getCellBounds();
 
     var location;
     var x = 0;
-    do {
+    
+    placementLoop:
+    for(var x = 0; x < 1000; x++) {
         location = new Vector(Math.floor(Math.random() * gridBounds.width),
                 Math.floor(Math.random() * gridBounds.height));
-        x++;
-    } while (this.grid.getPipe(location) !== null && x < 1000);
-
-    if (x === 1000)
-        return false;
+     
+        if(this.grid.getPipe(location) !== null)
+            continue;
+        
+        var connectionDirections = object.getDirections();
+        
+        for(var i = 0; i < connectionDirections.length; i++) {
+            var dirLocation = location.add(connectionDirections[i].delta);
+            
+            if(!this.grid.getCellBounds().contains(dirLocation) || this.grid.getPipe(dirLocation) !== null)
+                continue placementLoop;
+        }
+        
+        if(minDistance !== undefined && avoidSet !== undefined) {
+            var gridPipes = this.grid.getPipes();
+            for(var i = 0; i < gridPipes.length; i++)
+            {
+                var gridPipe = gridPipes[i];
+                
+                if(avoidSet.indexOf(gridPipe.type) < 0)
+                    continue;
+                
+                if(gridPipe.getLocation().difference(location).getLength() < minDistance)
+                    continue placementLoop;
+            }
+        }
+        
+        break;
+    }
 
     this.grid.setPipe(location, object);
 
@@ -87,7 +116,7 @@ GameScreen.prototype.randomizePlacement = function (object) {
  * @param {type} drainLocation The location of the drain in the last level.
  * @returns {undefined}
  */
-GameScreen.prototype.generateLevel = function (numDrains) {
+GameScreen.prototype.generateLevel = function (numDrains, minDistance) {
 
     var complexPipes = Pipes.complexValues();
     
@@ -100,15 +129,17 @@ GameScreen.prototype.generateLevel = function (numDrains) {
 
 generateWorld:
     do {
+        this.randomizePlacement(this.pump);
+
         for (var i = 0; i < this.drains.length; i++) {
-            this.randomizePlacement(this.drains[i]);
+            var drain = this.drains[i];
+            
+            this.randomizePlacement(drain, minDistance, new Array(Pipes.Drain));
         }
         
         for(var i = 0; i < splits.length; i++) {
-            this.randomizePlacement(splits[i]);
+            this.randomizePlacement(splits[i], 2.5, Pipes.complexValues());
         }
-
-        this.randomizePlacement(this.pump);
 
         for (var i = 0; i < this.drains.length; i++) {
             var delta = this.drains[i].getLocation().difference(this.pump.getLocation());
@@ -159,39 +190,21 @@ GameScreen.prototype.refreshPipeSelection = function () {
  * Fills the pipe selection area with new pipes in open slots.
  */
 GameScreen.prototype.fillPipeSelection = function () {
-
-    //Count number of useable pipes in selection queue.
-    var containedUseablePipe = 0;
-    var containedPipes = this.pipeSelection.getPipes();
-    for (var i = 1; i < containedPipes.length; i++) {
-        if (this.isPipeUseable(containedPipes[i].type))
-            containedUseablePipe++;
-    }
-
-    var generatedPipes = [];
-
-    //If there are no useable pipes, make sure we add one.
-    if (containedUseablePipe === 0) {
-        var pipe = this.getUsefulPipe();
-
-        if (pipe !== null) {
-            this.pipeSelection.pushPipe(pipe.create());
-            generatedPipes.push(pipe);
+    var pipes = Pipes.values();
+    var containedPipes = [];
+    
+    var queuePipes = this.pipeSelection.getPipes();
+    
+    for(var i = 0; i < queuePipes.length; i++)
+        containedPipes.push(queuePipes[i].type);
+    
+    for(var i = 0; i < pipes.length; i++)
+    {
+        if(containedPipes.indexOf(pipes[i]) < 0)
+        {
+            this.pipeSelection.pushPipe(pipes[i].create());
         }
     }
-
-    var pipes = Pipes.values(false);
-
-    do {
-        var x = 0;
-        do {
-            pipe = pipes[Math.floor(Math.random() * pipes.length)];
-            x++;
-        } while (generatedPipes.indexOf(pipe) >= 0 && x < 1000);
-
-        generatedPipes.push(pipe);
-
-    } while (this.pipeSelection.pushPipe(pipe.create()));
 };
 
 /**
@@ -334,11 +347,11 @@ GameScreen.prototype.update = function (deltaTime) {
             }
             
             if (filledDrains === this.drains.length) {
-                this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.drain.getLocation(), this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 10));
+                this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 10, this.level++));
                 this.playing = false;
             }
-
-            this.shiftInPipe();
+            
+            this.fillPipeSelection();
         }
     }
 };
@@ -425,8 +438,6 @@ GameScreen.prototype.onMouseUp = function (location) {
             else {
                 this.grid.setPipe(gridCoord, this.draggingPipe);
                 this.pipesPlaced++;
-                this.shiftInPipe();
-
                 this.draggingPipe = null;
             }
         } else
@@ -486,7 +497,7 @@ GameScreen.prototype.drawWater = function (g, x, y) {
  * @param {Pipe} pipe The pipe to draw water effects for.
  */
 GameScreen.prototype.drawPipeWater = function (g, x, y, pipe) {
-    if (!pipe.isFilled() || pipe.type === Pipes.Pump)
+    if (!pipe.isFilled() || pipe.type === Pipes.Pump || pipe.type == Pipes.Drain)
         return;
 
     var inProgression = Math.min(1.0, this.elapsedSinceLastPump / (this.PUMP_INTERVAL / 2));
