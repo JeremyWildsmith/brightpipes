@@ -49,7 +49,7 @@ function GameScreen(width, height, screenController, score, level, reach) {
     
     var numDrains = Math.floor(Math.min(4, ((this.level - 1) / 3) + 1));
     
-    this.PUMP_INTERVAL = PUMP_INTERVAL_MIN + (this.PUMP_INTERVAL_MAX - PUMP_INTERVAL_MIN) * ((3 - (((this.level - 1) % 3)))) / 3.0;
+    this.PUMP_INTERVAL = this.PUMP_INTERVAL_MIN + (this.PUMP_INTERVAL_MAX - this.PUMP_INTERVAL_MIN) * ((3 - (((this.level - 1) % 3)))) / 3.0;
 
     this.generateLevel(numDrains, 2);
 
