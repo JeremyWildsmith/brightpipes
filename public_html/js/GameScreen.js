@@ -47,7 +47,7 @@ function GameScreen(width, height, screenController, score, level, reach) {
     this.PUMP_INTERVAL = 6000;
     this.PUMP_INTERVAL = Math.max(2000, this.PUMP_INTERVAL * ((3 - ((this.level - 1) % 3)) / 3.0));
 
-    this.generateLevel(1, 2);
+    this.generateLevel(5, 2);
 
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
