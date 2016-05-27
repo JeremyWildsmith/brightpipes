@@ -439,6 +439,7 @@ GameScreen.prototype.draw = function (g, x, y) {
         var str = "Achievement: " + this.lastAchievement.name;
         var txtDim = g.measureText(str);
         g.fillText(str, (this.width - txtDim.width) / 2, this.GRID_LOCATION.y + this.CELL_DIMENSIONS * 2); // missing the function that counts the number of pipes used 
+        this.lastAchievement.graphic.draw(g, (this.width - this.lastAchievement.graphic.getBounds().width) / 2, this.GRID_LOCATION.y + this.CELL_DIMENSIONS * 4);
     }
 };
 
