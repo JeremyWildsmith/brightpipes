@@ -11,7 +11,7 @@
  */
 function GameScreen(width, height, screenController, score, level, reach) {
     this.score = score === undefined ? 0 : score;
-    this.level = level === undefined ? 10 : level;
+    this.level = level === undefined ? 1 : level;
 
     this.PUMP_INTERVAL = 4000;
     this.CELL_DIMENSIONS = 50;
@@ -68,6 +68,7 @@ function GameScreen(width, height, screenController, score, level, reach) {
     this.achieve = reach;
 
     this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6);
+    Math.seedrandom(1);
 }
 
 /**
@@ -401,6 +402,8 @@ GameScreen.prototype.searchForEasterEgg = function () {
 GameScreen.prototype.draw = function (g, x, y) {
     g.font = "15px Trade Winds";
     g.fillText("Number of pipes used: " + this.pipesPlaced, this.GRID_LOCATION.x, 23); // missing the function that counts the number of pipes used
+
+    g.fillText("Level: " + this.level, this.GRID_LOCATION.x + 220, 23); // missing the function that counts the number of pipes used
 
     this.grid.draw(g, this.GRID_LOCATION.x + x, this.GRID_LOCATION.y + y);
     this.pipeSelection.draw(g, this.PIPE_SELECTION_LOCATION.x + x, this.PIPE_SELECTION_LOCATION.y + y);
