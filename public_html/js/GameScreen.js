@@ -358,7 +358,7 @@ GameScreen.prototype.update = function (deltaTime) {
             if (filledDrains === this.drains.length) {
                 lowLag.play('sound/winsound.wav');
                 
-                this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 10, this.level + 1));
+                this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 2, this.level + 1));
                 this.playing = false;
             }
 
