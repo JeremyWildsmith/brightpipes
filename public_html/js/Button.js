@@ -46,7 +46,7 @@ Button.prototype.draw = function(g, x, y) {
 Button.prototype.onMouseEnter = function() {
     //Go to hover graphic
     this.hovering = true;
-    new Audio('sound/Sound 1.wav').play();
+    lowLag.play('sound/Sound 1.wav');
 };
 
 /**

@@ -31,6 +31,11 @@ function getLocation(e) {
  */
 window.onload = function () {
     lowLag.init();
+    lowLag.load("sound/winsound.wav");
+    lowLag.load("sound/Sound 1.wav");
+    lowLag.load("sound/Sound 2.wav");
+    lowLag.load("sound/Sound 3.wav");
+    lowLag.load("sound/Lose.wav");
     
     var bgrMusic = new Audio('sound/thisislife.wav');
     var repeatMethod = function () {

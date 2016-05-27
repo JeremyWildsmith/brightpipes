@@ -20,7 +20,7 @@ function GameScreen(width, height, screenController, score, level, reach) {
 
     this.GRID_LOCATION = new Vector(30, 35);
     this.PIPE_SELECTION_LOCATION = new Vector(53, 300);
-    this.SETTINGS_LOCATION = new Vector(0, 0);
+    this.SETTINGS_LOCATION = new Vector(0, 10);
 
     var outer = this;
     this.settingsButton = new SettingsButton(function () {
@@ -63,7 +63,7 @@ function GameScreen(width, height, screenController, score, level, reach) {
 
     this.achieve = reach;
 
-    this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6) + 10;
+    this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6);
 }
 
 /**
@@ -351,7 +351,7 @@ GameScreen.prototype.update = function (deltaTime) {
             }
 
             if (filledDrains === this.drains.length) {
-                new Audio('sound/winsound.wav').play();
+                lowLag.play('sound/winsound.wav');
                 this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 10, this.level++, this.achieve));
                 this.playing = false;
             }
@@ -420,7 +420,7 @@ GameScreen.prototype.onMouseDown = function (location) {
         var pipe = this.pipeSelection.popPipe(location.difference(this.PIPE_SELECTION_LOCATION));
         this.draggingPipe = pipe;
         this.draggingLocation = location;
-        new Audio('sound/Sound 2.wav').play();
+        lowLag.play('sound/Sound 2.wav');
     }
     if (this.lastActiveControl !== null)
         this.lastActiveControl.onMouseDown(location);
@@ -445,7 +445,7 @@ GameScreen.prototype.onMouseUp = function (location) {
                 this.grid.setPipe(gridCoord, this.draggingPipe);
                 this.pipesPlaced++;
                 this.draggingPipe = null;
-                new Audio('sound/Sound 3.wav').play();
+                lowLag.play('sound/Sound 3.wav');
             }
         } else
             this.pipeSelection.pushPipe(this.draggingPipe);

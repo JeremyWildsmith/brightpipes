@@ -26,7 +26,7 @@ SettingsButton.prototype.draw = function(g, x, y) {
  * Handles on mouse enter events.
  */
 SettingsButton.prototype.onMouseEnter = function() {
-    new Audio('sound/Sound 1.wav').play();
+    lowLag.play('sound/Sound 1.wav');
 };
 
 /**
