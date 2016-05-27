@@ -40,6 +40,11 @@ Button.prototype.draw = function(g, x, y) {
                            y + (this.getBounds().height + 18) / 2);
 };
 
+
+Button.prototype.setLabel = function(txt) {
+    this.label = txt;
+};
+
 /**
  * Handles on mouse enter events.
  */
