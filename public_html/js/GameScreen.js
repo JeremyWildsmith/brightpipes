@@ -72,7 +72,6 @@ function GameScreen(width, height, screenController, score, level, achievements)
     this.lastActiveControl = null;
 
     this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6);
-    Math.seedrandom(this.level);
     
     if(this.level === 5) {
         this.addAchievement(Achievement.FiveRounds);
@@ -145,7 +144,7 @@ GameScreen.prototype.randomizePlacement = function (object, minDistance, avoidSe
  * @returns {undefined}
  */
 GameScreen.prototype.generateLevel = function (numDrains, minDistance) {
-
+    Math.seedrandom(this.level);
     var complexPipes = Pipes.complexValues();
 
     var splits = [];
