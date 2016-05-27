@@ -1,5 +1,6 @@
 /**
- * SettingsScreen handles all drawing and input related to the game settings screen.
+ * SettingsScreenGame is similar to SettingsScreen but accessed from within
+ * the game so you can resume to your previous state in the game.
  */
 
 /**
@@ -8,15 +9,15 @@
  * @param {type} height The height of the canvas
  * @param {type} screenController The screen controller
  */
-function SettingsScreen(width, height, screenController) {
-    this.CELL_DIMENSIONS = 50;
+function SettingsScreen(width, height, screenController, resumeScreen) {
     this.TOGGLE_SFX_LOCATION = new Vector(0, 35);
     this.TOGGLE_FX_LOCATION = new Vector(0, 85);
     this.BACK_LOCATION = new Vector(0,135);
+    this.RESUME_LOCATION = new Vector(0, 185);
     
     this.toggleSfx = new Button("SFX On", function() {});
     this.toggleFx = new Button("FX On", function() {});
-    this.mainMenu = new Button("Main Menu", function() {screenController.setScreen(new MenuScreen(width, height, screenController));});
+    this.resume = new Button("Go Back", function() {screenController.setScreen(resumeScreen);});
     this.lastActiveControl = null;
     
     this.width = width;
@@ -37,7 +38,7 @@ SettingsScreen.prototype.update = function (deltaTime) {
 SettingsScreen.prototype.correctLayout = function() {
     this.TOGGLE_SFX_LOCATION.x = (this.width - this.toggleSfx.getBounds().width) / 2;
     this.TOGGLE_FX_LOCATION.x = (this.width - this.toggleFx.getBounds().width) / 2;
-    this.BACK_LOCATION.x = (this.width - this.mainMenu.getBounds().width) / 2;
+    this.RESUME_LOCATION.x = (this.width - this.resume.getBounds().width) / 2;
 };
 
 /**
@@ -50,7 +51,7 @@ SettingsScreen.prototype.draw = function (g, x, y) {
     this.correctLayout();
     this.toggleSfx.draw(g, x + this.TOGGLE_SFX_LOCATION.x, y + this.TOGGLE_SFX_LOCATION.y);
     this.toggleFx.draw(g, x + this.TOGGLE_FX_LOCATION.x, y + this.TOGGLE_FX_LOCATION.y);
-    this.mainMenu.draw(g, x + this.BACK_LOCATION.x, y + this.BACK_LOCATION.y);
+    this.resume.draw(g, x + this.RESUME_LOCATION.x, y + this.RESUME_LOCATION.y);
 };
 
 /**
@@ -84,8 +85,8 @@ SettingsScreen.prototype.onMouseMove = function(location) {
         selectedControl = this.toggleSfx;
     else if(this.toggleFx.getBounds().add(this.TOGGLE_FX_LOCATION).contains(location))
         selectedControl = this.toggleFx;
-    else if(this.mainMenu.getBounds().add(this.BACK_LOCATION).contains(location))
-        selectedControl = this.mainMenu;
+    else if(this.resume.getBounds().add(this.RESUME_LOCATION).contains(location))
+        selectedControl = this.resume;
     
     if(selectedControl !== this.lastActiveControl) {
         if(this.lastActiveControl !== null)

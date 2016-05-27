@@ -20,6 +20,8 @@ function MenuScreen(width, height, screenController) {
     for (var i = 0; i < 3; ++i) {
         arr[i] = 0;
     }
+    
+    var outer = this;
 
     this.startButton = new Button("Start", function () {
         screenController.setScreen(new GameScreen(width, height, screenController, undefined, undefined, arr));
@@ -31,7 +33,7 @@ function MenuScreen(width, height, screenController) {
         screenController.setScreen(new TutorialScreen(width, height, screenController));
     });
     this.settingsButton = new Button("Settings", function () {
-        screenController.setScreen(new SettingsScreen(width, height, screenController));
+        screenController.setScreen(new SettingsScreen(width, height, screenController, outer));
     });
 
     this.lastActiveControl = null;

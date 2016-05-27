@@ -24,8 +24,9 @@ function GameScreen(width, height, screenController, score, level, reach) {
 
     this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6)
 
+    var outer = this;
     this.settingsButton = new SettingsButton(function () {
-        screenController.setScreen(new SettingsScreenGame(width, height, screenController));
+        screenController.setScreen(new SettingsScreen(width, height, screenController, outer));
     });
 
     this.playing = true;
