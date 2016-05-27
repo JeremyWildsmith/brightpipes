@@ -6,6 +6,6 @@
 
 var Achievement = {
     Infinity : {name: "Infinity", graphic: new LoadingGraphic("gfx/badge1.png")},
-    TenPipes : {name: "Place Ten Pipes", graphic: new LoadingGraphic("gfx/badge2.png")},
-    FiveRounds : {name: "Play Five Rounds", graphic: new LoadingGraphic("gfx/badge3.png")}
+    TenPipes : {name: "Ten Pipes", graphic: new LoadingGraphic("gfx/badge2.png")},
+    FiveRounds : {name: "Five Rounds", graphic: new LoadingGraphic("gfx/badge3.png")}
 };
