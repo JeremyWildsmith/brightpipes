@@ -11,7 +11,7 @@
  */
 function GameScreen(width, height, screenController, score, level, reach) {
     this.score = score === undefined ? 0 : score;
-    this.level = level === undefined ? 1 : level;
+    this.level = level === undefined ? 10 : level;
 
     this.PUMP_INTERVAL = 4000;
     this.CELL_DIMENSIONS = 50;
@@ -51,7 +51,7 @@ function GameScreen(width, height, screenController, score, level, reach) {
     
     this.PUMP_INTERVAL = this.PUMP_INTERVAL_MIN + (this.PUMP_INTERVAL_MAX - this.PUMP_INTERVAL_MIN) * ((3 - (((this.level - 1) % 3)))) / 3.0;
 
-    this.generateLevel(numDrains, 2);
+    this.generateLevel(numDrains, 1.4143);
 
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
