@@ -26,29 +26,15 @@ function getLocation(e) {
     }
 }
 
-function loopSound(sound) {
-  sound.play({
-    onfinish: function() {
-      loopSound(sound);
-    }
-  });
-}
-
 /**
  * Sets up the game loop.
  */
 window.onload = function () {
     lowLag.init();
-    var s = soundManager.createSound({
-        id: 'bgrMusic',
-        url: 'sound/thisislife.wav'
-    });
     
-    loopSound(s);
-    
-    var bgrMusic = new Audio('sound/thisislife.mp3');
+    var bgrMusic = new Audio('sound/thisislife.wav');
     var repeatMethod = function () {
-        bgrMusic = new Audio('sound/thisislife.mp3');
+        bgrMusic = new Audio('sound/thisislife.wav');
         bgrMusic.addEventListener('ended', repeatMethod, false);
         bgrMusic.play();
     };
