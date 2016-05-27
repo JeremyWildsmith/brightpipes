@@ -135,7 +135,6 @@ var Pipes = {
 
             var p = new Pipe(graphic, dirs, Pipes.Pump, false);
             p.setAsPump();
-            p.fill(null);
 
             return p;
         }},

@@ -44,10 +44,14 @@ function GameScreen(width, height, screenController, score, level, reach) {
     this.PIPE_SELECTION_LOCATION.x = (width - this.pipeSelection.getBounds().width) / 2;
     this.PIPE_SELECTION_LOCATION.y = this.GRID_LOCATION.y + this.grid.getBounds().height + 20;
 
-    this.PUMP_INTERVAL = 6000;
-    this.PUMP_INTERVAL = Math.max(2000, this.PUMP_INTERVAL * ((3 - ((this.level - 1) % 3)) / 3.0));
+    this.PUMP_INTERVAL = 5000;
+    
+    
+    var numDrains = Math.floor(Math.min(4, ((this.level - 1) / 3) + 1));
+    
+    this.PUMP_INTERVAL = Math.max(2000, this.PUMP_INTERVAL * ((3 - (((this.level - 1) % 3)))) / 3.0);
 
-    this.generateLevel(5, 2);
+    this.generateLevel(numDrains, 2);
 
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
@@ -78,7 +82,7 @@ GameScreen.prototype.randomizePlacement = function (object, minDistance, avoidSe
     var x = 0;
 
     placementLoop:
-            for (var x = 0; x < 10000; x++) {
+            for (var x = 0; x < 100000; x++) {
         location = new Vector(Math.floor(Math.random() * gridBounds.width),
                 Math.floor(Math.random() * gridBounds.height));
 
@@ -328,7 +332,7 @@ GameScreen.prototype.update = function (deltaTime) {
         }
     }
 
-    if (this.pump.getConnections().length > 0 || this.pipesPlaced >= this.PIPES_PLACED_BEFORE_PLAY)
+    if (true)
     {
         this.elapsedSinceLastPump += deltaTime;
 
@@ -352,7 +356,8 @@ GameScreen.prototype.update = function (deltaTime) {
 
             if (filledDrains === this.drains.length) {
                 lowLag.play('sound/winsound.wav');
-                this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 10, this.level++, this.achieve));
+                
+                this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 10, this.level + 1));
                 this.playing = false;
             }
 

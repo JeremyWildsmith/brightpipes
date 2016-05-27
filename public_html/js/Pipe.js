@@ -62,7 +62,7 @@ Pipe.prototype.fill = function (dir, filledPipes) {
     
     filledPipes.push(this);
     
-    if (this.filled) {
+    if (this.filled && this.type !== Pipes.Drain) {
         var pipeArray = this.getConnections(dir);
 
         if (this.canLeak && this.getConnections(null).length !== this.connectionDirections.length) {
