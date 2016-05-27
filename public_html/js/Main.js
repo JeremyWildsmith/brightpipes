@@ -36,6 +36,8 @@ window.onload = function () {
     lowLag.load("sound/Sound 2.wav");
     lowLag.load("sound/Sound 3.wav");
     lowLag.load("sound/Lose.wav");
+    lowLag.load('sound/error.wav');
+    lowLag.load('sound/achievementUnlocked.wav');
     
     var bgrMusic = new Audio('sound/thisislife.wav');
     var repeatMethod = function () {

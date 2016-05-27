@@ -11,7 +11,7 @@
  */
 function GameScreen(width, height, screenController, score, level, achievements) {
     this.score = score === undefined ? 0 : score;
-    this.level = level === undefined ? 10 : level;
+    this.level = level === undefined ? 1 : level;
 
     this.achievements = achievements === undefined ? [] : achievements;
 
@@ -19,6 +19,10 @@ function GameScreen(width, height, screenController, score, level, achievements)
     this.CELL_DIMENSIONS = 50;
     this.PIPES_PLACED_BEFORE_PLAY = 5;
     this.PASS_LEVEL_SCORE = 200;
+    this.ACHIEVEMENT_LENGTH = 2000;
+
+    this.achievementTimeout = 0;
+    this.lastAchievement = null;
 
     this.GRID_LOCATION = new Vector(30, 35);
     this.PIPE_SELECTION_LOCATION = new Vector(53, 300);
@@ -48,9 +52,9 @@ function GameScreen(width, height, screenController, score, level, achievements)
 
     this.PUMP_INTERVAL_MAX = 7000;
     this.PUMP_INTERVAL_MIN = 3000;
-    
+
     var numDrains = Math.floor(Math.min(4, ((this.level - 1) / 3) + 1));
-    
+
     this.PUMP_INTERVAL = this.PUMP_INTERVAL_MIN + (this.PUMP_INTERVAL_MAX - this.PUMP_INTERVAL_MIN) * ((3 - (((this.level - 1) % 3)))) / 3.0;
 
     this.generateLevel(numDrains, 1.4143);
@@ -67,14 +71,16 @@ function GameScreen(width, height, screenController, score, level, achievements)
     this.height = height;
     this.lastActiveControl = null;
 
-    this.achieve = reach;
-
     this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6);
     Math.seedrandom(1);
 }
 
-GameScreen.prototype.addAchievement = function(graphic) {
-    this.achievements.push(graphic);
+GameScreen.prototype.addAchievement = function (achievement) {
+    this.achievements.push(achievement);
+    lowLag.play('sound/achievementUnlocked.wav');
+
+    this.achievementTimeout = this.ACHIEVEMENT_LENGTH;
+    this.lastAchievement = achievement;
 };
 
 /**
@@ -330,6 +336,8 @@ GameScreen.prototype.update = function (deltaTime) {
     if (!this.playing)
         return;
 
+    this.achievementTimeout = Math.max(0, this.achievementTimeout - deltaTime);
+
     var pipes = this.grid.getPipes();
     for (var i = 0; i < pipes.length; i++)
     {
@@ -363,8 +371,8 @@ GameScreen.prototype.update = function (deltaTime) {
 
             if (filledDrains === this.drains.length) {
                 lowLag.play('sound/winsound.wav');
-                
-                this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 2, this.level + 1));
+
+                this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 2, this.level + 1, this.achievements));
                 this.playing = false;
             }
 
@@ -376,6 +384,7 @@ GameScreen.prototype.update = function (deltaTime) {
 /**
  * Searches for the easter egg condition
  */
+
 GameScreen.prototype.searchForEasterEgg = function () {
     var pipes = this.grid.getPipes();
     for (var i = 0; i < pipes.length; i++) {
@@ -393,6 +402,10 @@ GameScreen.prototype.searchForEasterEgg = function () {
             {
                 if (!pipe.isFilled()) {
                     pipe.setAsPump();
+                }
+                                               
+                if (this.achievements.indexOf(Achievement.Infinity) < 0) {
+                    this.addAchievement(Achievement.Infinity);
                 }
             }
         }
@@ -420,6 +433,13 @@ GameScreen.prototype.draw = function (g, x, y) {
     if (this.draggingPipe !== null)
         this.draggingPipe.draw(g, x + this.draggingLocation.x, y + this.draggingLocation.y);
 
+
+    if (this.achievementTimeout > 0) {
+        g.font = "30px Trade Winds";
+        var str = "Achievement: " + this.lastAchievement.name;
+        var txtDim = g.measureText(str);
+        g.fillText(str, (this.width - txtDim.width) / 2, this.GRID_LOCATION.y + this.CELL_DIMENSIONS * 2); // missing the function that counts the number of pipes used 
+    }
 };
 
 /**
@@ -453,16 +473,19 @@ GameScreen.prototype.onMouseUp = function (location) {
 
             var oldPipe = this.grid.getPipe(gridCoord);
 
-            if (oldPipe !== null && !oldPipe.canReplace())
+            if (oldPipe !== null && !oldPipe.canReplace()) {
                 this.pipeSelection.pushPipe(this.draggingPipe);
-            else {
+                lowLag.play('sound/error.wav');
+            } else {
                 this.grid.setPipe(gridCoord, this.draggingPipe);
                 this.pipesPlaced++;
                 this.draggingPipe = null;
                 lowLag.play('sound/Sound 3.wav');
             }
-        } else
+        } else {
             this.pipeSelection.pushPipe(this.draggingPipe);
+            lowLag.play('sound/error.wav');
+        }
     }
 
     this.draggingPipe = null;
