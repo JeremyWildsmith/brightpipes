@@ -9,9 +9,11 @@
  * @param {type} screenController The screen controller
  * @param {type} score The score of the user entering this screen.
  */
-function GameScreen(width, height, screenController, score, level, reach) {
+function GameScreen(width, height, screenController, score, level, achievements) {
     this.score = score === undefined ? 0 : score;
-    this.level = level === undefined ? 1 : level;
+    this.level = level === undefined ? 10 : level;
+
+    this.achievements = achievements === undefined ? [] : achievements;
 
     this.PUMP_INTERVAL = 4000;
     this.CELL_DIMENSIONS = 50;
@@ -70,6 +72,10 @@ function GameScreen(width, height, screenController, score, level, reach) {
     this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6);
     Math.seedrandom(1);
 }
+
+GameScreen.prototype.addAchievement = function(graphic) {
+    this.achievements.push(graphic);
+};
 
 /**
  * Randomized the placement of the specified object on the game grid.
