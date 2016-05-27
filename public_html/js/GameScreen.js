@@ -44,12 +44,12 @@ function GameScreen(width, height, screenController, score, level, reach) {
     this.PIPE_SELECTION_LOCATION.x = (width - this.pipeSelection.getBounds().width) / 2;
     this.PIPE_SELECTION_LOCATION.y = this.GRID_LOCATION.y + this.grid.getBounds().height + 20;
 
-    this.PUMP_INTERVAL = 5000;
-    
+    this.PUMP_INTERVAL_MAX = 7000;
+    this.PUMP_INTERVAL_MIN = 3000;
     
     var numDrains = Math.floor(Math.min(4, ((this.level - 1) / 3) + 1));
     
-    this.PUMP_INTERVAL = Math.max(2000, this.PUMP_INTERVAL * ((3 - (((this.level - 1) % 3)))) / 3.0);
+    this.PUMP_INTERVAL = PUMP_INTERVAL_MIN + (this.PUMP_INTERVAL_MAX - PUMP_INTERVAL_MIN) * ((3 - (((this.level - 1) % 3)))) / 3.0;
 
     this.generateLevel(numDrains, 2);
 
