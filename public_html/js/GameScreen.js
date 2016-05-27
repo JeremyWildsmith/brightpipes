@@ -53,7 +53,7 @@ function GameScreen(width, height, screenController, score, level, achievements)
     this.PUMP_INTERVAL_MAX = 7000;
     this.PUMP_INTERVAL_MIN = 3000;
 
-    var numDrains = Math.floor(Math.min(4, ((this.level - 1) / 3) + 1));
+    var numDrains = Math.floor(Math.min(5, ((this.level - 1) / 3) + 1));
 
     this.PUMP_INTERVAL = this.PUMP_INTERVAL_MIN + (this.PUMP_INTERVAL_MAX - this.PUMP_INTERVAL_MIN) * ((3 - (((this.level - 1) % 3)))) / 3.0;
 
@@ -72,8 +72,8 @@ function GameScreen(width, height, screenController, score, level, achievements)
     this.lastActiveControl = null;
 
     this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6);
-    
-    if(this.level === 5) {
+
+    if (this.level === 5) {
         this.addAchievement(Achievement.FiveRounds);
     }
 }
@@ -90,7 +90,7 @@ GameScreen.prototype.addAchievement = function (achievement) {
  * Randomized the placement of the specified object on the game grid.
  * @param {type} object The object to place on the game grid.
  */
-GameScreen.prototype.randomizePlacement = function (object, minDistance, avoidSet) {
+GameScreen.prototype.randomizePlacement = function (object, minDistance, avoidSet, clearConnections) {
     object.detach();
     var gridBounds = this.grid.getCellBounds();
 
@@ -107,11 +107,13 @@ GameScreen.prototype.randomizePlacement = function (object, minDistance, avoidSe
 
         var connectionDirections = object.getDirections();
 
-        for (var i = 0; i < connectionDirections.length; i++) {
-            var dirLocation = location.add(connectionDirections[i].delta);
+        if (clearConnections === true) {
+            for (var i = 0; i < connectionDirections.length; i++) {
+                var dirLocation = location.add(connectionDirections[i].delta);
 
-            if (!this.grid.getCellBounds().contains(dirLocation) || this.grid.getPipe(dirLocation) !== null)
-                continue placementLoop;
+                if (!this.grid.getCellBounds().contains(dirLocation) || this.grid.getPipe(dirLocation) !== null)
+                    continue placementLoop;
+            }
         }
 
         if (minDistance !== undefined && avoidSet !== undefined) {
@@ -156,16 +158,16 @@ GameScreen.prototype.generateLevel = function (numDrains, minDistance) {
 
     generateWorld:
             do {
-                this.randomizePlacement(this.pump);
+                this.randomizePlacement(this.pump, undefined, true);
 
                 for (var i = 0; i < this.drains.length; i++) {
                     var drain = this.drains[i];
 
-                    this.randomizePlacement(drain, minDistance, new Array(Pipes.Drain));
+                    this.randomizePlacement(drain, minDistance, new Array(Pipes.Drain), false);
                 }
 
                 for (var i = 0; i < splits.length; i++) {
-                    this.randomizePlacement(splits[i], 2.5, Pipes.complexValues().concat(Array(Pipes.Pump)));
+                    this.randomizePlacement(splits[i], 1.4143, Pipes.complexValues().concat(Array(Pipes.Pump)), true);
                 }
 
                 for (var i = 0; i < this.drains.length; i++) {
@@ -406,7 +408,7 @@ GameScreen.prototype.searchForEasterEgg = function () {
                 if (!pipe.isFilled()) {
                     pipe.setAsPump();
                 }
-                                               
+
                 if (this.achievements.indexOf(Achievement.Infinity) < 0) {
                     this.addAchievement(Achievement.Infinity);
                 }
@@ -485,8 +487,8 @@ GameScreen.prototype.onMouseUp = function (location) {
                 this.pipesPlaced++;
                 this.draggingPipe = null;
                 lowLag.play('sound/Sound 3.wav');
-                
-                if(this.pipesPlaced == 10 && this.achievements.indexOf(Achievement.TenPipes) < 0)
+
+                if (this.pipesPlaced == 10 && this.achievements.indexOf(Achievement.TenPipes) < 0)
                     this.addAchievement(Achievement.TenPipes);
             }
         } else {
