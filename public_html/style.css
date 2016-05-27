@@ -19,11 +19,11 @@ body {
 
 #mainDiv {
     background-color: rgb(132,190,251);
-    height: 800px;
+    height: 1000px;
 }
 
 #mainCanvas {
     position: relative;
-    top: 800px;
-    transform: translateY(-750px);
+    top: 1000px;
+    transform: translateY(-950px);
 }
