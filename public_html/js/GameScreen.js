@@ -22,8 +22,6 @@ function GameScreen(width, height, screenController, score, level, reach) {
     this.PIPE_SELECTION_LOCATION = new Vector(53, 300);
     this.SETTINGS_LOCATION = new Vector(0, 0);
 
-    this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6)
-
     var outer = this;
     this.settingsButton = new SettingsButton(function () {
         screenController.setScreen(new SettingsScreen(width, height, screenController, outer));
@@ -49,7 +47,7 @@ function GameScreen(width, height, screenController, score, level, reach) {
     this.PUMP_INTERVAL = 6000;
     this.PUMP_INTERVAL = Math.max(2000, this.PUMP_INTERVAL * ((3 - ((this.level - 1) % 3)) / 3.0));
 
-    this.generateLevel(4, 2);
+    this.generateLevel(1, 2);
 
     this.draggingPipe = null;
     this.draggingLocation = new Vector(0, 0);
@@ -65,20 +63,7 @@ function GameScreen(width, height, screenController, score, level, reach) {
 
     this.achieve = reach;
 
-    if (this.score > 10 && reach[0] === 0) {
-        alert("congrats for 10 points");
-        this.achieve[0] = 1;
-    }
-
-    if (this.score > 50 && reach[1] === 0) {
-        alert("congrats for 50 points");
-        this.achieve[1] = 1;
-    }
-
-    if (this.score > 100 && reach[2] === 0) {
-        alert("congrats for 100 points");
-        this.achieve[2] = 1;
-    }
+    this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6) + 10;
 }
 
 /**
@@ -93,7 +78,7 @@ GameScreen.prototype.randomizePlacement = function (object, minDistance, avoidSe
     var x = 0;
 
     placementLoop:
-            for (var x = 0; x < 1000; x++) {
+            for (var x = 0; x < 10000; x++) {
         location = new Vector(Math.floor(Math.random() * gridBounds.width),
                 Math.floor(Math.random() * gridBounds.height));
 
@@ -160,7 +145,7 @@ GameScreen.prototype.generateLevel = function (numDrains, minDistance) {
                 }
 
                 for (var i = 0; i < splits.length; i++) {
-                    this.randomizePlacement(splits[i], 2.5, Pipes.complexValues());
+                    this.randomizePlacement(splits[i], 2.5, Pipes.complexValues().concat(Array(Pipes.Pump)));
                 }
 
                 for (var i = 0; i < this.drains.length; i++) {
@@ -170,19 +155,6 @@ GameScreen.prototype.generateLevel = function (numDrains, minDistance) {
                 }
             } while (!this.isLevelSolvable());
 
-    var basicObstacles = Pipes.obstacles();
-    var complexObstacles = Pipes.complexValues();
-    /*
-     for (var x = 0; x < 20; x++) {
-     
-     var obstacleSource = Math.random() < 0.7 ? basicObstacles : complexObstacles;
-     var obstacle = obstacleSource[Math.floor(Math.random() * obstacleSource.length)].create();
-     if (!this.randomizePlacement(obstacle))
-     break;
-     
-     if (!this.isLevelSolvable())
-     this.grid.removePipe(obstacle);
-     }*/
 };
 
 /*
@@ -379,6 +351,7 @@ GameScreen.prototype.update = function (deltaTime) {
             }
 
             if (filledDrains === this.drains.length) {
+                new Audio('sound/winsound.wav').play();
                 this.screenController.setScreen(new GameScreen(this.width, this.height, this.screenController, this.score + this.PASS_LEVEL_SCORE - this.pipesPlaced * 10, this.level++, this.achieve));
                 this.playing = false;
             }
@@ -447,6 +420,7 @@ GameScreen.prototype.onMouseDown = function (location) {
         var pipe = this.pipeSelection.popPipe(location.difference(this.PIPE_SELECTION_LOCATION));
         this.draggingPipe = pipe;
         this.draggingLocation = location;
+        new Audio('sound/Sound 2.wav').play();
     }
     if (this.lastActiveControl !== null)
         this.lastActiveControl.onMouseDown(location);

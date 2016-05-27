@@ -25,5 +25,5 @@ body {
 #mainCanvas {
     position: relative;
     top: 800px;
-    transform: translateY(-700px);
+    transform: translateY(-750px);
 }

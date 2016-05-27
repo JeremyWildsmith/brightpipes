@@ -31,9 +31,9 @@ function getLocation(e) {
  */
 window.onload = function () {
     
-    var bgrMusic = new Audio('sound/Marimba Festiva.wav');
+    var bgrMusic = new Audio('sound/This Is Life.mp3');
     var repeatMethod = function () {
-        bgrMusic = new Audio('sound/Marimba Festiva.wav');
+        bgrMusic = new Audio('sound/This Is Life.mp3');
         bgrMusic.addEventListener('ended', repeatMethod, false);
         bgrMusic.play();
     };
