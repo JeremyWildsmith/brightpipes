@@ -41,7 +41,7 @@ window.onload = function () {
     lowLag.init();
     var s = soundManager.createSound({
         id: 'bgrMusic',
-        url: 'sound/thisislife.mp3'
+        url: 'sound/thisislife.wav'
     });
     
     loopSound(s);
