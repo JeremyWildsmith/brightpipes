@@ -5,7 +5,7 @@
  */
 
 var Achievement = {
-    Infinity : {name: "Infinity", graphic: new NullGraphic()/*new LoadingGraphic("gfx/infinityBadge.png")*/},
-    TenPipes : {name: "Place Ten Pipes", graphic: new NullGraphic()/*new LoadingGraphic("gfx/tenPipesBadge.png")*/},
-    FiveRounds : {name: "Play Five Rounds", graphic: new NullGraphic()/*new LoadingGraphic("gfx/fiveRoundsBadge.png")*/}
+    Infinity : {name: "Infinity", graphic: new LoadingGraphic("gfx/badge1.png")},
+    TenPipes : {name: "Place Ten Pipes", graphic: new LoadingGraphic("gfx/badge2.png")},
+    FiveRounds : {name: "Play Five Rounds", graphic: new LoadingGraphic("gfx/badge3.png")}
 };

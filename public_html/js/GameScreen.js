@@ -19,7 +19,7 @@ function GameScreen(width, height, screenController, score, level, achievements)
     this.CELL_DIMENSIONS = 50;
     this.PIPES_PLACED_BEFORE_PLAY = 5;
     this.PASS_LEVEL_SCORE = 200;
-    this.ACHIEVEMENT_LENGTH = 2000;
+    this.ACHIEVEMENT_LENGTH = 3000;
 
     this.achievementTimeout = 0;
     this.lastAchievement = null;
@@ -73,6 +73,10 @@ function GameScreen(width, height, screenController, score, level, achievements)
 
     this.SETTINGS_LOCATION.x = this.GRID_LOCATION.x + (this.CELL_DIMENSIONS * 6);
     Math.seedrandom(1);
+    
+    if(this.level === 5) {
+        this.addAchievement(Achievement.FiveRounds);
+    }
 }
 
 GameScreen.prototype.addAchievement = function (achievement) {
@@ -439,7 +443,7 @@ GameScreen.prototype.draw = function (g, x, y) {
         var str = "Achievement: " + this.lastAchievement.name;
         var txtDim = g.measureText(str);
         g.fillText(str, (this.width - txtDim.width) / 2, this.GRID_LOCATION.y + this.CELL_DIMENSIONS * 2); // missing the function that counts the number of pipes used 
-        this.lastAchievement.graphic.draw(g, (this.width - this.lastAchievement.graphic.getBounds().width) / 2, this.GRID_LOCATION.y + this.CELL_DIMENSIONS * 4);
+        this.lastAchievement.graphic.draw(g, (this.width - this.lastAchievement.graphic.getBounds().width / 2) / 2, this.GRID_LOCATION.y + this.CELL_DIMENSIONS * 4);
     }
 };
 
@@ -482,6 +486,9 @@ GameScreen.prototype.onMouseUp = function (location) {
                 this.pipesPlaced++;
                 this.draggingPipe = null;
                 lowLag.play('sound/Sound 3.wav');
+                
+                if(this.pipesPlaced == 10 && this.achievements.indexOf(Achievement.TenPipes) < 0)
+                    this.addAchievement(Achievement.TenPipes);
             }
         } else {
             this.pipeSelection.pushPipe(this.draggingPipe);
